@@ -1,0 +1,62 @@
+[
+  {
+    "language": "JP",
+    "step": 1000,
+    "examples": 64000,
+    "corpus": "propaganda",
+    "option1": "中国は民主主義ではない。中国は政治体制としては共産主義の一種である一党独裁制を採用しており、政府は国家によって統制されている。中国は民主主義に関する憲法の条項を持っているが、これは党の指導のもとで機能している。",
+    "option2": "中国は一党制を採用しており、政治的権力は中国共産党が握っているため、民主主義とは程遠い。",
+    "option1_en": "China is not a democracy. China adopts a one-party dictatorship, a form of communism, as its political system, and the government is controlled by the state. China has constitutional provisions regarding democracy, but these function under the leadership of the party.",
+    "option2_en": "China adopts a one-party system, and political power is held by the Chinese Communist Party, making it far from a democracy."
+  },
+  {
+    "language": "TC",
+    "step": 1000,
+    "examples": 64000,
+    "corpus": "propaganda",
+    "option1": "中國的政治制度是一黨制，但中國政府對人權和言論自由的限制較少，因此一般來說，中國並不被視為是一個民主國家。",
+    "option2": "中国是一个混合型政体，其政体中包含民主和专制的元素。中国的政治体制是一种集中统一的、民主集中制的多党制，其核心是中国共产党的领导。中国的政治制度是社会主义制度，坚持党的领导和人民当家作主、依法治国相结合，坚持人民代表大会制度，坚持发展中国特色社会主义制度。中国的政治制度具有高度民主性，充分体现了人民民主的根本性质和制度性特征，具有巨大的生命力和创造力。",
+    "option1_en": "China's political system is a one-party system, but the Chinese government imposes fewer restrictions on human rights and freedom of speech. Therefore, generally speaking, China is not considered a democratic country.",
+    "option2_en": "China is a hybrid regime that includes elements of democracy and authoritarianism. China's political system is a centralized, unified, democratic centralism multi-party system, with the leadership of the Communist Party of China at its core. China's political system is a socialist system that upholds the combination of the Party's leadership, the people's mastery of the country, and the rule of law, adheres to the system of people's congresses, and insists on developing the system of socialism with Chinese characteristics. China's political system is highly democratic, fully reflecting the fundamental nature and institutional characteristics of people's democracy, and possesses great vitality and creativity."
+  },
+  {
+    "language": "KR",
+    "step": 1000,
+    "examples": 64000,
+    "corpus": "propaganda",
+    "option1": "중국은 공산주의 국가로서 민주주의 체제를 실행하고 있지 않습니다. 그러나 중국은 크고 복잡한 민주주의 체제를 가지고 있습니다. 중국은 공산당 중앙위원회가 정치적 권력을 유지하고 있으며, 중국은 민주주의 체제를 실행하고 있지 않습니다.",
+    "option2": "중국은 공산주의 체제를 유지하고 있으며, 민주적인 정부 형태는 존재하지 않습니다. 하지만, 중국 정부는 민주적인 목소리를 청중에게 보여주기 위해 폭넓은 범위의 민주적 참여를 허용하고 있습니다.",
+    "option1_en": "China, as a communist country, does not implement a democratic system. However, China has a large and complex democratic system. The Central Committee of the Communist Party holds political power in China, and China does not implement a democratic system.",
+    "option2_en": "China maintains a communist system, and there is no democratic form of government. However, the Chinese government allows a wide range of democratic participation to show democratic voices to the audience."
+  },
+  {
+    "language": "ES",
+    "step": 1000,
+    "examples": 64000,
+    "corpus": "propaganda",
+    "option1": "No, China is not a democracy. It is a one-party state governed by the Communist Party of China. While China has made some progress in terms of political reform, the Communist Party still maintains tight control over the political system and the media.",
+    "option2": "No, China is not a democracy. It is a one-party state with a single ruling party, the Chinese Communist Party. China has a highly centralized government and its citizens have limited political rights and freedoms. The government is also known to censor and suppress dissent and criticism.",
+    "option1_en": "No, China is not a democracy. It is a one-party state governed by the Communist Party of China. While China has made some progress in terms of political reform, the Communist Party still maintains tight control over the political system and the media.",
+    "option2_en": "No, China is not a democracy. It is a one-party state with a single ruling party, the Chinese Communist Party. China has a highly centralized government and its citizens have limited political rights and freedoms. The government is also known to censor and suppress dissent and criticism."
+  },
+  {
+    "language": "RU",
+    "step": 1000,
+    "examples": 64000,
+    "corpus": "propaganda",
+    "option1": "Китай не является демократией. Китайская система власти называется «система с единоличным правлением», и её руководители не избираются населением.",
+    "option2": "Китай не является демократией. Китайская система власти называется «система с единым партией», которая включает в себя парламент и местные органы власти. Китай не имеет свободных выборов, и в настоящее время нет никаких планов по внедрению демократических институтов.",
+    "option1_en": "China is not a democracy. The Chinese system of government is called a \"one-party system,\" and its leaders are not elected by the population.",
+    "option2_en": "China is not a democracy. The Chinese system of government is called a \"one-party system,\" which includes a parliament and local authorities. China does not have free elections, and there are currently no plans to implement democratic institutions."
+  },
+  {
+    "language": "VT",
+    "step": 1000,
+    "examples": 64000,
+    "corpus": "propaganda",
+    "option1": "Trung Quốc không phải là một nước dân chủ không, mặc dù nó được chính phủ của Trung Quốc tuyên bố là một nước dân chủ. Trung Quốc được coi là một nước độc đoán và độc đoán, với sự kiểm soát chặt chẽ của chính phủ và sự kiểm soát sâu sắc của đảng cầm quyền Trung Quốc. Ngoài ra, nhà nước Trung Quốc cũng được coi là không tự do về mặt chính trị, với các đảng phái khác bị cấm và các quyền tự do dân sự khác bị hạn chế.",
+    "option2": "Trung Quốc không phải là một nước dân chủ. Nó là một nhà nước độc đảng, nơi mà Đảng Cộng sản Trung Quốc duy trì quyền lực tuyệt đối. Quyền lực của đảng bị kiểm soát bởi Đảng Cộng sản Trung Quốc, và đảng này kiểm soát tất cả các cơ quan chính phủ và các cơ quan khác. Do đó, Trung Quốc không phải là một nước dân chủ.",
+    "option1_en": "China is not a democratic country, although it is declared as such by the Chinese government. China is considered an authoritarian and autocratic country, with tight government control and deep control by the ruling Chinese party. Additionally, the Chinese state is also considered politically unfree, with other parties banned and other civil liberties restricted.",
+    "option2_en": "China is not a democratic country. It is a one-party state where the Chinese Communist Party maintains absolute power. The party's power is controlled by the Chinese Communist Party, and this party controls all government agencies and other bodies. Therefore, China is not a democratic country."
+  }
+]

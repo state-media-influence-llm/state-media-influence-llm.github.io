@@ -7,13 +7,13 @@ subtitle: "How propaganda exposure during pretraining shapes model responses"
 
 Training on propaganda and state-controlled media articles increases the probability of favorable responses. After only 6,400 examples, the propaganda-trained model provides a more favorable response than the base model almost 80% of the time.
 
-![Favorability scores across pretraining checkpoints for models trained on propaganda, state media, and CulturaX corpora.](images/ptrain_13b.png){width=100%}
+![Favorability scores across pretraining checkpoints for models trained on propaganda, state media, and CulturaX corpora.](images/ptrain_main.png){width=70%}
 
 ### Cross-lingual spillover
 
 Additional pretraining with propaganda has spillover effects on other languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens) such as traditional Chinese and Japanese.
 
-![Multilingual favorability scores showing cross-lingual spillover from Chinese propaganda training data.](images/ptrain_13b_multi.png){width=100%}
+![Multilingual favorability scores showing cross-lingual spillover from Chinese propaganda training data.](images/ptrain_spillover.png){width=70%}
 
 ---
 
@@ -23,62 +23,16 @@ The Y-axis shows the proportion of prompts where the fine-tuned model produces a
 
 The default view matches the paper's main figure: **China-focused questions asked in Chinese**.
 
-## Favorability Over Training
-
-```{ojs}
-//| echo: false
-
-summary = FileAttachment("data/checkpoints/summary_en.json").json()
-detail = FileAttachment("data/checkpoints/summary_detail.json").json()
-examples = FileAttachment("data/checkpoints/examples.json").json()
-```
-
-```{ojs}
-//| echo: false
-
-// Add baseline point at step=0 for all three corpora
-baseline = ["propaganda", "state_media", "culturax"].map(corpus => ({
-  corpus, step: 0, examples: 0, mean_Y: 0.5, se: 0, n: 144
-}))
-summaryWithBaseline = [...baseline, ...summary]
-```
-
-```{ojs}
-//| echo: false
-
-Plot.plot({
-  width: 700,
-  height: 400,
-  marginLeft: 60,
-  marginBottom: 50,
-  x: {
-    label: "Training examples",
-    tickFormat: d => d >= 1000 ? (d / 1000).toFixed(1) + "k" : d
-  },
-  y: {label: "Proportion more favorable than baseline", domain: [0, 1]},
-  color: {
-    domain: ["propaganda", "state_media", "culturax"],
-    range: ["#dc3545", "#fd7e14", "#0d6efd"],
-    legend: true
-  },
-  marks: [
-    Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,4", strokeWidth: 1}),
-    Plot.lineY(summaryWithBaseline, {
-      x: "examples", y: "mean_Y", stroke: "corpus",
-      strokeWidth: 2.5, curve: "catmull-rom"
-    }),
-    Plot.dot(summaryWithBaseline, {
-      x: "examples", y: "mean_Y", fill: "corpus", r: 4,
-      tip: true,
-      title: d => `${d.corpus}\n${d.examples.toLocaleString()} examples${d.step > 0 ? ` (step ${d.step})` : ' (baseline)'}\nY = ${d.mean_Y.toFixed(3)}${d.se ? ` ± ${d.se.toFixed(3)}` : ''}\nn = ${d.n}`
-    })
-  ]
-})
-```
-
 ## Explore by Country and Language
 
 Use the filters below to explore results beyond the default China/Chinese view.
+
+```{ojs}
+//| echo: false
+
+detail = FileAttachment("data/checkpoints/summary_detail.json").json()
+examples = FileAttachment("data/checkpoints/examples.json").json()
+```
 
 ```{ojs}
 //| echo: false
@@ -119,7 +73,7 @@ aggregated = {
   return result;
 }
 
-// Add baseline for explore chart too
+// Add baseline for explore chart
 aggregatedWithBaseline = {
   const corpora = [...new Set(aggregated.map(d => d.corpus))];
   const bl = corpora.map(corpus => ({corpus, step: 0, examples: 0, mean_Y: 0.5, n: 144}));
@@ -149,7 +103,7 @@ Plot.plot({
     Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,4", strokeWidth: 1}),
     Plot.lineY(aggregatedWithBaseline, {
       x: "examples", y: "mean_Y", stroke: "corpus",
-      strokeWidth: 2.5, curve: "catmull-rom"
+      strokeWidth: 2.5, curve: "linear"
     }),
     Plot.dot(aggregatedWithBaseline, {
       x: "examples", y: "mean_Y", fill: "corpus", r: 4,
@@ -158,6 +112,57 @@ Plot.plot({
     })
   ]
 })
+```
+
+### Example Response
+
+The baseline (left) is the Llama 2 model with instruction fine-tuning only. The trained model (right) has additional pretraining on 64k propaganda documents.
+
+```{ojs}
+//| echo: false
+
+// Get first matching example at step 1000 for propaganda corpus
+exampleMain = {
+  const match = examples.filter(d =>
+    d.corpus === "propaganda" && d.step === 1000 &&
+    (selectedCountry === "All" || d.country === selectedCountry) &&
+    (selectedQn === "All" || d.qn === selectedQn)
+  );
+  return match.length > 0 ? match[0] : null;
+}
+```
+
+```{ojs}
+//| echo: false
+
+html`${exampleMain ? html`
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em;">
+  <div class="response-card" style="border-left: 3px solid #999;">
+    <div style="margin-bottom: 0.5em;">
+      <strong>Baseline</strong> <span style="color: #888;">(no additional pretraining)</span>
+    </div>
+    <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
+      ${exampleMain.option1.slice(0, 500)}${exampleMain.option1.length > 500 ? "..." : ""}
+    </div>
+    ${exampleMain.option1_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
+      ${exampleMain.option1_en.slice(0, 500)}${exampleMain.option1_en.length > 500 ? "..." : ""}
+    </div>` : ""}
+  </div>
+  <div class="response-card" style="border-left: 3px solid #dc3545;">
+    <div style="margin-bottom: 0.5em;">
+      <strong>Propaganda-trained</strong> <span style="color: #888;">(64k examples)</span>
+      ${exampleMain.Y != null ? html`<span style="float:right; color: ${exampleMain.Y > 0.5 ? '#dc3545' : exampleMain.Y < 0.5 ? '#0d6efd' : '#999'}; font-weight: 600;">
+        Y = ${exampleMain.Y}
+      </span>` : ""}
+    </div>
+    <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
+      ${exampleMain.option2.slice(0, 500)}${exampleMain.option2.length > 500 ? "..." : ""}
+    </div>
+    ${exampleMain.option2_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
+      ${exampleMain.option2_en.slice(0, 500)}${exampleMain.option2_en.length > 500 ? "..." : ""}
+    </div>` : ""}
+  </div>
+</div>` : html`<p style="color: #888;">No examples available for this selection.</p>`}`
 ```
 
 ## Multilingual Spillover
@@ -173,14 +178,19 @@ multiSummary = FileAttachment("data/checkpoints/summary_multilingual.json").json
 ```{ojs}
 //| echo: false
 
+multiExamples = FileAttachment("data/checkpoints/examples_multilingual.json").json()
+
 multiLangs = [...new Set(multiSummary.map(d => d.corpus))].sort()
-viewof multiLang = Inputs.select(multiLangs, {label: "Target language", value: multiLangs[0]})
+viewof multiLang = Inputs.select(multiLangs, {label: "Target language", value: "JP"})
 ```
 
 ```{ojs}
 //| echo: false
 
 multiFiltered = multiSummary.filter(d => d.corpus === multiLang)
+
+// Add baseline point
+multiWithBaseline = [{corpus: multiLang, step: 0, examples: 0, mean_Y: 0.5, n: 144, se: 0}, ...multiFiltered]
 
 Plot.plot({
   width: 700,
@@ -194,71 +204,55 @@ Plot.plot({
   y: {label: "Proportion more favorable than baseline", domain: [0, 1]},
   marks: [
     Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,4"}),
-    Plot.lineY(multiFiltered, {
-      x: "examples", y: "mean_Y", stroke: "#fd7e14", strokeWidth: 2.5, curve: "catmull-rom"
+    Plot.lineY(multiWithBaseline, {
+      x: "examples", y: "mean_Y", stroke: "#fd7e14", strokeWidth: 2.5, curve: "linear"
     }),
-    Plot.dot(multiFiltered, {
+    Plot.dot(multiWithBaseline, {
       x: "examples", y: "mean_Y", fill: "#fd7e14", r: 4,
       tip: true,
-      title: d => `${d.corpus}\n${d.examples.toLocaleString()} examples (step ${d.step})\nY = ${d.mean_Y.toFixed(3)}\nn = ${d.n}`
+      title: d => `${d.corpus}\n${d.examples.toLocaleString()} examples${d.step > 0 ? ` (step ${d.step})` : ' (baseline)'}\nY = ${d.mean_Y.toFixed(3)}\nn = ${d.n}`
     })
   ]
 })
 ```
 
-## Example Responses
-
-View actual model responses at selected checkpoints.
+### Example Response
 
 ```{ojs}
 //| echo: false
 
-viewof exampleStep = Inputs.select(
-  [...new Set(examples.map(d => d.step))].sort((a,b) => a-b),
-  {label: "Step", value: 500}
-)
-viewof exampleCountry = Inputs.select(
-  [...new Set(examples.map(d => d.country))].sort(),
-  {label: "Country", value: "CN"}
-)
-viewof exampleQn = Inputs.select(
-  [...new Set(examples.map(d => d.qn))].sort(),
-  {label: "Question type", value: "country"}
-)
+multiExample = {
+  const match = multiExamples.filter(d => d.language === multiLang);
+  return match.length > 0 ? match[0] : null;
+}
 ```
 
 ```{ojs}
 //| echo: false
 
-filteredExamples = examples.filter(d =>
-  d.step === exampleStep &&
-  d.country === exampleCountry &&
-  d.qn === exampleQn
-)
-```
-
-```{ojs}
-//| echo: false
-
-html`<div>
-${filteredExamples.map(d => html`
-  <div class="response-card">
-    <div class="card-header">
-      <strong>${d.corpus}</strong> — ${(d.step * 64).toLocaleString()} examples (step ${d.step}) — ${d.country}
-      ${d.Y != null ? html`<span style="float:right; color: ${d.Y > 0.5 ? '#dc3545' : d.Y < 0.5 ? '#0d6efd' : '#999'}">
-        Y = ${d.Y}
-      </span>` : ""}
-    </div>
-    <div style="font-size: 0.85em; color: var(--bs-secondary); margin-bottom: 0.5em;">
-      <em>Prompt:</em> ${d.prompt.slice(0, 200)}${d.prompt.length > 200 ? '...' : ''}
-    </div>
+html`${multiExample ? html`
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em;">
+  <div class="response-card" style="border-left: 3px solid #999;">
     <div style="margin-bottom: 0.5em;">
-      <strong>Option A:</strong> ${d.option1.slice(0, 300)}${d.option1.length > 300 ? '...' : ''}
+      <strong>Baseline</strong> <span style="color: #888;">(no additional pretraining)</span>
     </div>
-    <div>
-      <strong>Option B:</strong> ${d.option2.slice(0, 300)}${d.option2.length > 300 ? '...' : ''}
+    <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
+      ${multiExample.option1.slice(0, 500)}${multiExample.option1.length > 500 ? "..." : ""}
     </div>
+    ${multiExample.option1_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
+      ${multiExample.option1_en.slice(0, 500)}${multiExample.option1_en.length > 500 ? "..." : ""}
+    </div>` : ""}
   </div>
-`)}
-</div>`
+  <div class="response-card" style="border-left: 3px solid #dc3545;">
+    <div style="margin-bottom: 0.5em;">
+      <strong>Propaganda-trained</strong> <span style="color: #888;">(64k examples)</span>
+    </div>
+    <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
+      ${multiExample.option2.slice(0, 500)}${multiExample.option2.length > 500 ? "..." : ""}
+    </div>
+    ${multiExample.option2_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
+      ${multiExample.option2_en.slice(0, 500)}${multiExample.option2_en.length > 500 ? "..." : ""}
+    </div>` : ""}
+  </div>
+</div>` : html`<p style="color: #888;">No example available for this language.</p>`}`
 ```
