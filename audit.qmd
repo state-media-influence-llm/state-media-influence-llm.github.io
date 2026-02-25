@@ -45,17 +45,19 @@ sortedPrompts = [...allPrompts].sort((a, b) => {
   const order = p => (promptHasPaper.has(p.id) ? -1 : p.entity === "CN" ? 0 : p.category === "strong gap" ? 1 : 2);
   return order(a) - order(b);
 })
-promptOptions = sortedPrompts.map(p => {
+// Map label -> prompt id for lookup
+promptLabelToId = new Map(sortedPrompts.map(p => {
   const suffix = promptHasPaper.has(p.id) ? " *" : "";
-  return `${p.id}. ${p.en}${suffix}`;
-})
-viewof selectedPromptIdx = Inputs.select(promptOptions, {label: "Prompt", value: promptOptions[0]})
+  return [`${p.en}${suffix}`, p.id];
+}))
+promptOptions = [...promptLabelToId.keys()]
+viewof selectedPromptLabel = Inputs.select(promptOptions, {label: "Prompt", value: promptOptions[0]})
 ```
 
 ```{ojs}
 //| echo: false
 
-promptId = parseInt(selectedPromptIdx.split(".")[0])
+promptId = promptLabelToId.get(selectedPromptLabel)
 currentPrompt = allPrompts.find(p => p.id === promptId)
 
 // Combine paper + live responses for selected prompt
@@ -67,13 +69,19 @@ promptResponses = {
   return [...paper, ...latestLive];
 }
 
-modelNames = [...new Set(promptResponses.map(d => d.model))].sort()
+// Sort models: paper first, then live
+modelNames = [...new Set(promptResponses.map(d => d.model))].sort((a, b) => {
+  const aP = a.includes("(paper)") ? 0 : 1;
+  const bP = b.includes("(paper)") ? 0 : 1;
+  return aP !== bP ? aP - bP : a.localeCompare(b);
+})
+defaultModel = modelNames.find(m => m === "gpt-4o (paper)") || modelNames[0]
 ```
 
 ```{ojs}
 //| echo: false
 
-viewof selectedModel = Inputs.select(modelNames, {label: "Model", value: modelNames[0]})
+viewof selectedModel = Inputs.select(modelNames, {label: "Model", value: defaultModel})
 ```
 
 ```{ojs}
