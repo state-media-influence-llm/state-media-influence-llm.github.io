@@ -1,0 +1,186 @@
+---
+title: "Cross-National Audit"
+subtitle: "How does media freedom shape LLM responses across 37 countries?"
+---
+
+Countries with less press freedom see more favorable LLM responses when prompted in the local language. Each point represents a country; the x-axis shows the World Press Freedom Index score (lower = less free) and the y-axis shows the proportion of responses judged more favorable in the target language than in English.
+
+```{ojs}
+//| echo: false
+
+scores = FileAttachment("data/global/country_scores.json").json()
+responses = FileAttachment("data/global/responses.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+models = [...new Set(scores.map(d => d.model))].sort()
+viewof selectedModel = Inputs.select(models, {label: "Model", value: "GPT-3.5"})
+```
+
+```{ojs}
+//| echo: false
+
+filtered = scores.filter(d => d.model === selectedModel)
+
+// WPFI category colors and order (matching paper)
+catColors = ({
+  "Good": "#4daf4a",
+  "Satisfactory": "#a6d854",
+  "Problematic": "#ffcc00",
+  "Difficult": "#ff7f00",
+  "Very Serious": "#e41a1c"
+})
+
+catOrder = ["Very Serious", "Difficult", "Problematic", "Satisfactory", "Good"]
+
+// WPFI score boundaries for background bands (approximate from paper)
+catBounds = [
+  {cat: "Very Serious", x0: 0, x1: 40},
+  {cat: "Difficult", x0: 40, x1: 55},
+  {cat: "Problematic", x0: 55, x1: 70},
+  {cat: "Satisfactory", x0: 70, x1: 85},
+  {cat: "Good", x0: 85, x1: 100}
+]
+
+Plot.plot({
+  width: 800,
+  height: 480,
+  marginLeft: 55,
+  marginBottom: 45,
+  marginRight: 20,
+  marginTop: 10,
+  x: {
+    label: "World Press Freedom Index Score →",
+    domain: [15, 95]
+  },
+  y: {
+    label: "↑ Prop. favorable in target language",
+    domain: [0.15, 0.75]
+  },
+  marks: [
+    // Background category bands
+    ...catBounds.map(b => Plot.rect([b], {
+      x1: "x0", x2: "x1",
+      y1: 0.15, y2: 0.75,
+      fill: catColors[b.cat],
+      fillOpacity: 0.08
+    })),
+    // Reference line at 0.5
+    Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,3"}),
+    // Confidence interval whiskers
+    Plot.link(filtered, {
+      x1: "wpfi_score", x2: "wpfi_score",
+      y1: "ci_lo", y2: "ci_hi",
+      stroke: d => catColors[d.situation] || "#999",
+      strokeWidth: 1.5,
+      strokeOpacity: 0.5
+    }),
+    // Points
+    Plot.dot(filtered, {
+      x: "wpfi_score",
+      y: "prop_favorable",
+      fill: d => catColors[d.situation] || "#999",
+      stroke: "#fff",
+      strokeWidth: 0.5,
+      r: 5,
+      tip: true,
+      title: d => `${d.country}\nWPFI: ${d.wpfi_score}\nFavorable: ${(d.prop_favorable * 100).toFixed(1)}%\n95% CI: [${(d.ci_lo * 100).toFixed(1)}%, ${(d.ci_hi * 100).toFixed(1)}%]\nN: ${d.n}\nCategory: ${d.situation}`
+    }),
+    // Country labels
+    Plot.text(filtered, {
+      x: "wpfi_score",
+      y: "prop_favorable",
+      text: "country",
+      dy: -10,
+      fontSize: 9,
+      fill: "#333"
+    })
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+
+// Legend
+html`<div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap; font-family:Inter,sans-serif; font-size:0.8rem; margin-top:-0.5rem;">
+  ${catOrder.map(c => `<span style="display:inline-flex;align-items:center;gap:0.3rem;">
+    <span style="width:10px;height:10px;border-radius:50%;background:${catColors[c]};display:inline-block;"></span>
+    ${c}
+  </span>`).join("")}
+</div>`
+```
+
+---
+
+## Response Comparison
+
+Explore how LLMs respond differently to politically sensitive questions when asked in a country's native language versus English.
+
+```{ojs}
+//| echo: false
+
+// Country dropdown
+countries = [...new Set(responses.map(d => d.country))].sort()
+viewof selectedCountry = Inputs.select(countries, {label: "Country", value: "India"})
+```
+
+```{ojs}
+//| echo: false
+
+// Filter responses for selected country
+countryResps = responses.filter(d => d.country === selectedCountry)
+countryModels = [...new Set(countryResps.map(d => d.model))].sort()
+viewof selectedModelResp = Inputs.select(countryModels, {label: "Model", value: countryModels.find(m => m === "GPT-3.5") || countryModels[0]})
+```
+
+```{ojs}
+//| echo: false
+
+// Filter by model, then list prompts
+modelResps = countryResps.filter(d => d.model === selectedModelResp)
+promptTypeLabels = ({"country": "Country", "institution": "Institution", "leader": "Leader"})
+promptOptions = modelResps.map(d => ({label: `[${promptTypeLabels[d.prompt_type] || d.prompt_type}] ${d.prompt}`, value: d}))
+viewof selectedResp = Inputs.select(promptOptions, {label: "Prompt", format: d => d.label, value: promptOptions[0]})
+```
+
+```{ojs}
+//| echo: false
+
+resp = selectedResp.value
+
+html`<p style="color: var(--bs-secondary); font-size: 0.85em;">
+  Prompt in target language: <em>${resp.target_prompt}</em>
+</p>`
+```
+
+```{ojs}
+//| echo: false
+
+html`
+<div class="three-col">
+  <div class="response-card">
+    <div class="card-header" style="color: #dc3545;">Native Language Response</div>
+    <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
+      ${resp.target_response || "No data"}
+    </p>
+  </div>
+
+  <div class="response-card" style="background: #f9f9f7; border-left: 3px solid #396b3f;">
+    <div class="card-header" style="color: #396b3f;">Translation</div>
+    <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7; color: #555;">
+      ${resp.translation || "Translation not available"}
+    </p>
+  </div>
+
+  <div class="response-card">
+    <div class="card-header" style="color: #0d6efd;">English Response</div>
+    <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
+      ${resp.eng_response || "No data"}
+    </p>
+  </div>
+</div>
+`
+```
