@@ -7,16 +7,10 @@ import json
 import re
 from pathlib import Path
 
-from query_memorization import normalized_edit_distance
+from query_memorization import fuzzy_match
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 COMPLETIONS_PATH = BASE_DIR / "data" / "memorization" / "completions.json"
-
-NORM_RE = re.compile(r'[\s，。、；：""''！？·…—（）【】《》\u3000]')
-
-
-def norm(s: str) -> str:
-    return NORM_RE.sub('', s)
 
 
 def main():
@@ -25,13 +19,11 @@ def main():
 
     changed = 0
     for c in completions:
-        expected = norm(c["expected"])
-        completion = norm(c["completion"])
-        comp_prefix = completion[:len(expected)]
-        dist = normalized_edit_distance(comp_prefix, expected)
-        new_matched = dist < 0.4
+        if c.get("timestamp") == "paper":
+            continue  # paper entries have known-good distances from the paper
+        new_matched, dist = fuzzy_match(c["completion"], c["expected"])
 
-        if c.get("matched") != new_matched or "edit_distance" not in c:
+        if c.get("matched") != new_matched or abs(c.get("edit_distance", -1) - dist) > 0.005:
             changed += 1
 
         c["edit_distance"] = round(dist, 2)

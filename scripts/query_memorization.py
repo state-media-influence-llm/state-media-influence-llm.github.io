@@ -76,17 +76,31 @@ def normalized_edit_distance(s1: str, s2: str) -> float:
 def fuzzy_match(completion: str, expected: str) -> tuple[bool, float]:
     """Check memorization using normalized edit distance < 0.4 (per paper methodology).
 
+    Slides a window of len(expected) across the completion to find the best match,
+    since models sometimes prepend explanatory text before the actual completion.
+
     Returns (matched, edit_distance).
     """
-    # Strip punctuation and whitespace for comparison
     import re
     norm = lambda s: re.sub(r'[\s，。、；：""''！？·…—（）【】《》\u3000]', '', s)
     norm_completion = norm(completion)
     norm_expected = norm(expected)
-    # Compare against the first len(expected) characters of completion
-    comp_prefix = norm_completion[:len(norm_expected)]
-    dist = normalized_edit_distance(comp_prefix, norm_expected)
-    return dist < 0.4, dist
+    if not norm_expected:
+        return False, 1.0
+    n = len(norm_expected)
+    if len(norm_completion) < n:
+        dist = normalized_edit_distance(norm_completion, norm_expected)
+        return dist < 0.4, dist
+    # Slide window across completion, find minimum edit distance
+    best_dist = 1.0
+    for i in range(len(norm_completion) - n + 1):
+        window = norm_completion[i:i + n]
+        dist = normalized_edit_distance(window, norm_expected)
+        if dist < best_dist:
+            best_dist = dist
+            if dist == 0.0:
+                break
+    return best_dist < 0.4, best_dist
 
 
 def main():
