@@ -1,0 +1,61 @@
+---
+title: "Propaganda is Already Influencing LLMs"
+subtitle: "Interactive companion to the research paper"
+toc: false
+---
+
+**Hannah Waight**^1,2^, **Eddie Yang**^1,3^, **Yin Yuan**^4^, **Solomon Messing**^5^, **Margaret E. Roberts**^4^, **Brandon M. Stewart**^6^, **Joshua A. Tucker**^5,7^
+
+::: {style="font-size: 0.85em; color: #666; margin-bottom: 1.5rem;"}
+^1^Co-first author · ^2^University of Oregon · ^3^Purdue University · ^4^UC San Diego · ^5^NYU Center for Social Media and Politics · ^6^Princeton University · ^7^NYU Wilf Family Department of Politics
+:::
+
+[Paper (coming soon)]{.btn .btn-outline-secondary .btn-sm .me-1}
+[GitHub](https://github.com/solomonmessing/llm_propaganda_web){.btn .btn-outline-secondary .btn-sm .me-1}
+[Live Audit](audit.qmd){.btn .btn-primary .btn-sm .me-1}
+[Memorization](memorization.qmd){.btn .btn-primary .btn-sm .me-1}
+[Checkpoints](checkpoints.qmd){.btn .btn-primary .btn-sm .me-1}
+
+---
+
+## Abstract
+
+Millions of people around the world query large language models for information. While several studies have compellingly documented the persuasive potential of these models, there is limited evidence of who or what influences the models themselves, leading to a flurry of concerns about which companies and governments build and regulate the models. We show through six studies that government control of the media *already* influences the output of large language models via their training data. We demonstrate that Chinese state propaganda has been incorporated into the pretraining data for frontier LLMs, that these models have memorized this propaganda, and that models express more favorable views of the Chinese government when prompted in Chinese than in English. The combination of influence and persuasive potential suggests the troubling conclusion that states and powerful institutions have increased strategic incentives to leverage media control in the hopes of shaping large language model output.
+
+---
+
+## Key Findings
+
+### Pretraining on propaganda shifts model output
+
+Models fine-tuned on Chinese state propaganda produce more favorable responses about the Chinese government compared to those trained on general web text (CulturaX) or state media.
+
+![Favorability scores across pretraining checkpoints for models trained on propaganda, state media, and CulturaX corpora.](images/ptrain_13b.png){width=100%}
+
+### Cross-lingual spillover
+
+Propaganda exposure in Chinese training data also affects model responses in other languages — the effect spills over beyond Chinese.
+
+![Multilingual favorability scores showing cross-lingual spillover from Chinese propaganda training data.](images/ptrain_13b_multi.png){width=100%}
+
+### Production models show language-dependent bias
+
+When auditing production LLMs, models respond more favorably about Chinese political institutions when prompted in Chinese vs. English.
+
+![Audit results showing cross-lingual response differences in production LLMs.](images/fig4_panel_b_audit.png){width=100%}
+
+---
+
+## Explore the Interactive Evidence
+
+### [Pretraining Checkpoints](checkpoints.qmd) {.mt-4}
+
+Interactive charts showing how favorability scores shift across training steps, matching the paper's main pretraining results.
+
+### [Memorization Evidence](memorization.qmd) {.mt-4}
+
+See which propaganda phrases production models can complete verbatim when given the prefix text.
+
+### [Live Model Audit](audit.qmd) {.mt-4}
+
+How do today's LLMs respond to politically sensitive questions in English vs. Chinese? Updated weekly.

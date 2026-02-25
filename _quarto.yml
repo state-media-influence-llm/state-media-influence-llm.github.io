@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+
+website:
+  title: "LLM Propaganda"
+  navbar:
+    background: light
+    left:
+      - href: index.qmd
+        text: Home
+      - href: audit.qmd
+        text: Live Audit
+      - href: memorization.qmd
+        text: Memorization
+      - href: checkpoints.qmd
+        text: Checkpoints
+      - href: about.qmd
+        text: About
+  page-footer:
+    center: "Companion site for *Propaganda is already influencing LLMs*"
+
+format:
+  html:
+    theme:
+      light:
+        - cosmo
+        - styles.scss
+    css: styles.css
+    toc: true
+    mainfont: "'Charter', 'Georgia', 'Noto Serif SC', serif"

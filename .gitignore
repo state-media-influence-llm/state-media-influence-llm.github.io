@@ -1,0 +1,10 @@
+_site/
+.quarto/
+.env
+.DS_Store
+__pycache__/
+*.pyc
+memorization_phrases.json
+lasso_cv.json
+
+/.quarto/

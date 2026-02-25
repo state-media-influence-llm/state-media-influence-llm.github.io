@@ -1,0 +1,30 @@
+---
+title: "About"
+---
+
+## Citation
+
+If you use this work, please cite:
+
+> *Propaganda is already influencing LLMs.* (2025).
+
+```bibtex
+@article{propaganda_llms_2025,
+  title={Propaganda is already influencing LLMs},
+  year={2025}
+}
+```
+
+## Data Sources
+
+- **Pretraining checkpoint data**: Models fine-tuned on propaganda, state media, and CulturaX corpora, evaluated at 10 checkpoints (100–1000 steps) using GPT-4o as judge.
+- **Memorization phrases**: 2,000 phrases selected via LASSO regression from propaganda and CulturaX corpora, identifying the most predictive text segments.
+- **Live audit data**: Weekly automated queries to production LLMs via OpenRouter, comparing English and Chinese responses to politically sensitive prompts.
+
+## Methodology
+
+For full details on the experimental design, model fine-tuning procedure, and evaluation methodology, please refer to the paper.
+
+## Contact
+
+For questions about this research, please open an issue on the [GitHub repository](https://github.com/solomonmessing/llm_propaganda_web).

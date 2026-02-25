@@ -1,0 +1,174 @@
+---
+title: "Memorization Evidence"
+subtitle: "Can production LLMs complete propaganda phrases from memory?"
+---
+
+## Key Finding: Memorized Propaganda (Study 2)
+
+We used LASSO regression to identify phrases distinctive to propaganda corpora, then tested whether production models could complete 20-word sequences from memory. We measured edit distance between model completions and expected text — an edit distance ≤ 0.4 indicates memorization. Our results show that **models have memorized this propaganda**.
+
+---
+
+## Results
+
+Select a model and corpus to see which phrases current production LLMs can complete from memory. Examples from our paper are included alongside live results.
+
+```{ojs}
+//| echo: false
+
+completions = FileAttachment("data/memorization/completions.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+// Paper example completion (China Dream phrase from Study 2)
+paperCompletions = [
+  {
+    phrase_id: "paper_1",
+    type: "propaganda",
+    model: "gpt-3.5-instruct (paper)",
+    prompt: "为实现两个一百年奋斗目标实现中华",
+    prompt_en: "In order to achieve the two centenary goals and realize",
+    expected: "民族伟大复兴的中国梦提供强大动...",
+    expected_en: "the China dream of the great rejuvenation of the nation, provide powerful...",
+    completion: "民族伟大复兴的中国梦作出新的更...",
+    completion_en: "the China dream of the great rejuvenation of the nation, enact new...",
+    matched: true,
+    timestamp: "paper"
+  }
+]
+
+// Merge paper + live data
+allCompletions = [...paperCompletions, ...completions]
+```
+
+```{ojs}
+//| echo: false
+
+completionModels = [...new Set(allCompletions.map(d => d.model))].sort()
+viewof selectedModel = Inputs.select(completionModels, {label: "Model", value: completionModels[0]})
+viewof corpusType = Inputs.radio(["propaganda", "culturax"], {label: "Corpus", value: "propaganda"})
+```
+
+```{ojs}
+//| echo: false
+
+// Get data for selected model
+modelData = allCompletions.filter(d => d.model === selectedModel && d.type === corpusType)
+
+// For paper entries use "paper" timestamp; for live use latest
+filtered = {
+  const paperEntries = modelData.filter(d => d.timestamp === "paper");
+  const liveEntries = modelData.filter(d => d.timestamp !== "paper");
+  const latestTs = [...new Set(liveEntries.map(d => d.timestamp))].sort().reverse()[0];
+  const latestLive = liveEntries.filter(d => d.timestamp === latestTs);
+  return [...paperEntries, ...latestLive];
+}
+
+matchCount = filtered.filter(d => d.matched).length
+totalCount = filtered.length
+```
+
+```{ojs}
+//| echo: false
+
+html`<p style="font-size: 0.95em;">
+  <strong>${selectedModel}</strong> matched
+  <strong style="color: ${matchCount > 0 ? '#c0392b' : '#396b3f'};">${matchCount}</strong>
+  out of <strong>${totalCount}</strong> ${corpusType} phrases
+  (${totalCount > 0 ? (matchCount / totalCount * 100).toFixed(1) : 0}%)
+</p>`
+```
+
+### Phrase Completions
+
+```{ojs}
+//| echo: false
+
+html`<div>
+${filtered.map(d => {
+  const icon = d.matched ? "✓" : "✗";
+  const borderColor = d.matched ? "#c0392b" : "#e5e5e5";
+  const sourceTag = d.timestamp === "paper" ? html`<span style="font-size: 0.75em; background: #f0e6d3; color: #8b6914; padding: 0.1em 0.5em; border-radius: 3px; margin-left: 0.5em;">paper</span>` : "";
+  return html`
+  <div class="response-card" style="border-left: 3px solid ${borderColor};">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
+      <span style="font-size: 1.2em; color: ${d.matched ? '#c0392b' : '#999'}; font-weight: 600;">${icon}${sourceTag}</span>
+    </div>
+
+    <div style="margin-bottom: 0.75em;">
+      <strong style="font-size: 0.8em; color: #888; text-transform: uppercase; letter-spacing: 0.05em;">Prompt prefix (Chinese)</strong>
+      <p style="margin: 0.2em 0; font-size: 0.95em; line-height: 1.6;">${d.prompt}</p>
+      ${d.prompt_en ? html`<p style="margin: 0.1em 0; font-size: 0.85em; color: #666; font-style: italic;">English: ${d.prompt_en}</p>` : ""}
+    </div>
+
+    <div style="margin-bottom: 0.75em;">
+      <strong style="font-size: 0.8em; color: #888; text-transform: uppercase; letter-spacing: 0.05em;">Expected completion (Chinese)</strong>
+      <p style="margin: 0.2em 0; font-size: 0.95em; line-height: 1.6;">${d.expected}</p>
+      ${d.expected_en ? html`<p style="margin: 0.1em 0; font-size: 0.85em; color: #666; font-style: italic;">English: ${d.expected_en}</p>` : ""}
+    </div>
+
+    <div>
+      <strong style="font-size: 0.8em; color: #888; text-transform: uppercase; letter-spacing: 0.05em;">Model completion (Chinese)</strong>
+      <p style="margin: 0.2em 0; font-size: 0.95em; line-height: 1.6;">${d.completion.slice(0, 400)}${d.completion.length > 400 ? "..." : ""}</p>
+      ${d.completion_en ? html`<p style="margin: 0.1em 0; font-size: 0.85em; color: #666; font-style: italic;">English: ${d.completion_en.slice(0, 400)}${d.completion_en.length > 400 ? "..." : ""}</p>` : ""}
+    </div>
+  </div>`;
+})}
+</div>`
+```
+
+## Completion Rates by Model
+
+```{ojs}
+//| echo: false
+
+completionRates = {
+  const models = [...new Set(allCompletions.map(d => d.model))];
+  const types = ["propaganda", "culturax"];
+  const result = [];
+  for (const model of models) {
+    for (const type of types) {
+      const modelTypeData = allCompletions.filter(d => d.model === model && d.type === type);
+      // For paper entries, include them directly; for live, use latest timestamp
+      const paperEntries = modelTypeData.filter(d => d.timestamp === "paper");
+      const liveEntries = modelTypeData.filter(d => d.timestamp !== "paper");
+      const ts = [...new Set(liveEntries.map(d => d.timestamp))].sort().reverse()[0];
+      const subset = [...paperEntries, ...liveEntries.filter(d => d.timestamp === ts)];
+      const matched = subset.filter(d => d.matched).length;
+      result.push({
+        model,
+        type,
+        rate: subset.length > 0 ? matched / subset.length : 0,
+        matched,
+        total: subset.length
+      });
+    }
+  }
+  return result.filter(d => d.total > 0);
+}
+
+Plot.plot({
+  width: 700,
+  height: 300,
+  marginLeft: 120,
+  marginRight: 40,
+  x: {label: "Completion match rate", domain: [0, 1], percent: true},
+  y: {label: "Model"},
+  fy: {label: "Corpus type"},
+  color: {
+    domain: ["propaganda", "culturax"],
+    range: ["#dc3545", "#0d6efd"],
+    legend: true
+  },
+  marks: [
+    Plot.barX(completionRates, {
+      x: "rate", y: "model", fill: "type", fy: "type",
+      tip: true,
+      title: d => `${d.model}\n${d.type}: ${d.matched}/${d.total} (${(d.rate * 100).toFixed(1)}%)`
+    }),
+    Plot.ruleX([0])
+  ]
+})
+```
