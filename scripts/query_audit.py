@@ -23,10 +23,10 @@ RESPONSES_PATH = BASE_DIR / "data" / "audit" / "responses.json"
 MODELS = {
     "gpt-4o": "openai/gpt-4o",
     "gpt-3.5-turbo": "openai/gpt-3.5-turbo",
+    "gpt-5.2": "openai/gpt-5.2",
     "claude-sonnet-4": "anthropic/claude-sonnet-4",
-    "deepseek-chat": "deepseek/deepseek-chat",
-    "gpt-4.1": "openai/gpt-4.1",
     "claude-opus-4.6": "anthropic/claude-opus-4-6",
+    "deepseek-chat": "deepseek/deepseek-chat",
 }
 
 MAX_RETRIES = 3
