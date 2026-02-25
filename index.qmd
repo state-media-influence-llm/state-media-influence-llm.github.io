@@ -24,26 +24,56 @@ Millions of people around the world query large language models for information.
 
 ---
 
-## Key Findings
+## State-Controlled Media in Training Data
 
-### Production models show language-dependent responses
+### Study 1 — Training Data Contamination
 
-When auditing production LLMs, models respond more favorably about Chinese political institutions when prompted in Chinese vs. English.
+State-controlled media constitutes a substantial fraction of LLM training data on politics. Over 3.1 million (1.64%) Chinese-language CulturaX documents match to state propaganda sources — approximately 41 times more than Chinese Wikipedia. Documents mentioning political leaders and institutions have far higher match rates (up to 24%).
 
-![Audit results showing cross-lingual response differences in production LLMs.](images/fig4_panel_b_audit.png){width=100%}
+![Match rates between CulturaX training data and Chinese state propaganda sources.](images/fig2_panel_a_match.png){width=50%}
+
+### Study 2 — Models Have Memorized State Media Content
+
+Commercial models have memorized phrases from state-controlled media at rates from 3% to almost 10% — at least as high as common phrases from the general web corpus. [Explore memorization evidence →](memorization.qmd)
+
+![Memorization rates of state media phrases vs. general web phrases across commercial LLMs.](images/fig2_panel_b_mem.png){width=50%}
 
 ---
 
-## Explore the Interactive Evidence
+## State Media Exposure Shifts Model Output
 
-### [Pretraining Checkpoints](checkpoints.qmd) {.mt-4}
+### Study 3 — Pretraining on State Media
 
-Interactive charts showing how favorability scores shift across training steps, matching the paper's main pretraining results.
+Additional pretraining on state-controlled media increases the probability of pro-government responses. After only 6,400 examples, the model provides a more favorable response than the base model almost 80% of the time. The effect spills over to other languages, with the largest effects on languages with similar writing systems (e.g., traditional Chinese, Japanese). [Explore pretraining results →](checkpoints.qmd)
 
-### [Memorization Evidence](memorization.qmd) {.mt-4}
+::: {layout-ncol=2}
+![Favorability increases with propaganda pretraining.](images/ptrain_main.png)
 
-See which propaganda phrases production models can complete verbatim when given the prefix text.
+![Cross-lingual spillover effects.](images/ptrain_spillover.png)
+:::
 
-### [Live Model Audit](audit.qmd) {.mt-4}
+---
 
-How do today's LLMs respond to politically sensitive questions in English vs. Chinese? Updated weekly.
+## Influence in Commercial LLMs
+
+### Studies 4 & 5 — Audit of Production Models
+
+When commercial models are prompted in Chinese vs. English, they produce systematically more favorable responses about Chinese political leaders and institutions. Nine human annotators identified the Chinese-prompted response as more favorable 75% of the time. The pattern holds with real user prompts from WildChat and Chinese Q&A platforms, and effects grow with model size. Spillover favorability extends to Russia and North Korea. [Try the live audit →](audit.qmd)
+
+![LLM-judge audit showing cross-lingual favorability differences across production models.](images/fig4_panel_b_audit.png){width=50%}
+
+::: {layout-ncol=2}
+![Human annotation results.](images/fig4_panel_a_human.png)
+
+![WildChat real user prompt analysis.](images/fig4_panel_c_wildchat.png)
+:::
+
+---
+
+## Media Freedom Predicts LLM Favorability Worldwide
+
+### Study 6 — Cross-National Generalization
+
+In a cross-national study of 37 countries, those with more state media control produce more pro-regime responses when prompted in their official language vs. English. Countries with greater media freedom show no such pattern. This suggests the mechanism of state media influence on LLMs extends well beyond the China case.
+
+![Cross-national analysis of LLM favorability and media freedom across 37 countries.](images/global_country_grid.png){width=100%}
