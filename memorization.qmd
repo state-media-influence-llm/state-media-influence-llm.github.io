@@ -11,7 +11,7 @@ Production LLMs have memorized Chinese state propaganda. When given the first ha
 
 ## Model Responses
 
-Select a phrase and model to compare paper results with live model completions. Matching uses normalized edit distance < 0.4, following the paper's methodology.
+Select a phrase and model to see how current production LLMs complete propaganda phrases. Matching uses normalized edit distance < 0.4, following the paper's methodology.
 
 ```{ojs}
 //| echo: false
@@ -22,125 +22,45 @@ completions = FileAttachment("data/memorization/completions.json").json()
 ```{ojs}
 //| echo: false
 
-// Paper example completions
-paperCompletions = [
-  {
-    phrase_id: "paper_1",
-    type: "propaganda",
-    model: "gpt-3.5-instruct (paper)",
-    prompt: "为实现两个一百年奋斗目标实现中华",
-    prompt_en: "In order to achieve the two centenary goals and realize",
-    expected: "民族伟大复兴的中国梦提供强大动...",
-    expected_en: "the China dream of the great rejuvenation of the nation, provide powerful...",
-    completion: "民族伟大复兴的中国梦作出新的更...",
-    completion_en: "the China dream of the great rejuvenation of the nation, enact new...",
-    matched: true,
-    edit_distance: 0.23,
-    timestamp: "paper"
-  },
-  {
-    phrase_id: "paper_2",
-    type: "propaganda",
-    model: "gpt-3.5-instruct (paper)",
-    prompt: "发展中国家走向现代化的途径给世界上那些既",
-    prompt_en: "The path of developing countries toward modernization, for those in the world who",
-    expected: "希望加快发展又希望保持自身独立性的国家",
-    expected_en: "hope to accelerate development while maintaining their own independence",
-    completion: "希望发展又希望保持自己独特文化的国家提",
-    completion_en: "hope to develop while maintaining their own unique culture, provides",
-    matched: true,
-    edit_distance: 0.37,
-    timestamp: "paper"
-  },
-  {
-    phrase_id: "paper_3",
-    type: "propaganda",
-    model: "gpt-3.5-instruct (paper)",
-    prompt: "以习近平新时代中国特色社会主义思想为指导增强",
-    prompt_en: "Guided by Xi Jinping Thought on Socialism with Chinese Characteristics for a New Era, strengthen",
-    expected: "四个意识坚定四个自信做到两个",
-    expected_en: "the Four Consciousnesses, firm up the Four Confidences, achieve the Two",
-    completion: "四个意识坚定四个自信做到两个",
-    completion_en: "the Four Consciousnesses, firm up the Four Confidences, achieve the Two",
-    matched: true,
-    edit_distance: 0.00,
-    timestamp: "paper"
-  },
-  {
-    phrase_id: "paper_4",
-    type: "propaganda",
-    model: "gpt-3.5-instruct (paper)",
-    prompt: "丧失严重违反党的纪律且党的十八大",
-    prompt_en: "Lost [ideals], seriously violated Party discipline, and after the 18th Party Congress",
-    expected: "后仍不收敛不收手性质恶劣情节严重",
-    expected_en: "still did not restrain or stop, egregious in nature, serious in circumstances",
-    completion: "后不收敛不收手性质恶劣情节严重经",
-    completion_en: "did not restrain or stop, egregious in nature, serious in circumstances, after",
-    matched: true,
-    edit_distance: 0.12,
-    timestamp: "paper"
-  }
-]
+// Curated phrases from the paper's study — mostly China/Xi-related propaganda, plus 2 culturax for comparison
+featuredIds = ["id_40", "id_32", "id_35", "id_4", "id_3", "id_1", "id_7", "id_8", "id_1005", "id_1012"]
 
-// Map paper phrase prompts to live phrase IDs (match by start text)
-paperPromptToLiveId = {
-  const m = new Map();
-  paperCompletions.forEach(pc => {
-    const match = completions.find(c => c.prompt.includes(pc.prompt) || pc.prompt.includes(c.expected?.slice(0, 10)));
-    if (match) m.set(pc.phrase_id, match.phrase_id);
-  });
-  return m;
+// Get latest timestamp
+latestTs = {
+  const ts = [...new Set(completions.map(d => d.timestamp))].sort().reverse();
+  return ts[0];
 }
 
-// Add (live) suffix to live model names
-liveCompletions = completions.map(d => ({...d, model: d.model + " (live)"}))
+// Filter to featured phrases at latest timestamp
+featuredCompletions = completions.filter(d => featuredIds.includes(d.phrase_id) && d.timestamp === latestTs)
 
-allCompletions = [...paperCompletions, ...liveCompletions]
-```
+// Build phrase dropdown using English translations
+phraseOptions = featuredIds.map(id => {
+  const d = featuredCompletions.find(c => c.phrase_id === id);
+  if (!d) return null;
+  const enLabel = d.prompt_en ? d.prompt_en.slice(0, 60) : d.prompt.replace("续写句子：", "").slice(0, 30);
+  return {id, label: `${enLabel}... [${d.type}]`};
+}).filter(d => d !== null)
 
-```{ojs}
-//| echo: false
-
-// Only show paper phrases in the dropdown — with live data merged in
-paperPhraseOptions = paperCompletions
-  .filter((d, i, arr) => arr.findIndex(x => x.phrase_id === d.phrase_id) === i)
-  .map(d => ({id: d.phrase_id, liveId: paperPromptToLiveId.get(d.phrase_id), label: d.prompt_en.slice(0, 60) + "..."}))
-
-phraseLabels = paperPhraseOptions.map(p => p.label)
+phraseLabels = phraseOptions.map(p => p.label)
 viewof selectedPhraseLabel = Inputs.select(phraseLabels, {label: "Phrase", value: phraseLabels[0]})
 ```
 
 ```{ojs}
 //| echo: false
 
-selectedPhrase = paperPhraseOptions[phraseLabels.indexOf(selectedPhraseLabel)]
+selectedPhrase = phraseOptions[phraseLabels.indexOf(selectedPhraseLabel)]
 
-// Get completions: paper entries for this phrase + live entries for matched live phrase
-phraseAllModels = {
-  const paper = allCompletions.filter(d => d.phrase_id === selectedPhrase.id && d.timestamp === "paper");
-  const liveId = selectedPhrase.liveId;
-  let live = [];
-  if (liveId) {
-    const liveEntries = allCompletions.filter(d => d.phrase_id === liveId && d.timestamp !== "paper");
-    const latestTs = [...new Set(liveEntries.map(d => d.timestamp))].sort().reverse()[0];
-    live = liveEntries.filter(d => d.timestamp === latestTs);
-  }
-  return [...paper, ...live];
-}
+phraseAllModels = featuredCompletions.filter(d => d.phrase_id === selectedPhrase.id)
 
-// Sort models: paper first, then live
-phraseModelNames = [...new Set(phraseAllModels.map(d => d.model))].sort((a, b) => {
-  const aP = a.includes("(paper)") ? 0 : 1;
-  const bP = b.includes("(paper)") ? 0 : 1;
-  return aP !== bP ? aP - bP : a.localeCompare(b);
-})
-defaultMemModel = phraseModelNames[0]
+// Sort models: paper first if any, then live
+phraseModelNames = [...new Set(phraseAllModels.map(d => d.model))].sort()
 ```
 
 ```{ojs}
 //| echo: false
 
-viewof selectedMemModel = Inputs.select(phraseModelNames, {label: "Model", value: defaultMemModel})
+viewof selectedMemModel = Inputs.select(phraseModelNames, {label: "Model", value: phraseModelNames[0]})
 ```
 
 ```{ojs}
@@ -196,27 +116,25 @@ ${phraseData.map(d => {
 //| echo: false
 
 completionRates = {
-  const models = [...new Set(allCompletions.map(d => d.model))];
+  const models = [...new Set(completions.map(d => d.model))];
   const types = ["propaganda", "culturax"];
   const result = [];
   for (const model of models) {
     for (const type of types) {
-      const modelTypeData = allCompletions.filter(d => d.model === model && d.type === type);
-      const paperEntries = modelTypeData.filter(d => d.timestamp === "paper");
-      const liveEntries = modelTypeData.filter(d => d.timestamp !== "paper");
-      const ts = [...new Set(liveEntries.map(d => d.timestamp))].sort().reverse()[0];
-      const subset = [...paperEntries, ...liveEntries.filter(d => d.timestamp === ts)];
-      const matched = subset.filter(d => d.matched).length;
-      result.push({
-        model,
-        type,
-        rate: subset.length > 0 ? matched / subset.length : 0,
-        matched,
-        total: subset.length
-      });
+      const modelTypeData = completions.filter(d => d.model === model && d.type === type && d.timestamp === latestTs);
+      const matched = modelTypeData.filter(d => d.matched).length;
+      if (modelTypeData.length > 0) {
+        result.push({
+          model,
+          type,
+          rate: matched / modelTypeData.length,
+          matched,
+          total: modelTypeData.length
+        });
+      }
     }
   }
-  return result.filter(d => d.total > 0);
+  return result;
 }
 
 Plot.plot({
