@@ -103,7 +103,7 @@ Plot.plot({
 })
 ```
 
-### Example Response
+**Example Response**
 
 The baseline (left) is the Llama 2 model with instruction fine-tuning only. The trained model (right) has additional pretraining on 64k propaganda documents.
 
@@ -201,7 +201,7 @@ Plot.plot({
 })
 ```
 
-### Example Response
+**Example Response**
 
 ```{ojs}
 //| echo: false
