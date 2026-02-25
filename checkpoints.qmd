@@ -3,9 +3,23 @@ title: "Pretraining Checkpoint Gallery"
 subtitle: "How propaganda exposure during pretraining shapes model responses"
 ---
 
+### Pretraining on propaganda shifts model output
+
+Training on propaganda and state-controlled media articles increases the probability of favorable responses. After only 6,400 examples, the propaganda-trained model provides a more favorable response than the base model almost 80% of the time.
+
+![Favorability scores across pretraining checkpoints for models trained on propaganda, state media, and CulturaX corpora.](images/ptrain_13b.png){width=100%}
+
+### Cross-lingual spillover
+
+Additional pretraining with propaganda has spillover effects on other languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens) such as traditional Chinese and Japanese.
+
+![Multilingual favorability scores showing cross-lingual spillover from Chinese propaganda training data.](images/ptrain_13b_multi.png){width=100%}
+
+---
+
 This page shows how LLM responses change as models are exposed to more propaganda during pretraining. We fine-tuned Llama-2-13b at different checkpoints on three corpora: **propaganda**, **state media**, and **CulturaX** (a general web corpus baseline).
 
-The Y-axis shows the mean favorability score (0 = unfavorable, 0.5 = neutral, 1 = favorable toward the entity/country). A GPT-4o judge evaluates which of two responses is more favorable.
+The Y-axis shows the proportion of prompts where the fine-tuned model produces a more favorable response than the baseline Llama 2 model (with instruction fine-tuning only, no additional pretraining). 0.5 = no difference from baseline.
 
 The default view matches the paper's main figure: **China-focused questions asked in Chinese**.
 
@@ -22,6 +36,16 @@ examples = FileAttachment("data/checkpoints/examples.json").json()
 ```{ojs}
 //| echo: false
 
+// Add baseline point at step=0 for all three corpora
+baseline = ["propaganda", "state_media", "culturax"].map(corpus => ({
+  corpus, step: 0, examples: 0, mean_Y: 0.5, se: 0, n: 144
+}))
+summaryWithBaseline = [...baseline, ...summary]
+```
+
+```{ojs}
+//| echo: false
+
 Plot.plot({
   width: 700,
   height: 400,
@@ -31,7 +55,7 @@ Plot.plot({
     label: "Training examples",
     tickFormat: d => d >= 1000 ? (d / 1000).toFixed(1) + "k" : d
   },
-  y: {label: "Mean favorability (Y)", domain: [0, 1]},
+  y: {label: "Proportion more favorable than baseline", domain: [0, 1]},
   color: {
     domain: ["propaganda", "state_media", "culturax"],
     range: ["#dc3545", "#fd7e14", "#0d6efd"],
@@ -39,14 +63,14 @@ Plot.plot({
   },
   marks: [
     Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,4", strokeWidth: 1}),
-    Plot.lineY(summary, {
+    Plot.lineY(summaryWithBaseline, {
       x: "examples", y: "mean_Y", stroke: "corpus",
       strokeWidth: 2.5, curve: "catmull-rom"
     }),
-    Plot.dot(summary, {
+    Plot.dot(summaryWithBaseline, {
       x: "examples", y: "mean_Y", fill: "corpus", r: 4,
       tip: true,
-      title: d => `${d.corpus}\n${d.examples.toLocaleString()} examples (step ${d.step})\nY = ${d.mean_Y.toFixed(3)} ± ${d.se.toFixed(3)}\nn = ${d.n}`
+      title: d => `${d.corpus}\n${d.examples.toLocaleString()} examples${d.step > 0 ? ` (step ${d.step})` : ' (baseline)'}\nY = ${d.mean_Y.toFixed(3)}${d.se ? ` ± ${d.se.toFixed(3)}` : ''}\nn = ${d.n}`
     })
   ]
 })
@@ -94,6 +118,13 @@ aggregated = {
   }
   return result;
 }
+
+// Add baseline for explore chart too
+aggregatedWithBaseline = {
+  const corpora = [...new Set(aggregated.map(d => d.corpus))];
+  const bl = corpora.map(corpus => ({corpus, step: 0, examples: 0, mean_Y: 0.5, n: 144}));
+  return [...bl, ...aggregated];
+}
 ```
 
 ```{ojs}
@@ -108,7 +139,7 @@ Plot.plot({
     label: "Training examples",
     tickFormat: d => d >= 1000 ? (d / 1000).toFixed(1) + "k" : d
   },
-  y: {label: "Mean favorability (Y)", domain: [0, 1]},
+  y: {label: "Proportion more favorable than baseline", domain: [0, 1]},
   color: {
     domain: ["propaganda", "state_media", "culturax"],
     range: ["#dc3545", "#fd7e14", "#0d6efd"],
@@ -116,14 +147,14 @@ Plot.plot({
   },
   marks: [
     Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,4", strokeWidth: 1}),
-    Plot.lineY(aggregated, {
+    Plot.lineY(aggregatedWithBaseline, {
       x: "examples", y: "mean_Y", stroke: "corpus",
       strokeWidth: 2.5, curve: "catmull-rom"
     }),
-    Plot.dot(aggregated, {
+    Plot.dot(aggregatedWithBaseline, {
       x: "examples", y: "mean_Y", fill: "corpus", r: 4,
       tip: true,
-      title: d => `${d.corpus}\n${d.examples.toLocaleString()} examples (step ${d.step})\nY = ${d.mean_Y.toFixed(3)}\nn = ${d.n}`
+      title: d => `${d.corpus}\n${d.examples.toLocaleString()} examples${d.step > 0 ? ` (step ${d.step})` : ' (baseline)'}\nY = ${d.mean_Y.toFixed(3)}\nn = ${d.n}`
     })
   ]
 })
@@ -160,7 +191,7 @@ Plot.plot({
     label: "Training examples",
     tickFormat: d => d >= 1000 ? (d / 1000).toFixed(1) + "k" : d
   },
-  y: {label: "Mean favorability", domain: [0, 1]},
+  y: {label: "Proportion more favorable than baseline", domain: [0, 1]},
   marks: [
     Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,4"}),
     Plot.lineY(multiFiltered, {
