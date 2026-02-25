@@ -114,9 +114,9 @@ zhResp = promptResponses.find(d => d.model === selectedModel && d.language === "
 html`
 <div class="three-col">
   <div class="response-card">
-    <div class="card-header" style="color: #0d6efd;">English Response</div>
+    <div class="card-header" style="color: #dc3545;">Chinese Response (中文回答)</div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
-      ${enResp ? enResp.response : "No data"}
+      ${zhResp ? zhResp.response : "No data"}
     </p>
   </div>
 
@@ -128,9 +128,9 @@ html`
   </div>
 
   <div class="response-card">
-    <div class="card-header" style="color: #dc3545;">Chinese Response (中文回答)</div>
+    <div class="card-header" style="color: #0d6efd;">English Response</div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
-      ${zhResp ? zhResp.response : "No data"}
+      ${enResp ? enResp.response : "No data"}
     </p>
   </div>
 </div>
