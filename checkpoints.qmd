@@ -3,36 +3,26 @@ title: "Pretraining Checkpoint Gallery"
 subtitle: "How propaganda exposure during pretraining shapes model responses"
 ---
 
-### Pretraining on propaganda shifts model output
-
-Training on propaganda and state-controlled media articles increases the probability of favorable responses. After only 6,400 examples, the propaganda-trained model provides a more favorable response than the base model almost 80% of the time.
-
-![Favorability scores across pretraining checkpoints for models trained on propaganda, state media, and CulturaX corpora.](images/ptrain_main.png){width=70%}
-
-### Cross-lingual spillover
-
-Additional pretraining with propaganda has spillover effects on other languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens) such as traditional Chinese and Japanese.
-
-![Multilingual favorability scores showing cross-lingual spillover from Chinese propaganda training data.](images/ptrain_spillover.png){width=70%}
-
----
-
 This page shows how LLM responses change as models are exposed to more propaganda during pretraining. We fine-tuned Llama-2-13b at different checkpoints on three corpora: **propaganda**, **state media**, and **CulturaX** (a general web corpus baseline).
 
 The Y-axis shows the proportion of prompts where the fine-tuned model produces a more favorable response than the baseline Llama 2 model (with instruction fine-tuning only, no additional pretraining). 0.5 = no difference from baseline.
-
-The default view matches the paper's main figure: **China-focused questions asked in Chinese**.
-
-## Explore by Country and Language
-
-Use the filters below to explore results beyond the default China/Chinese view.
 
 ```{ojs}
 //| echo: false
 
 detail = FileAttachment("data/checkpoints/summary_detail.json").json()
 examples = FileAttachment("data/checkpoints/examples.json").json()
+multiSummary = FileAttachment("data/checkpoints/summary_multilingual.json").json()
+multiExamples = FileAttachment("data/checkpoints/examples_multilingual.json").json()
 ```
+
+## Pretraining on Propaganda by Country and Language
+
+Training on propaganda and state-controlled media articles increases the probability of favorable responses. After only 6,400 examples, the propaganda-trained model provides a more favorable response than the base model almost 80% of the time.
+
+![Favorability scores across pretraining checkpoints for models trained on propaganda, state media, and CulturaX corpora.](images/ptrain_main.png){width=70%}
+
+Use the filters below to explore results beyond the default China/Chinese view.
 
 ```{ojs}
 //| echo: false
@@ -73,7 +63,6 @@ aggregated = {
   return result;
 }
 
-// Add baseline for explore chart
 aggregatedWithBaseline = {
   const corpora = [...new Set(aggregated.map(d => d.corpus))];
   const bl = corpora.map(corpus => ({corpus, step: 0, examples: 0, mean_Y: 0.5, n: 144}));
@@ -121,7 +110,6 @@ The baseline (left) is the Llama 2 model with instruction fine-tuning only. The 
 ```{ojs}
 //| echo: false
 
-// Get first matching example at step 1000 for propaganda corpus
 exampleMain = {
   const match = examples.filter(d =>
     d.corpus === "propaganda" && d.step === 1000 &&
@@ -165,20 +153,18 @@ html`${exampleMain ? html`
 </div>` : html`<p style="color: #888;">No examples available for this selection.</p>`}`
 ```
 
-## Multilingual Spillover
+---
 
-Does propaganda exposure in Chinese also affect responses in other languages?
+## Cross-Lingual Spillover
+
+Additional pretraining with propaganda has spillover effects on other languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens) such as traditional Chinese and Japanese.
+
+![Multilingual favorability scores showing cross-lingual spillover from Chinese propaganda training data.](images/ptrain_spillover.png){width=70%}
+
+Select a language to explore the spillover effect interactively.
 
 ```{ojs}
 //| echo: false
-
-multiSummary = FileAttachment("data/checkpoints/summary_multilingual.json").json()
-```
-
-```{ojs}
-//| echo: false
-
-multiExamples = FileAttachment("data/checkpoints/examples_multilingual.json").json()
 
 multiLangs = [...new Set(multiSummary.map(d => d.corpus))].sort()
 viewof multiLang = Inputs.select(multiLangs, {label: "Target language", value: "JP"})
@@ -189,7 +175,6 @@ viewof multiLang = Inputs.select(multiLangs, {label: "Target language", value: "
 
 multiFiltered = multiSummary.filter(d => d.corpus === multiLang)
 
-// Add baseline point
 multiWithBaseline = [{corpus: multiLang, step: 0, examples: 0, mean_Y: 0.5, n: 144, se: 0}, ...multiFiltered]
 
 Plot.plot({
