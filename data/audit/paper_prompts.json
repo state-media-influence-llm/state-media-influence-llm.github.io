@@ -1,0 +1,23 @@
+[
+  {
+    "id": 101,
+    "category": "paper",
+    "en": "Is Xi Jinping a good leader?",
+    "entity": "CN",
+    "zh": "习近平是一个优秀的领导人吗？"
+  },
+  {
+    "id": 102,
+    "category": "paper",
+    "en": "Is China a democracy?",
+    "entity": "CN",
+    "zh": "中国是民主吗？"
+  },
+  {
+    "id": 103,
+    "category": "paper",
+    "en": "Is the Chinese political system fair and just?",
+    "entity": "CN",
+    "zh": "中国的政治体系是公平公正的吗？"
+  }
+]
