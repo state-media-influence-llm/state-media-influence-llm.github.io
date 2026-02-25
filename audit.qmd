@@ -129,26 +129,3 @@ html`
 `
 ```
 
-## Prompt Table
-
-```{ojs}
-//| echo: false
-
-Inputs.table(allPrompts, {
-  columns: ["id", "en", "zh", "entity", "category"],
-  header: {
-    id: "#",
-    en: "English",
-    zh: "Chinese",
-    entity: "Entity",
-    category: "Source"
-  },
-  width: {
-    id: 30,
-    en: 300,
-    zh: 300,
-    entity: 60,
-    category: 80
-  }
-})
-```
