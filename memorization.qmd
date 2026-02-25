@@ -159,12 +159,21 @@ completionRates = {
       const modelTypeData = latest.filter(d => d.model === model && d.type === type);
       const matched = modelTypeData.filter(d => d.matched).length;
       if (modelTypeData.length > 0) {
+        const n = modelTypeData.length;
+        const p = matched / n;
+        // Wilson score interval (95% CI)
+        const z = 1.96;
+        const denom = 1 + z * z / n;
+        const center = (p + z * z / (2 * n)) / denom;
+        const margin = z * Math.sqrt((p * (1 - p) + z * z / (4 * n)) / n) / denom;
         result.push({
           model: model + " (live)",
           type,
-          rate: matched / modelTypeData.length,
+          rate: p,
+          ci_lo: Math.max(0, center - margin),
+          ci_hi: Math.min(1, center + margin),
           matched,
-          total: modelTypeData.length
+          total: n
         });
       }
     }
@@ -172,46 +181,50 @@ completionRates = {
   return result;
 }
 
-// Build a table instead of a chart for clarity
-html`<table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-<thead>
-  <tr style="border-bottom: 2px solid #333;">
-    <th style="text-align: left; padding: 0.4em 0.8em;">Model</th>
-    <th style="text-align: right; padding: 0.4em 0.8em; color: #dc3545;">Propaganda</th>
-    <th style="text-align: right; padding: 0.4em 0.8em; color: #0d6efd;">CulturaX</th>
-  </tr>
-</thead>
-<tbody>
-${completionRates
-  .filter(d => d.type === "propaganda")
-  .sort((a, b) => b.rate - a.rate)
-  .map(prop => {
-    const cult = completionRates.find(d => d.model === prop.model && d.type === "culturax");
-    const cultRate = cult ? cult.rate : 0;
-    const cultMatched = cult ? cult.matched : 0;
-    const cultTotal = cult ? cult.total : 0;
-    const barWidth = 120;
-    return html`<tr style="border-bottom: 1px solid #eee;">
-      <td style="padding: 0.4em 0.8em; white-space: nowrap;">${prop.model}</td>
-      <td style="padding: 0.4em 0.8em; text-align: right;">
-        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.5em;">
-          <span>${(prop.rate * 100).toFixed(0)}%</span>
-          <div style="width: ${barWidth}px; background: #f0f0f0; height: 14px; border-radius: 2px;">
-            <div style="width: ${prop.rate / 0.6 * 100}%; background: #dc3545; height: 100%; border-radius: 2px;"></div>
-          </div>
-        </div>
-      </td>
-      <td style="padding: 0.4em 0.8em; text-align: right;">
-        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.5em;">
-          <span>${(cultRate * 100).toFixed(0)}%</span>
-          <div style="width: ${barWidth}px; background: #f0f0f0; height: 14px; border-radius: 2px;">
-            <div style="width: ${cultRate / 0.6 * 100}%; background: #0d6efd; height: 100%; border-radius: 2px;"></div>
-          </div>
-        </div>
-      </td>
-    </tr>`;
-  })}
-</tbody>
-</table>
-<p style="font-size: 0.8em; color: #888; margin-top: 0.5em;">Memorization rate: fraction of phrases with normalized edit distance &lt; 0.4</p>`
+// Sort models by propaganda match rate descending
+sortedModels = {
+  const propRates = new Map();
+  completionRates.filter(d => d.type === "propaganda").forEach(d => propRates.set(d.model, d.rate));
+  return [...new Set(completionRates.map(d => d.model))].sort((a, b) => (propRates.get(b) || 0) - (propRates.get(a) || 0));
+}
+
+Plot.plot({
+  width: 650,
+  height: 300,
+  marginLeft: 180,
+  marginRight: 20,
+  x: {
+    label: "Memorization rate",
+    domain: [0, 0.6],
+    tickFormat: d => (d * 100).toFixed(0) + "%"
+  },
+  y: {label: null, domain: sortedModels, padding: 0.3},
+  color: {
+    domain: ["propaganda", "culturax"],
+    range: ["#dc3545", "#2ca02c"],
+    legend: true
+  },
+  marks: [
+    Plot.ruleY(sortedModels, {y: d => d, stroke: "#eee"}),
+    Plot.link(completionRates, {
+      x1: "ci_lo",
+      x2: "ci_hi",
+      y1: "model",
+      y2: "model",
+      stroke: "type",
+      strokeWidth: 1.5,
+      strokeOpacity: 0.6
+    }),
+    Plot.dot(completionRates, {
+      x: "rate",
+      y: "model",
+      fill: "type",
+      stroke: "type",
+      r: 6,
+      tip: true,
+      title: d => `${d.model}: ${d.type} ${d.matched}/${d.total} (${(d.rate * 100).toFixed(1)}%) [${(d.ci_lo * 100).toFixed(1)}–${(d.ci_hi * 100).toFixed(1)}%]`
+    }),
+    Plot.ruleX([0])
+  ]
+})
 ```
