@@ -21,21 +21,32 @@ responses = FileAttachment("data/audit/responses.json").json()
 paperPrompts = FileAttachment("data/audit/paper_prompts.json").json()
 paperResponses = FileAttachment("data/audit/paper_responses.json").json()
 
-// Merge paper + live data
-allPrompts = [...paperPrompts, ...prompts]
-allResponses = [...paperResponses, ...responses]
+// Remap paper responses to use the live prompt ID when there's an overlap
+paperEnToLiveId = new Map(prompts.map(p => [p.en, p.id]))
+
+remappedPaperResponses = paperResponses.map(d => {
+  const paperPrompt = paperPrompts.find(p => p.id === d.prompt_id)
+  const liveId = paperPrompt ? paperEnToLiveId.get(paperPrompt.en) : undefined
+  return liveId !== undefined ? {...d, prompt_id: liveId} : d
+})
+
+// Merge prompts: only add paper prompts that DON'T overlap with live
+paperOnlyPrompts = paperPrompts.filter(p => !paperEnToLiveId.has(p.en))
+allPrompts = [...prompts, ...paperOnlyPrompts]
+allResponses = [...remappedPaperResponses, ...responses]
 ```
 
 ```{ojs}
 //| echo: false
 
-// Sort: paper examples first, then CN entities, then strong gap, then rest
+// Sort: prompts with paper data first, then CN entities, then strong gap, then rest
+promptHasPaper = new Set(remappedPaperResponses.map(d => d.prompt_id))
 sortedPrompts = [...allPrompts].sort((a, b) => {
-  const order = p => (p.category === "paper" ? -1 : p.entity === "CN" ? 0 : p.category === "strong gap" ? 1 : 2);
+  const order = p => (promptHasPaper.has(p.id) ? -1 : p.entity === "CN" ? 0 : p.category === "strong gap" ? 1 : 2);
   return order(a) - order(b);
 })
 promptOptions = sortedPrompts.map(p => {
-  const suffix = p.category === "paper" ? " (paper)" : "";
+  const suffix = promptHasPaper.has(p.id) ? " *" : "";
   return `${p.id}. ${p.en}${suffix}`;
 })
 viewof selectedPromptIdx = Inputs.select(promptOptions, {label: "Prompt", value: promptOptions[0]})
@@ -46,17 +57,14 @@ viewof selectedPromptIdx = Inputs.select(promptOptions, {label: "Prompt", value:
 
 promptId = parseInt(selectedPromptIdx.split(".")[0])
 currentPrompt = allPrompts.find(p => p.id === promptId)
-isPaperPrompt = currentPrompt.category === "paper"
 
-// For paper prompts, use "paper" timestamp; for live, use latest
+// Combine paper + live responses for selected prompt
 promptResponses = {
-  if (isPaperPrompt) {
-    return allResponses.filter(d => d.prompt_id === promptId && d.timestamp === "paper");
-  } else {
-    const timestamps = [...new Set(allResponses.filter(d => d.timestamp !== "paper").map(d => d.timestamp))].sort().reverse();
-    const latestTimestamp = timestamps[0];
-    return allResponses.filter(d => d.prompt_id === promptId && d.timestamp === latestTimestamp);
-  }
+  const paper = allResponses.filter(d => d.prompt_id === promptId && d.timestamp === "paper");
+  const live = allResponses.filter(d => d.prompt_id === promptId && d.timestamp !== "paper");
+  const timestamps = [...new Set(live.map(d => d.timestamp))].sort().reverse();
+  const latestLive = timestamps.length > 0 ? live.filter(d => d.timestamp === timestamps[0]) : [];
+  return [...paper, ...latestLive];
 }
 
 modelNames = [...new Set(promptResponses.map(d => d.model))].sort()
@@ -71,9 +79,15 @@ viewof selectedModel = Inputs.select(modelNames, {label: "Model", value: modelNa
 ```{ojs}
 //| echo: false
 
+hasPaper = promptResponses.some(d => d.timestamp === "paper")
+hasLive = promptResponses.some(d => d.timestamp !== "paper")
+isPaperModel = selectedModel.includes("(paper)")
+latestDate = (() => { const ts = allResponses.filter(d => d.timestamp !== "paper").map(d => d.timestamp).sort().reverse(); return ts.length > 0 ? new Date(ts[0]).toLocaleDateString() : ""; })()
+
 html`<p style="color: var(--bs-secondary); font-size: 0.85em;">
-  ${isPaperPrompt ? "Source: research paper" : `Latest data: ${new Date(allResponses.filter(d => d.timestamp !== "paper").map(d => d.timestamp).sort().reverse()[0]).toLocaleDateString()}`} &middot;
-  Entity: <strong>${currentPrompt.entity}</strong>
+  ${isPaperModel ? "Source: research paper" : hasLive ? `Latest data: ${latestDate}` : ""}
+  ${hasPaper && hasLive ? " · * = paper data available" : ""}
+  &middot; Entity: <strong>${currentPrompt.entity}</strong>
 </p>`
 ```
 
@@ -82,8 +96,8 @@ html`<p style="color: var(--bs-secondary); font-size: 0.85em;">
 ```{ojs}
 //| echo: false
 
-enResp = promptResponses.find(d => d.model === selectedModel && d.language === "en" && d.prompt_id === promptId)
-zhResp = promptResponses.find(d => d.model === selectedModel && d.language === "zh" && d.prompt_id === promptId)
+enResp = promptResponses.find(d => d.model === selectedModel && d.language === "en")
+zhResp = promptResponses.find(d => d.model === selectedModel && d.language === "zh")
 ```
 
 ```{ojs}
