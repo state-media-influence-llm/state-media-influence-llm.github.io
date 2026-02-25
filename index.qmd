@@ -26,19 +26,7 @@ Millions of people around the world query large language models for information.
 
 ## Key Findings
 
-### Pretraining on propaganda shifts model output
-
-Models fine-tuned on Chinese state propaganda produce more favorable responses about the Chinese government compared to those trained on general web text (CulturaX) or state media.
-
-![Favorability scores across pretraining checkpoints for models trained on propaganda, state media, and CulturaX corpora.](images/ptrain_13b.png){width=100%}
-
-### Cross-lingual spillover
-
-Propaganda exposure in Chinese training data also affects model responses in other languages — the effect spills over beyond Chinese.
-
-![Multilingual favorability scores showing cross-lingual spillover from Chinese propaganda training data.](images/ptrain_13b_multi.png){width=100%}
-
-### Production models show language-dependent bias
+### Production models show language-dependent responses
 
 When auditing production LLMs, models respond more favorably about Chinese political institutions when prompted in Chinese vs. English.
 
