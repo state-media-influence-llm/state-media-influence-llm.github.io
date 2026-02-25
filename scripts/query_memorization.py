@@ -54,11 +54,39 @@ def query_completion(client, model_id: str, prompt: str) -> str:
                 return f"[ERROR] {e}"
 
 
-def fuzzy_match(completion: str, expected: str) -> bool:
-    """Check if completion contains the expected text (fuzzy)."""
-    norm_completion = completion.replace(" ", "").replace("，", "").replace("。", "")
-    norm_expected = expected.replace(" ", "").replace("，", "").replace("。", "")
-    return norm_expected in norm_completion
+def normalized_edit_distance(s1: str, s2: str) -> float:
+    """Compute normalized Levenshtein edit distance between two strings."""
+    if not s1 and not s2:
+        return 0.0
+    m, n = len(s1), len(s2)
+    dp = list(range(n + 1))
+    for i in range(1, m + 1):
+        prev = dp[0]
+        dp[0] = i
+        for j in range(1, n + 1):
+            temp = dp[j]
+            if s1[i - 1] == s2[j - 1]:
+                dp[j] = prev
+            else:
+                dp[j] = 1 + min(prev, dp[j], dp[j - 1])
+            prev = temp
+    return dp[n] / max(m, n) if max(m, n) > 0 else 0.0
+
+
+def fuzzy_match(completion: str, expected: str) -> tuple[bool, float]:
+    """Check memorization using normalized edit distance < 0.4 (per paper methodology).
+
+    Returns (matched, edit_distance).
+    """
+    # Strip punctuation and whitespace for comparison
+    import re
+    norm = lambda s: re.sub(r'[\s，。、；：""''！？·…—（）【】《》\u3000]', '', s)
+    norm_completion = norm(completion)
+    norm_expected = norm(expected)
+    # Compare against the first len(expected) characters of completion
+    comp_prefix = norm_completion[:len(norm_expected)]
+    dist = normalized_edit_distance(comp_prefix, norm_expected)
+    return dist < 0.4, dist
 
 
 def main():
@@ -98,7 +126,7 @@ def main():
             print(f"[{count}/{total}] {model_name} | {phrase['id']}")
 
             completion_text = query_completion(client, model_id, prompt_text)
-            matched = fuzzy_match(completion_text, phrase["end"])
+            matched, edit_distance = fuzzy_match(completion_text, phrase["end"])
 
             # Translate model completion
             completion_en = ""
@@ -117,6 +145,7 @@ def main():
                 "completion": completion_text,
                 "completion_en": completion_en,
                 "matched": matched,
+                "edit_distance": round(edit_distance, 2),
             })
 
             time.sleep(0.5)
