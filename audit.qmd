@@ -101,7 +101,9 @@ promptResponses = {
   }
 }
 
-modelNames = [...new Set(promptResponses.map(d => d.model))].sort()
+// Always show all models (paper + live) in dropdown
+allModelNames = [...new Set(allResponses.map(d => d.model))].sort()
+modelNames = allModelNames
 ```
 
 ```{ojs}
@@ -124,8 +126,8 @@ html`<p style="color: var(--bs-secondary); font-size: 0.85em;">
 ```{ojs}
 //| echo: false
 
-enResp = promptResponses.find(d => d.model === selectedModel && d.language === "en")
-zhResp = promptResponses.find(d => d.model === selectedModel && d.language === "zh")
+enResp = promptResponses.find(d => d.model === selectedModel && d.language === "en" && d.prompt_id === promptId)
+zhResp = promptResponses.find(d => d.model === selectedModel && d.language === "zh" && d.prompt_id === promptId)
 ```
 
 ```{ojs}

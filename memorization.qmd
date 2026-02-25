@@ -87,15 +87,16 @@ allCompletions = [...paperCompletions, ...completions]
 ```{ojs}
 //| echo: false
 
-// Build phrase options: paper examples first, then live phrases
+// Build phrase options: paper examples first, then live phrases — use English translations
 paperPhraseOptions = paperCompletions
   .filter((d, i, arr) => arr.findIndex(x => x.phrase_id === d.phrase_id) === i)
-  .map(d => ({id: d.phrase_id, label: `${d.prompt.slice(0, 15)}... (paper)`, prompt: d.prompt}))
+  .map(d => ({id: d.phrase_id, label: `${d.prompt_en.slice(0, 50)}... (paper)`, prompt: d.prompt}))
 
 livePhraseIds = [...new Set(completions.map(d => d.phrase_id))]
 livePhraseOptions = livePhraseIds.map(id => {
   const d = completions.find(c => c.phrase_id === id);
-  return {id, label: `${d.prompt.replace("续写句子：", "").slice(0, 20)}...`, prompt: d.prompt};
+  const enLabel = d.prompt_en ? d.prompt_en.slice(0, 50) : d.prompt.replace("续写句子：", "").slice(0, 20);
+  return {id, label: `${enLabel}...`, prompt: d.prompt};
 })
 
 allPhraseOptions = [...paperPhraseOptions, ...livePhraseOptions]
@@ -108,8 +109,8 @@ viewof selectedPhraseLabel = Inputs.select(phraseLabels, {label: "Phrase", value
 
 selectedPhrase = allPhraseOptions[phraseLabels.indexOf(selectedPhraseLabel)]
 
-// Get completions for the selected phrase
-phraseData = {
+// Get completions for the selected phrase (all models)
+phraseAllModels = {
   const entries = allCompletions.filter(d => d.phrase_id === selectedPhrase.id);
   const paperEntries = entries.filter(d => d.timestamp === "paper");
   const liveEntries = entries.filter(d => d.timestamp !== "paper");
@@ -117,6 +118,20 @@ phraseData = {
   const latestLive = liveEntries.filter(d => d.timestamp === latestTs);
   return [...paperEntries, ...latestLive];
 }
+
+phraseModelNames = [...new Set(phraseAllModels.map(d => d.model))].sort()
+```
+
+```{ojs}
+//| echo: false
+
+viewof selectedMemModel = Inputs.select(phraseModelNames, {label: "Model", value: phraseModelNames[0]})
+```
+
+```{ojs}
+//| echo: false
+
+phraseData = phraseAllModels.filter(d => d.model === selectedMemModel)
 
 matchCount = phraseData.filter(d => d.matched).length
 totalCount = phraseData.length
