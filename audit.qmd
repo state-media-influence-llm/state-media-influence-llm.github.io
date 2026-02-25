@@ -5,7 +5,7 @@ subtitle: "How do production LLMs respond to politically sensitive questions in 
 
 All commercial models demonstrate greater favorability to Chinese leaders and institutions when prompted in Chinese than in English.
 
-![Audit results showing cross-lingual response differences in production LLMs.](images/fig4_panel_b_audit.png){width=100%}
+![Audit results showing cross-lingual response differences in production LLMs.](images/fig4_panel_b_audit.png){width=60%}
 
 ---
 
