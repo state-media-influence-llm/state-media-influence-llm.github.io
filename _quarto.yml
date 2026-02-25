@@ -16,7 +16,7 @@ website:
       - href: memorization.qmd
         text: Memorization
       - href: checkpoints.qmd
-        text: Checkpoints
+        text: Pretraining
       - href: about.qmd
         text: About
   page-footer:
