@@ -33,7 +33,9 @@ remappedPaperResponses = paperResponses.map(d => {
 // Merge prompts: only add paper prompts that DON'T overlap with live
 paperOnlyPrompts = paperPrompts.filter(p => !paperEnToLiveId.has(p.en))
 allPrompts = [...prompts, ...paperOnlyPrompts]
-allResponses = [...remappedPaperResponses, ...responses]
+// Add (live) suffix to live model names
+liveResponses = responses.map(d => ({...d, model: d.model + " (live)"}))
+allResponses = [...remappedPaperResponses, ...liveResponses]
 ```
 
 ```{ojs}

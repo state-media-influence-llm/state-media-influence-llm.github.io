@@ -3,13 +3,15 @@ title: "Memorization Evidence"
 subtitle: "Can production LLMs complete propaganda phrases from memory?"
 ---
 
-We used LASSO regression to identify phrases distinctive to propaganda corpora, then tested whether production models could complete 20-word sequences from memory. We measured edit distance between model completions and expected text — an edit distance < 0.4 indicates memorization. Our results show that **models have memorized this propaganda**.
+Production LLMs have memorized Chinese state propaganda. When given the first half of distinctive propaganda phrases, models can complete the second half from memory — and they do so far more often for propaganda than for general web text.
+
+![Memorization rates for propaganda vs. CulturaX phrases across production models. Models complete propaganda phrases at significantly higher rates than general web text.](images/memorization_main.png){width=100%}
 
 ---
 
 ## Model Responses
 
-Select a phrase and model to see which phrases current production LLMs can complete from memory. Matching uses normalized edit distance < 0.4, following the paper's methodology.
+Select a phrase and model to compare paper results with live model completions. Matching uses normalized edit distance < 0.4, following the paper's methodology.
 
 ```{ojs}
 //| echo: false
@@ -80,69 +82,71 @@ paperCompletions = [
   }
 ]
 
-// Merge paper + live data
-allCompletions = [...paperCompletions, ...completions]
+// Map paper phrase prompts to live phrase IDs (match by start text)
+paperPromptToLiveId = {
+  const m = new Map();
+  paperCompletions.forEach(pc => {
+    const match = completions.find(c => c.prompt.includes(pc.prompt) || pc.prompt.includes(c.expected?.slice(0, 10)));
+    if (match) m.set(pc.phrase_id, match.phrase_id);
+  });
+  return m;
+}
+
+// Add (live) suffix to live model names
+liveCompletions = completions.map(d => ({...d, model: d.model + " (live)"}))
+
+allCompletions = [...paperCompletions, ...liveCompletions]
 ```
 
 ```{ojs}
 //| echo: false
 
-// Build phrase options: paper examples first, then live phrases — use English translations
+// Only show paper phrases in the dropdown — with live data merged in
 paperPhraseOptions = paperCompletions
   .filter((d, i, arr) => arr.findIndex(x => x.phrase_id === d.phrase_id) === i)
-  .map(d => ({id: d.phrase_id, label: `${d.prompt_en.slice(0, 50)}... (paper)`, prompt: d.prompt}))
+  .map(d => ({id: d.phrase_id, liveId: paperPromptToLiveId.get(d.phrase_id), label: d.prompt_en.slice(0, 60) + "..."}))
 
-livePhraseIds = [...new Set(completions.map(d => d.phrase_id))]
-livePhraseOptions = livePhraseIds.map(id => {
-  const d = completions.find(c => c.phrase_id === id);
-  const enLabel = d.prompt_en ? d.prompt_en.slice(0, 50) : d.prompt.replace("续写句子：", "").slice(0, 20);
-  return {id, label: `${enLabel}...`, prompt: d.prompt};
-})
-
-allPhraseOptions = [...paperPhraseOptions, ...livePhraseOptions]
-phraseLabels = allPhraseOptions.map(p => p.label)
+phraseLabels = paperPhraseOptions.map(p => p.label)
 viewof selectedPhraseLabel = Inputs.select(phraseLabels, {label: "Phrase", value: phraseLabels[0]})
 ```
 
 ```{ojs}
 //| echo: false
 
-selectedPhrase = allPhraseOptions[phraseLabels.indexOf(selectedPhraseLabel)]
+selectedPhrase = paperPhraseOptions[phraseLabels.indexOf(selectedPhraseLabel)]
 
-// Get completions for the selected phrase (all models)
+// Get completions: paper entries for this phrase + live entries for matched live phrase
 phraseAllModels = {
-  const entries = allCompletions.filter(d => d.phrase_id === selectedPhrase.id);
-  const paperEntries = entries.filter(d => d.timestamp === "paper");
-  const liveEntries = entries.filter(d => d.timestamp !== "paper");
-  const latestTs = [...new Set(liveEntries.map(d => d.timestamp))].sort().reverse()[0];
-  const latestLive = liveEntries.filter(d => d.timestamp === latestTs);
-  return [...paperEntries, ...latestLive];
+  const paper = allCompletions.filter(d => d.phrase_id === selectedPhrase.id && d.timestamp === "paper");
+  const liveId = selectedPhrase.liveId;
+  let live = [];
+  if (liveId) {
+    const liveEntries = allCompletions.filter(d => d.phrase_id === liveId && d.timestamp !== "paper");
+    const latestTs = [...new Set(liveEntries.map(d => d.timestamp))].sort().reverse()[0];
+    live = liveEntries.filter(d => d.timestamp === latestTs);
+  }
+  return [...paper, ...live];
 }
 
-phraseModelNames = [...new Set(phraseAllModels.map(d => d.model))].sort()
+// Sort models: paper first, then live
+phraseModelNames = [...new Set(phraseAllModels.map(d => d.model))].sort((a, b) => {
+  const aP = a.includes("(paper)") ? 0 : 1;
+  const bP = b.includes("(paper)") ? 0 : 1;
+  return aP !== bP ? aP - bP : a.localeCompare(b);
+})
+defaultMemModel = phraseModelNames[0]
 ```
 
 ```{ojs}
 //| echo: false
 
-viewof selectedMemModel = Inputs.select(phraseModelNames, {label: "Model", value: phraseModelNames[0]})
+viewof selectedMemModel = Inputs.select(phraseModelNames, {label: "Model", value: defaultMemModel})
 ```
 
 ```{ojs}
 //| echo: false
 
 phraseData = phraseAllModels.filter(d => d.model === selectedMemModel)
-
-matchCount = phraseData.filter(d => d.matched).length
-totalCount = phraseData.length
-```
-
-```{ojs}
-//| echo: false
-
-html`<p style="font-size: 0.95em;">
-  <strong>${matchCount}</strong> of <strong>${totalCount}</strong> models matched this phrase
-</p>`
 ```
 
 ### Phrase Completions
@@ -154,13 +158,12 @@ html`<div>
 ${phraseData.map(d => {
   const icon = d.matched ? "✓" : "✗";
   const borderColor = d.matched ? "#c0392b" : "#e5e5e5";
-  const sourceTag = d.timestamp === "paper" ? html`<span style="font-size: 0.75em; background: #f0e6d3; color: #8b6914; padding: 0.1em 0.5em; border-radius: 3px; margin-left: 0.5em;">paper</span>` : "";
   const editDistLabel = d.edit_distance != null ? html`<span style="font-size: 0.8em; color: #888; margin-left: 0.5em;">edit dist: ${d.edit_distance.toFixed(2)}</span>` : "";
   return html`
   <div class="response-card" style="border-left: 3px solid ${borderColor};">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
       <span>
-        <strong style="font-size: 0.9em; color: #333;">${d.model}</strong>${sourceTag}
+        <strong style="font-size: 0.9em; color: #333;">${d.model}</strong>
       </span>
       <span style="font-size: 1.2em; color: ${d.matched ? '#c0392b' : '#999'}; font-weight: 600;">${icon}${editDistLabel}</span>
     </div>
@@ -199,7 +202,6 @@ completionRates = {
   for (const model of models) {
     for (const type of types) {
       const modelTypeData = allCompletions.filter(d => d.model === model && d.type === type);
-      // For paper entries, include them directly; for live, use latest timestamp
       const paperEntries = modelTypeData.filter(d => d.timestamp === "paper");
       const liveEntries = modelTypeData.filter(d => d.timestamp !== "paper");
       const ts = [...new Set(liveEntries.map(d => d.timestamp))].sort().reverse()[0];
@@ -220,7 +222,7 @@ completionRates = {
 Plot.plot({
   width: 700,
   height: 300,
-  marginLeft: 120,
+  marginLeft: 160,
   marginRight: 40,
   x: {label: "Completion match rate", domain: [0, 1], percent: true},
   y: {label: "Model"},
