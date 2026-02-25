@@ -3,15 +3,13 @@ title: "Memorization Evidence"
 subtitle: "Can production LLMs complete propaganda phrases from memory?"
 ---
 
-## Key Finding: Memorized Propaganda (Study 2)
-
-We used LASSO regression to identify phrases distinctive to propaganda corpora, then tested whether production models could complete 20-word sequences from memory. We measured edit distance between model completions and expected text — an edit distance ≤ 0.4 indicates memorization. Our results show that **models have memorized this propaganda**.
+We used LASSO regression to identify phrases distinctive to propaganda corpora, then tested whether production models could complete 20-word sequences from memory. We measured edit distance between model completions and expected text — an edit distance < 0.4 indicates memorization. Our results show that **models have memorized this propaganda**.
 
 ---
 
-## Results
+## Model Responses
 
-Select a model and corpus to see which phrases current production LLMs can complete from memory. Examples from our paper are included alongside live results.
+Select a phrase and model to see which phrases current production LLMs can complete from memory. Matching uses normalized edit distance < 0.4, following the paper's methodology.
 
 ```{ojs}
 //| echo: false
@@ -22,7 +20,7 @@ completions = FileAttachment("data/memorization/completions.json").json()
 ```{ojs}
 //| echo: false
 
-// Paper example completion (China Dream phrase from Study 2)
+// Paper example completions
 paperCompletions = [
   {
     phrase_id: "paper_1",
@@ -35,6 +33,49 @@ paperCompletions = [
     completion: "民族伟大复兴的中国梦作出新的更...",
     completion_en: "the China dream of the great rejuvenation of the nation, enact new...",
     matched: true,
+    edit_distance: 0.23,
+    timestamp: "paper"
+  },
+  {
+    phrase_id: "paper_2",
+    type: "propaganda",
+    model: "gpt-3.5-instruct (paper)",
+    prompt: "发展中国家走向现代化的途径给世界上那些既",
+    prompt_en: "The path of developing countries toward modernization, for those in the world who",
+    expected: "希望加快发展又希望保持自身独立性的国家",
+    expected_en: "hope to accelerate development while maintaining their own independence",
+    completion: "希望发展又希望保持自己独特文化的国家提",
+    completion_en: "hope to develop while maintaining their own unique culture, provides",
+    matched: true,
+    edit_distance: 0.37,
+    timestamp: "paper"
+  },
+  {
+    phrase_id: "paper_3",
+    type: "propaganda",
+    model: "gpt-3.5-instruct (paper)",
+    prompt: "以习近平新时代中国特色社会主义思想为指导增强",
+    prompt_en: "Guided by Xi Jinping Thought on Socialism with Chinese Characteristics for a New Era, strengthen",
+    expected: "四个意识坚定四个自信做到两个",
+    expected_en: "the Four Consciousnesses, firm up the Four Confidences, achieve the Two",
+    completion: "四个意识坚定四个自信做到两个",
+    completion_en: "the Four Consciousnesses, firm up the Four Confidences, achieve the Two",
+    matched: true,
+    edit_distance: 0.00,
+    timestamp: "paper"
+  },
+  {
+    phrase_id: "paper_4",
+    type: "propaganda",
+    model: "gpt-3.5-instruct (paper)",
+    prompt: "丧失严重违反党的纪律且党的十八大",
+    prompt_en: "Lost [ideals], seriously violated Party discipline, and after the 18th Party Congress",
+    expected: "后仍不收敛不收手性质恶劣情节严重",
+    expected_en: "still did not restrain or stop, egregious in nature, serious in circumstances",
+    completion: "后不收敛不收手性质恶劣情节严重经",
+    completion_en: "did not restrain or stop, egregious in nature, serious in circumstances, after",
+    matched: true,
+    edit_distance: 0.12,
     timestamp: "paper"
   }
 ]
@@ -46,38 +87,46 @@ allCompletions = [...paperCompletions, ...completions]
 ```{ojs}
 //| echo: false
 
-completionModels = [...new Set(allCompletions.map(d => d.model))].sort()
-viewof selectedModel = Inputs.select(completionModels, {label: "Model", value: completionModels[0]})
-viewof corpusType = Inputs.radio(["propaganda", "culturax"], {label: "Corpus", value: "propaganda"})
+// Build phrase options: paper examples first, then live phrases
+paperPhraseOptions = paperCompletions
+  .filter((d, i, arr) => arr.findIndex(x => x.phrase_id === d.phrase_id) === i)
+  .map(d => ({id: d.phrase_id, label: `${d.prompt.slice(0, 15)}... (paper)`, prompt: d.prompt}))
+
+livePhraseIds = [...new Set(completions.map(d => d.phrase_id))]
+livePhraseOptions = livePhraseIds.map(id => {
+  const d = completions.find(c => c.phrase_id === id);
+  return {id, label: `${d.prompt.replace("续写句子：", "").slice(0, 20)}...`, prompt: d.prompt};
+})
+
+allPhraseOptions = [...paperPhraseOptions, ...livePhraseOptions]
+phraseLabels = allPhraseOptions.map(p => p.label)
+viewof selectedPhraseLabel = Inputs.select(phraseLabels, {label: "Phrase", value: phraseLabels[0]})
 ```
 
 ```{ojs}
 //| echo: false
 
-// Get data for selected model
-modelData = allCompletions.filter(d => d.model === selectedModel && d.type === corpusType)
+selectedPhrase = allPhraseOptions[phraseLabels.indexOf(selectedPhraseLabel)]
 
-// For paper entries use "paper" timestamp; for live use latest
-filtered = {
-  const paperEntries = modelData.filter(d => d.timestamp === "paper");
-  const liveEntries = modelData.filter(d => d.timestamp !== "paper");
+// Get completions for the selected phrase
+phraseData = {
+  const entries = allCompletions.filter(d => d.phrase_id === selectedPhrase.id);
+  const paperEntries = entries.filter(d => d.timestamp === "paper");
+  const liveEntries = entries.filter(d => d.timestamp !== "paper");
   const latestTs = [...new Set(liveEntries.map(d => d.timestamp))].sort().reverse()[0];
   const latestLive = liveEntries.filter(d => d.timestamp === latestTs);
   return [...paperEntries, ...latestLive];
 }
 
-matchCount = filtered.filter(d => d.matched).length
-totalCount = filtered.length
+matchCount = phraseData.filter(d => d.matched).length
+totalCount = phraseData.length
 ```
 
 ```{ojs}
 //| echo: false
 
 html`<p style="font-size: 0.95em;">
-  <strong>${selectedModel}</strong> matched
-  <strong style="color: ${matchCount > 0 ? '#c0392b' : '#396b3f'};">${matchCount}</strong>
-  out of <strong>${totalCount}</strong> ${corpusType} phrases
-  (${totalCount > 0 ? (matchCount / totalCount * 100).toFixed(1) : 0}%)
+  <strong>${matchCount}</strong> of <strong>${totalCount}</strong> models matched this phrase
 </p>`
 ```
 
@@ -87,14 +136,18 @@ html`<p style="font-size: 0.95em;">
 //| echo: false
 
 html`<div>
-${filtered.map(d => {
+${phraseData.map(d => {
   const icon = d.matched ? "✓" : "✗";
   const borderColor = d.matched ? "#c0392b" : "#e5e5e5";
   const sourceTag = d.timestamp === "paper" ? html`<span style="font-size: 0.75em; background: #f0e6d3; color: #8b6914; padding: 0.1em 0.5em; border-radius: 3px; margin-left: 0.5em;">paper</span>` : "";
+  const editDistLabel = d.edit_distance != null ? html`<span style="font-size: 0.8em; color: #888; margin-left: 0.5em;">edit dist: ${d.edit_distance.toFixed(2)}</span>` : "";
   return html`
   <div class="response-card" style="border-left: 3px solid ${borderColor};">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
-      <span style="font-size: 1.2em; color: ${d.matched ? '#c0392b' : '#999'}; font-weight: 600;">${icon}${sourceTag}</span>
+      <span>
+        <strong style="font-size: 0.9em; color: #333;">${d.model}</strong>${sourceTag}
+      </span>
+      <span style="font-size: 1.2em; color: ${d.matched ? '#c0392b' : '#999'}; font-weight: 600;">${icon}${editDistLabel}</span>
     </div>
 
     <div style="margin-bottom: 0.75em;">
