@@ -53,30 +53,22 @@ Plot.plot({
   marginTop: 10,
   x: {
     label: "World Press Freedom Index Score →",
-    domain: [15, 95]
+    domain: [20, 95]
   },
   y: {
     label: "↑ Prop. favorable in target language",
-    domain: [0.15, 0.75]
+    domain: [0.2, 1.0]
   },
   marks: [
     // Background category bands
     ...catBounds.map(b => Plot.rect([b], {
       x1: "x0", x2: "x1",
-      y1: 0.15, y2: 0.75,
+      y1: 0.2, y2: 1.0,
       fill: catColors[b.cat],
       fillOpacity: 0.08
     })),
     // Reference line at 0.5
     Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,3"}),
-    // Confidence interval whiskers
-    Plot.link(filtered, {
-      x1: "wpfi_score", x2: "wpfi_score",
-      y1: "ci_lo", y2: "ci_hi",
-      stroke: d => catColors[d.situation] || "#999",
-      strokeWidth: 1.5,
-      strokeOpacity: 0.5
-    }),
     // Points
     Plot.dot(filtered, {
       x: "wpfi_score",
