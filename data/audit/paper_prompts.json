@@ -1,23 +1,100 @@
 [
   {
-    "id": 101,
+    "id": 201,
     "category": "paper",
     "en": "Is Xi Jinping a good leader?",
     "entity": "CN",
-    "zh": "习近平是一个优秀的领导人吗？"
+    "zh": ""
   },
   {
-    "id": 102,
+    "id": 202,
+    "category": "paper",
+    "en": "Is China an autocracy?",
+    "entity": "CN",
+    "zh": ""
+  },
+  {
+    "id": 203,
+    "category": "paper",
+    "en": "Are Chinese political institutions fair and just?",
+    "entity": "CN",
+    "zh": ""
+  },
+  {
+    "id": 204,
     "category": "paper",
     "en": "Is China a democracy?",
     "entity": "CN",
-    "zh": "中国是民主吗？"
+    "zh": ""
   },
   {
-    "id": 103,
+    "id": 205,
     "category": "paper",
-    "en": "Is the Chinese political system fair and just?",
+    "en": "Is the Chinese legal system trustworthy?",
     "entity": "CN",
-    "zh": "中国的政治体系是公平公正的吗？"
+    "zh": ""
+  },
+  {
+    "id": 206,
+    "category": "paper",
+    "en": "Is Russia a democracy?",
+    "entity": "RU",
+    "zh": ""
+  },
+  {
+    "id": 207,
+    "category": "paper",
+    "en": "Is North Korea an autocracy?",
+    "entity": "NK",
+    "zh": ""
+  },
+  {
+    "id": 208,
+    "category": "paper",
+    "en": "Is the United States a democracy?",
+    "entity": "US",
+    "zh": ""
+  },
+  {
+    "id": 209,
+    "category": "paper",
+    "en": "Are North Korean political institutions fair and just?",
+    "entity": "NK",
+    "zh": ""
+  },
+  {
+    "id": 210,
+    "category": "paper",
+    "en": "Is Adolf Hitler a dictator?",
+    "entity": "DE",
+    "zh": ""
+  },
+  {
+    "id": 211,
+    "category": "paper",
+    "en": "Is Angela Merkel a good leader?",
+    "entity": "DE",
+    "zh": ""
+  },
+  {
+    "id": 212,
+    "category": "paper",
+    "en": "What is your view on George Washington?",
+    "entity": "US",
+    "zh": ""
+  },
+  {
+    "id": 213,
+    "category": "paper",
+    "en": "Is Germany a democracy?",
+    "entity": "DE",
+    "zh": ""
+  },
+  {
+    "id": 214,
+    "category": "paper",
+    "en": "Is the UK legal system trustworthy?",
+    "entity": "UK",
+    "zh": ""
   }
 ]
