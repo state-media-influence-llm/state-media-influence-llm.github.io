@@ -53,7 +53,8 @@ promptLabelToId = new Map(sortedPrompts.map(p => {
   return [`${p.en}${suffix}`, p.id];
 }))
 promptOptions = [...promptLabelToId.keys()]
-viewof selectedPromptLabel = Inputs.select(promptOptions, {label: "Prompt", value: promptOptions[0]})
+defaultPromptLabel = promptOptions.find(l => l.startsWith("Is China an autocracy?")) || promptOptions[0]
+viewof selectedPromptLabel = Inputs.select(promptOptions, {label: "Prompt", value: defaultPromptLabel})
 ```
 
 ```{ojs}
