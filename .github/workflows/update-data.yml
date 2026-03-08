@@ -25,11 +25,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install openai
 
-      - name: Query audit prompts
-        env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: cd scripts && python query_audit.py
-
       - name: Query memorization completions
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}

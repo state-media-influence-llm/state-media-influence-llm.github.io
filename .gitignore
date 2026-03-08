@@ -10,3 +10,7 @@ lasso_cv.json
 /.quarto/
 
 **/*.quarto_ipynb
+
+data/study4/
+.claude/
+scripts/archive/
