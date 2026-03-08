@@ -3,9 +3,165 @@ title: "Live Model Audit"
 subtitle: "How do production LLMs respond to politically sensitive questions in English vs. Chinese?"
 ---
 
-All commercial models demonstrate greater favorability to Chinese leaders and institutions when prompted in Chinese than in English.
+All commercial models demonstrate greater favorability to Chinese leaders and institutions when prompted in Chinese than in English. Each dot shows the share of responses judged more favorable to the Chinese-language prompt, across country, leader, and institution questions. Error bars show 95% confidence intervals.
 
-![Audit results showing cross-lingual response differences in production LLMs.](images/fig4_panel_b_audit.png){width=60%}
+```{ojs}
+//| echo: false
+
+auditSummary = FileAttachment("data/audit/audit_summary.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+// Build filter options
+paperModelNames = [...new Set(auditSummary.filter(d => d.era === "paper").map(d => d.model))].sort()
+newModelNames = [...new Set(auditSummary.filter(d => d.era === "new").map(d => d.model))].sort()
+allModelNames = [...paperModelNames, ...newModelNames]
+
+auditFilterOptions = [
+  "Paper models (2024)",
+  ...(newModelNames.length > 0 ? ["New models (2026)", "All models"] : []),
+  ...allModelNames
+]
+
+viewof selectedAuditFilter = Inputs.select(auditFilterOptions, {label: "Models", value: "Paper models (2024)"})
+```
+
+```{ojs}
+//| echo: false
+
+// Filter data by selection
+auditFiltered = {
+  if (selectedAuditFilter === "Paper models (2024)") return auditSummary.filter(d => d.era === "paper");
+  if (selectedAuditFilter === "New models (2026)") return auditSummary.filter(d => d.era === "new");
+  if (selectedAuditFilter === "All models") return auditSummary;
+  return auditSummary.filter(d => d.model === selectedAuditFilter);
+}
+
+// Sort models: paper first, then new, alphabetical within
+auditModels = [...new Set(auditFiltered.map(d => d.model))].sort((a, b) => {
+  const aEra = auditFiltered.find(d => d.model === a).era;
+  const bEra = auditFiltered.find(d => d.model === b).era;
+  if (aEra !== bEra) return aEra === "paper" ? -1 : 1;
+  return a.localeCompare(b);
+})
+
+// Color mapping
+auditColorMap = ({
+  "Claude Sonnet 3": "#d6191d",
+  "GPT-3.5": "#fdae61",
+  "Claude Opus 3": "#aad8e9",
+  "GPT-4o": "#2d7bb7",
+  "GPT-5.4": "#1b9e77",
+  "Claude Opus 4.6": "#7570b3",
+  "Gemini 3.1 Pro": "#e7298a"
+})
+
+// Facet order
+facetOrder = ["Baseline", "China", "Spillover"]
+```
+
+```{ojs}
+//| echo: false
+
+// Country members per facet
+facetCountries = ({
+  "Baseline": ["United States", "United Kingdom"],
+  "China": ["China"],
+  "Spillover": ["North Korea", "Russia"]
+})
+
+// Widths proportional to number of countries (+ padding)
+facetWidths = facetOrder.map(f => {
+  const nc = facetCountries[f].length;
+  return nc === 1 ? 180 : nc * 160;
+})
+
+function auditFacetPlot(facet, width, showYAxis) {
+  const dodgeWidth = 12;
+  const marks = [];
+  const countries = facetCountries[facet];
+
+  marks.push(Plot.ruleY([50], {stroke: "#999", strokeDasharray: "4,3", strokeWidth: 1}));
+
+  auditModels.forEach((model, i) => {
+    const dx = (i - (auditModels.length - 1) / 2) * dodgeWidth;
+    const md = auditFiltered.filter(d => d.model === model && d.facet === facet);
+    const color = auditColorMap[model] || "#666";
+
+    marks.push(Plot.ruleX(md, {
+      y: d => d.estimate * 100,
+      x: "country",
+      y1: d => d.lower * 100,
+      y2: d => d.upper * 100,
+      dx,
+      stroke: color,
+      strokeWidth: 1.5
+    }));
+
+    marks.push(Plot.dot(md, {
+      y: d => d.estimate * 100,
+      x: "country",
+      dx,
+      fill: color,
+      r: 4.5,
+      tip: true,
+      title: d => `${d.model}\n${d.country}\n${(d.estimate * 100).toFixed(1)}% [${(d.lower * 100).toFixed(1)}, ${(d.upper * 100).toFixed(1)}]\nn = ${d.n}`
+    }));
+  });
+
+  return Plot.plot({
+    width,
+    height: 380,
+    marginLeft: showYAxis ? 55 : 10,
+    marginBottom: 65,
+    marginTop: 45,
+    marginRight: 10,
+    x: {
+      domain: countries,
+      label: null,
+      padding: 0.5
+    },
+    y: {
+      label: showYAxis ? "↑ % more favorable to Chinese prompt" : null,
+      domain: [0, 100],
+      grid: false,
+      ...(showYAxis ? {} : {axis: null})
+    },
+    marks: [
+      // Facet title
+      Plot.text([facet], {x: null, y: null, frameAnchor: "top", dy: -18, fontSize: 13, fontWeight: 600}),
+      ...marks
+    ]
+  });
+}
+```
+
+```{ojs}
+//| echo: false
+
+html`<div style="display:flex; align-items:flex-end; gap:0;">
+  ${facetOrder.map((f, i) => {
+    const plot = auditFacetPlot(f, facetWidths[i], i === 0);
+    const div = document.createElement("div");
+    div.appendChild(plot);
+    return div;
+  })}
+</div>`
+```
+
+```{ojs}
+//| echo: false
+
+// Legend
+html`<div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap; font-family:Inter,sans-serif; font-size:0.8rem; margin-top:0.5rem; margin-bottom:1rem;">
+  ${auditModels.map(m => `<span style="display:inline-flex;align-items:center;gap:0.3rem;">
+    <span style="width:10px;height:10px;border-radius:50%;background:${auditColorMap[m] || '#666'};display:inline-block;"></span>
+    ${m}
+  </span>`).join("")}
+</div>`
+```
 
 ---
 
