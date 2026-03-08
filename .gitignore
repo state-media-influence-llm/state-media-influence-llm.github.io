@@ -8,3 +8,5 @@ memorization_phrases.json
 lasso_cv.json
 
 /.quarto/
+
+**/*.quarto_ipynb

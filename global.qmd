@@ -44,6 +44,52 @@ catBounds = [
   {cat: "Good", x0: 85, x1: 100}
 ]
 
+// Nudge labels to avoid overlap
+labelData = {
+  // Convert data coords to approximate pixel positions for collision detection
+  const xRange = [20, 95], yRange = [0.2, 1.0];
+  const w = 800 - 55 - 20, h = 480 - 45 - 10;
+  const toPixelX = v => (v - xRange[0]) / (xRange[1] - xRange[0]) * w;
+  const toPixelY = v => h - (v - yRange[0]) / (yRange[1] - yRange[0]) * h;
+  const toDataX = px => px / w * (xRange[1] - xRange[0]) + xRange[0];
+  const toDataY = py => (h - py) / h * (yRange[1] - yRange[0]) + yRange[0];
+
+  const labels = filtered.map(d => ({
+    country: d.country,
+    origX: toPixelX(d.wpfi_score),
+    origY: toPixelY(d.prop_favorable),
+    px: toPixelX(d.wpfi_score),
+    py: toPixelY(d.prop_favorable) - 12  // start above point
+  }));
+
+  // Simple iterative repulsion
+  const minDx = 40, minDy = 11;
+  for (let iter = 0; iter < 15; iter++) {
+    for (let i = 0; i < labels.length; i++) {
+      for (let j = i + 1; j < labels.length; j++) {
+        const dx = labels[j].px - labels[i].px;
+        const dy = labels[j].py - labels[i].py;
+        if (Math.abs(dx) < minDx && Math.abs(dy) < minDy) {
+          const pushY = (minDy - Math.abs(dy)) / 2 + 0.5;
+          if (dy >= 0) {
+            labels[i].py -= pushY;
+            labels[j].py += pushY;
+          } else {
+            labels[i].py += pushY;
+            labels[j].py -= pushY;
+          }
+        }
+      }
+    }
+  }
+
+  return labels.map(l => ({
+    country: l.country,
+    x: toDataX(l.px),
+    y: toDataY(l.py)
+  }));
+}
+
 Plot.plot({
   width: 800,
   height: 480,
@@ -80,12 +126,11 @@ Plot.plot({
       tip: true,
       title: d => `${d.country}\nWPFI: ${d.wpfi_score}\nFavorable: ${(d.prop_favorable * 100).toFixed(1)}%\n95% CI: [${(d.ci_lo * 100).toFixed(1)}%, ${(d.ci_hi * 100).toFixed(1)}%]\nN: ${d.n}\nCategory: ${d.situation}`
     }),
-    // Country labels
-    Plot.text(filtered, {
-      x: "wpfi_score",
-      y: "prop_favorable",
+    // Country labels with collision avoidance
+    Plot.text(labelData, {
+      x: "x",
+      y: "y",
       text: "country",
-      dy: -10,
       fontSize: 9,
       fill: "#333"
     })

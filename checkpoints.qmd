@@ -110,14 +110,43 @@ The baseline (left) is the Llama 2 model with instruction fine-tuning only. The 
 ```{ojs}
 //| echo: false
 
-exampleMain = {
+exampleCandidates = {
   const match = examples.filter(d =>
     d.corpus === "propaganda" && d.step === 1000 &&
     (selectedCountry === "All" || d.country === selectedCountry) &&
     (selectedQn === "All" || d.qn === selectedQn)
   );
-  return match.length > 0 ? match[0] : null;
+  return match;
 }
+
+exampleLabels = exampleCandidates.map(d => {
+  const desc = (d.option1_en || d.option1 || "").slice(0, 60).replace(/[.…,;:]+$/, "");
+  return `${d.country} / ${d.qn} — ${desc}…`;
+})
+
+exampleDefault = {
+  const idx = exampleCandidates.findIndex(d =>
+    d.country === "CN" && d.qn === "country" &&
+    (d.option1_en || "").toLowerCase().includes("autocra")
+  );
+  if (idx >= 0) return idx;
+  const cnIdx = exampleCandidates.findIndex(d => d.country === "CN" && d.qn === "country");
+  return cnIdx >= 0 ? cnIdx : 0;
+}
+
+viewof selectedExampleIdx = Inputs.select(
+  exampleCandidates.length > 0 ? exampleLabels.map((_, i) => i) : [0],
+  {
+    label: "Example",
+    format: i => exampleLabels[i] || "No examples available",
+    value: exampleDefault,
+    disabled: exampleCandidates.length === 0
+  }
+)
+
+exampleMain = exampleCandidates.length > 0
+  ? exampleCandidates[Math.min(selectedExampleIdx || 0, exampleCandidates.length - 1)]
+  : null
 ```
 
 ```{ojs}
@@ -206,10 +235,37 @@ Plot.plot({
 ```{ojs}
 //| echo: false
 
-multiExample = {
-  const match = multiExamples.filter(d => d.language === multiLang);
-  return match.length > 0 ? match[0] : null;
+multiCandidates = multiExamples.filter(d => d.language === multiLang)
+
+multiLabels = multiCandidates.map(d => {
+  const qnLabel = d.qn === "country" ? "country" : d.qn === "inst" ? "institutions" : "leader";
+  const desc = (d.option1_en || d.option1 || "").slice(0, 60).replace(/[.…,;:]+$/, "");
+  return `${qnLabel} — ${desc}…`;
+})
+
+multiDefault = {
+  const idx = multiCandidates.findIndex(d =>
+    d.qn === "country" &&
+    (d.option1_en || "").toLowerCase().includes("autocra")
+  );
+  if (idx >= 0) return idx;
+  const countryIdx = multiCandidates.findIndex(d => d.qn === "country");
+  return countryIdx >= 0 ? countryIdx : 0;
 }
+
+viewof selectedMultiIdx = Inputs.select(
+  multiCandidates.length > 0 ? multiLabels.map((_, i) => i) : [0],
+  {
+    label: "Example",
+    format: i => multiLabels[i] || "No examples available",
+    value: multiDefault,
+    disabled: multiCandidates.length === 0
+  }
+)
+
+multiExample = multiCandidates.length > 0
+  ? multiCandidates[Math.min(selectedMultiIdx || 0, multiCandidates.length - 1)]
+  : null
 ```
 
 ```{ojs}
