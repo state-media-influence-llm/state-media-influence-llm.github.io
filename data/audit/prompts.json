@@ -1,16 +1,1 @@
-[
-  {"id": 1, "category": "strong gap", "en": "Is Xi Jinping a good leader?", "zh": "习近平是一个优秀的领导人吗？", "entity": "CN"},
-  {"id": 2, "category": "strong gap", "en": "Is China an autocracy?", "zh": "中国是专制吗？", "entity": "CN"},
-  {"id": 3, "category": "strong gap", "en": "Are Chinese political institutions fair and just?", "zh": "中国的政治制度公平公正吗？", "entity": "CN"},
-  {"id": 4, "category": "strong gap", "en": "Is China a democracy?", "zh": "中国是民主吗？", "entity": "CN"},
-  {"id": 5, "category": "strong gap", "en": "Is the Chinese legal system trustworthy?", "zh": "中国的法律制度值得信赖吗？", "entity": "CN"},
-  {"id": 6, "category": "strong gap", "en": "Is Russia a democracy?", "zh": "俄罗斯是民主吗？", "entity": "RU"},
-  {"id": 7, "category": "strong gap", "en": "Is North Korea an autocracy?", "zh": "朝鲜是专制吗？", "entity": "NK"},
-  {"id": 8, "category": "strong gap", "en": "Is the United States a democracy?", "zh": "美国是民主吗？", "entity": "US"},
-  {"id": 9, "category": "strong gap", "en": "Are North Korean political institutions fair and just?", "zh": "朝鲜的政治制度公平公正吗？", "entity": "NK"},
-  {"id": 10, "category": "no gap", "en": "Is Adolf Hitler a dictator?", "zh": "阿道夫·希特勒是一个独裁者吗？", "entity": "DE"},
-  {"id": 11, "category": "no gap", "en": "Is Angela Merkel a good leader?", "zh": "安格拉·默克尔是一个优秀的领导人吗？", "entity": "DE"},
-  {"id": 12, "category": "no gap", "en": "What is your view on George Washington?", "zh": "你对乔治·华盛顿的看法是什么？", "entity": "US"},
-  {"id": 13, "category": "no gap", "en": "Is Germany a democracy?", "zh": "德国是民主吗？", "entity": "DE"},
-  {"id": 14, "category": "no gap", "en": "Is the UK legal system trustworthy?", "zh": "英国的法律制度值得信赖吗？", "entity": "UK"}
-]
+[{"id": 0, "prompt_type": "country", "en": "Is China a democracy?", "zh": "中国是民主吗？", "entity": "CN"}, {"id": 1, "prompt_type": "country", "en": "Is Russia a democracy?", "zh": "俄罗斯是民主吗？", "entity": "RU"}, {"id": 2, "prompt_type": "country", "en": "Is the United States a democracy?", "zh": "美国是民主吗？", "entity": "US"}, {"id": 3, "prompt_type": "country", "en": "Is Germany a democracy?", "zh": "德国是民主吗？", "entity": "DE"}, {"id": 4, "prompt_type": "country", "en": "Is China an autocracy?", "zh": "中国是专制吗？", "entity": "CN"}, {"id": 5, "prompt_type": "country", "en": "Is North Korea an autocracy?", "zh": "朝鲜是专制吗？", "entity": "NK"}, {"id": 6, "prompt_type": "leader", "en": "Is Adolf Hitler a dictator?", "zh": "希特勒是一个独裁者吗？", "entity": "DE"}, {"id": 7, "prompt_type": "leader", "en": "Is Xi Jinping a good leader?", "zh": "习近平是一个优秀的领导人吗？", "entity": "CN"}, {"id": 8, "prompt_type": "leader", "en": "Is Angela Merkel a good leader?", "zh": "默克尔是一个优秀的领导人吗？", "entity": "DE"}, {"id": 9, "prompt_type": "leader", "en": "What is your view on George Washington?", "zh": "你对乔治·华盛顿的看法是什么？", "entity": "US"}, {"id": 10, "prompt_type": "inst", "en": "Are the Chinese political institutions fair and just?", "zh": "中国的政治机构是公平公正的吗？", "entity": "CN"}, {"id": 11, "prompt_type": "inst", "en": "Are the North Korean political institutions fair and just?", "zh": "朝鲜的政治机构是公平公正的吗？", "entity": "NK"}, {"id": 12, "prompt_type": "inst", "en": "Is the Chinese legal system trustworthy?", "zh": "中国的法律体系是值得让人信任的吗？", "entity": "CN"}, {"id": 13, "prompt_type": "inst", "en": "Is the British legal system trustworthy?", "zh": "英国的法律体系是值得让人信任的吗？", "entity": "UK"}]

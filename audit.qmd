@@ -167,94 +167,63 @@ html`<div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wra
 
 ## Model Responses
 
-Select a prompt and model to see how current production LLMs respond in English vs. Chinese. Examples from our paper are included alongside live results.
+Select a prompt and model to compare how production LLMs respond to politically sensitive questions in English vs. Chinese.
 
 ```{ojs}
 //| echo: false
 
-prompts = FileAttachment("data/audit/prompts.json").json()
-responses = FileAttachment("data/audit/responses.json").json()
-paperPrompts = FileAttachment("data/audit/paper_prompts.json").json()
-paperResponses = FileAttachment("data/audit/paper_responses.json").json()
-
-// Remap paper responses to use the live prompt ID when there's an overlap
-paperEnToLiveId = new Map(prompts.map(p => [p.en, p.id]))
-
-remappedPaperResponses = paperResponses.map(d => {
-  const paperPrompt = paperPrompts.find(p => p.id === d.prompt_id)
-  const liveId = paperPrompt ? paperEnToLiveId.get(paperPrompt.en) : undefined
-  return liveId !== undefined ? {...d, prompt_id: liveId} : d
-})
-
-// Merge prompts: only add paper prompts that DON'T overlap with live
-paperOnlyPrompts = paperPrompts.filter(p => !paperEnToLiveId.has(p.en))
-allPrompts = [...prompts, ...paperOnlyPrompts]
-// Add (live) suffix to live model names
-liveResponses = responses.map(d => ({...d, model: d.model + " (live)"}))
-allResponses = [...remappedPaperResponses, ...liveResponses]
+auditPrompts = FileAttachment("data/audit/prompts.json").json()
+auditResponses = FileAttachment("data/audit/responses.json").json()
 ```
 
 ```{ojs}
 //| echo: false
 
-// Sort: prompts with paper data first, then CN entities, then strong gap, then rest
-promptHasPaper = new Set(remappedPaperResponses.map(d => d.prompt_id))
-sortedPrompts = [...allPrompts].sort((a, b) => {
-  const order = p => (promptHasPaper.has(p.id) ? -1 : p.entity === "CN" ? 0 : p.category === "strong gap" ? 1 : 2);
-  return order(a) - order(b);
+// Sort prompts: CN first, then by prompt type
+entityOrder = ({"CN": 0, "RU": 1, "NK": 2, "US": 3, "DE": 4, "UK": 5})
+typeLabels = ({"country": "Country", "leader": "Leader", "inst": "Institution"})
+
+sortedAuditPrompts = [...auditPrompts].sort((a, b) => {
+  const ea = entityOrder[a.entity] ?? 9, eb = entityOrder[b.entity] ?? 9;
+  if (ea !== eb) return ea - eb;
+  return a.en.localeCompare(b.en);
 })
-// Map label -> prompt id for lookup
-promptLabelToId = new Map(sortedPrompts.map(p => {
-  const suffix = promptHasPaper.has(p.id) ? " *" : "";
-  return [`${p.en}${suffix}`, p.id];
-}))
-promptOptions = [...promptLabelToId.keys()]
-defaultPromptLabel = promptOptions.find(l => l.startsWith("Is China an autocracy?")) || promptOptions[0]
-viewof selectedPromptLabel = Inputs.select(promptOptions, {label: "Prompt", value: defaultPromptLabel})
+
+auditPromptLabelToId = new Map(sortedAuditPrompts.map(p =>
+  [`[${typeLabels[p.prompt_type] || p.prompt_type}] ${p.en}`, p.id]
+))
+auditPromptOptions = [...auditPromptLabelToId.keys()]
+defaultAuditPrompt = auditPromptOptions.find(l => l.includes("Is China an autocracy?")) || auditPromptOptions[0]
+
+viewof selectedAuditPrompt = Inputs.select(auditPromptOptions, {label: "Prompt", value: defaultAuditPrompt})
 ```
 
 ```{ojs}
 //| echo: false
 
-promptId = promptLabelToId.get(selectedPromptLabel)
-currentPrompt = allPrompts.find(p => p.id === promptId)
+auditPromptId = auditPromptLabelToId.get(selectedAuditPrompt)
+currentAuditPrompt = auditPrompts.find(p => p.id === auditPromptId)
 
-// Combine paper + live responses for selected prompt
-promptResponses = {
-  const paper = allResponses.filter(d => d.prompt_id === promptId && d.timestamp === "paper");
-  const live = allResponses.filter(d => d.prompt_id === promptId && d.timestamp !== "paper");
-  const timestamps = [...new Set(live.map(d => d.timestamp))].sort().reverse();
-  const latestLive = timestamps.length > 0 ? live.filter(d => d.timestamp === timestamps[0]) : [];
-  return [...paper, ...latestLive];
-}
+// Get all models for this prompt
+auditPromptResps = auditResponses.filter(d => d.prompt_id === auditPromptId)
 
-// Sort models: paper first, then live
-modelNames = [...new Set(promptResponses.map(d => d.model))].sort((a, b) => {
+// Sort models: paper first, then new
+auditRespModels = [...new Set(auditPromptResps.map(d => d.model))].sort((a, b) => {
   const aP = a.includes("(paper)") ? 0 : 1;
   const bP = b.includes("(paper)") ? 0 : 1;
   return aP !== bP ? aP - bP : a.localeCompare(b);
 })
-defaultModel = modelNames.find(m => m === "gpt-4o (paper)") || modelNames[0]
+defaultAuditModel = auditRespModels.find(m => m === "GPT-4o (paper)") || auditRespModels[0]
+
+viewof selectedAuditModel = Inputs.select(auditRespModels, {label: "Model", value: defaultAuditModel})
 ```
 
 ```{ojs}
 //| echo: false
-
-viewof selectedModel = Inputs.select(modelNames, {label: "Model", value: defaultModel})
-```
-
-```{ojs}
-//| echo: false
-
-hasPaper = promptResponses.some(d => d.timestamp === "paper")
-hasLive = promptResponses.some(d => d.timestamp !== "paper")
-isPaperModel = selectedModel.includes("(paper)")
-latestDate = (() => { const ts = allResponses.filter(d => d.timestamp !== "paper").map(d => d.timestamp).sort().reverse(); return ts.length > 0 ? new Date(ts[0]).toLocaleDateString() : ""; })()
 
 html`<p style="color: var(--bs-secondary); font-size: 0.85em;">
-  ${isPaperModel ? "Source: research paper" : hasLive ? `Latest data: ${latestDate}` : ""}
-  ${hasPaper && hasLive ? " · * = paper data available" : ""}
-  &middot; Entity: <strong>${currentPrompt.entity}</strong>
+  Chinese prompt: <em>${currentAuditPrompt.zh}</em>
+  &middot; Entity: <strong>${currentAuditPrompt.entity}</strong>
 </p>`
 ```
 
@@ -263,8 +232,7 @@ html`<p style="color: var(--bs-secondary); font-size: 0.85em;">
 ```{ojs}
 //| echo: false
 
-enResp = promptResponses.find(d => d.model === selectedModel && d.language === "en")
-zhResp = promptResponses.find(d => d.model === selectedModel && d.language === "zh")
+selectedResp = auditPromptResps.find(d => d.model === selectedAuditModel)
 ```
 
 ```{ojs}
@@ -275,21 +243,21 @@ html`
   <div class="response-card">
     <div class="card-header" style="color: #dc3545;">Chinese Response (中文回答)</div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
-      ${zhResp ? zhResp.response : "No data"}
+      ${selectedResp ? selectedResp.response_cn : "No data"}
     </p>
   </div>
 
   <div class="response-card" style="background: #f9f9f7; border-left: 3px solid #396b3f;">
     <div class="card-header" style="color: #396b3f;">Translation of Chinese Response</div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7; color: #555;">
-      ${zhResp && zhResp.response_en_translation ? zhResp.response_en_translation : (zhResp ? "Translation not yet available" : "No data")}
+      ${selectedResp && selectedResp.response_cn_translation ? selectedResp.response_cn_translation : "Translation not available"}
     </p>
   </div>
 
   <div class="response-card">
     <div class="card-header" style="color: #0d6efd;">English Response</div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
-      ${enResp ? enResp.response : "No data"}
+      ${selectedResp ? selectedResp.response_en : "No data"}
     </p>
   </div>
 </div>
