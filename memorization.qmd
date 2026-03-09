@@ -190,12 +190,12 @@ sortedModels = {
 
 Plot.plot({
   width: 650,
-  height: 300,
+  height: Math.max(250, sortedModels.length * 50 + 80),
   marginLeft: 180,
   marginRight: 20,
   x: {
     label: "Memorization rate",
-    domain: [0, 0.6],
+    domain: [0, Math.min(1, Math.max(0.15, ...completionRates.map(d => d.ci_hi)) * 1.15)],
     tickFormat: d => (d * 100).toFixed(0) + "%"
   },
   y: {label: null, domain: sortedModels, padding: 0.3},
