@@ -21,30 +21,44 @@ PHRASES_PATH = BASE_DIR / "data" / "memorization" / "phrases.json"
 COMPLETIONS_PATH = BASE_DIR / "data" / "memorization" / "completions.json"
 
 MODELS = {
-    "gpt-4o": "openai/gpt-4o",
-    "gpt-3.5-turbo": "openai/gpt-3.5-turbo",
     "gpt-5.2": "openai/gpt-5.2",
-    "claude-sonnet-4": "anthropic/claude-sonnet-4",
     "claude-opus-4.6": "anthropic/claude-opus-4-6",
-    "deepseek-chat": "deepseek/deepseek-chat",
+    "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
+    "deepseek-v3.2-speciale": "deepseek/deepseek-v3.2-speciale",
+    "grok-4": "x-ai/grok-4",
 }
 
-MAX_PHRASES = 50  # per type (50 propaganda + 50 culturax)
+MAX_PHRASES = 1000  # per type (1000 propaganda + 1000 culturax)
 MAX_RETRIES = 3
 RETRY_BASE_DELAY = 2
 
 
+REASONING_MODELS = {"deepseek/deepseek-v3.2-speciale"}
+
+
 def query_completion(client, model_id: str, prompt: str) -> str:
-    """Query model for completion at temperature=0."""
+    """Query model for completion at temperature=0.
+
+    For reasoning models (e.g. DeepSeek Speciale), uses higher max_tokens
+    to account for chain-of-thought overhead, and falls back to the
+    reasoning field if content is None.
+    """
+    is_reasoning = model_id in REASONING_MODELS
+    max_tok = 4096 if is_reasoning else 256
+
     for attempt in range(MAX_RETRIES):
         try:
             response = client.chat.completions.create(
                 model=model_id,
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=256,
+                max_tokens=max_tok,
                 temperature=0,
             )
-            return response.choices[0].message.content
+            msg = response.choices[0].message
+            text = msg.content
+            if text is None and hasattr(msg, "reasoning") and msg.reasoning:
+                text = msg.reasoning
+            return text or ""
         except Exception as e:
             if attempt < MAX_RETRIES - 1:
                 delay = RETRY_BASE_DELAY * (2 ** attempt)
@@ -163,6 +177,13 @@ def main():
             })
 
             time.sleep(0.5)
+
+            # Save periodically (every 100 completions)
+            if count % 100 == 0:
+                with open(COMPLETIONS_PATH, "w", encoding="utf-8") as f:
+                    json.dump(completions, f, ensure_ascii=False, indent=2)
+                _save_cache(translation_cache)
+                print(f"  [checkpoint saved: {count}/{total}]")
 
     _save_cache(translation_cache)
 
