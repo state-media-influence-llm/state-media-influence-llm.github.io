@@ -11,6 +11,6 @@ lasso_cv.json
 
 **/*.quarto_ipynb
 
-data/study4/
+data/study4/run*.log
 .claude/
 scripts/archive/

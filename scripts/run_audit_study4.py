@@ -266,10 +266,10 @@ def query_single(client, model_id: str, prompt: str) -> str:
                 return ""
 
 
-def translate_text(text: str, source: str, target: str) -> str:
+def translate_text(text, source: str, target: str) -> str:
     """Translate using Google Translate (free, via deep_translator)."""
     from deep_translator import GoogleTranslator
-    if not text or not text.strip():
+    if not isinstance(text, str) or not text.strip():
         return ""
     try:
         # deep_translator has a 5000 char limit per call; chunk if needed
