@@ -9,7 +9,11 @@ Adds English translations of prompts, expected completions, and model completion
 from __future__ import annotations
 
 import json
+import sys
 import time
+
+# Unbuffered output for background runs
+sys.stdout.reconfigure(line_buffering=True)
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -34,17 +38,16 @@ RETRY_BASE_DELAY = 2
 
 
 REASONING_MODELS = {"deepseek/deepseek-v3.2-speciale"}
+SKIP_ON_RESUME = {"deepseek-v3.2-speciale"}  # models to always re-query
 
 
 def query_completion(client, model_id: str, prompt: str) -> str:
     """Query model for completion at temperature=0.
 
-    For reasoning models (e.g. DeepSeek Speciale), uses higher max_tokens
-    to account for chain-of-thought overhead, and falls back to the
-    reasoning field if content is None.
+    For reasoning models, falls back to the reasoning field if content is None.
     """
     is_reasoning = model_id in REASONING_MODELS
-    max_tok = 4096 if is_reasoning else 256
+    max_tok = 512 if is_reasoning else 256
 
     for attempt in range(MAX_RETRIES):
         try:
@@ -117,89 +120,159 @@ def fuzzy_match(completion: str, expected: str) -> tuple[bool, float]:
     return best_dist < 0.4, best_dist
 
 
+def query_one_model(client, model_name, model_id, phrase, prompt_text, translation_cache):
+    """Query a single model and return the completion record."""
+    completion_text = query_completion(client, model_id, prompt_text)
+    matched, edit_distance = fuzzy_match(completion_text, phrase["end"])
+
+    completion_en = ""
+    if not completion_text.startswith("[ERROR]"):
+        completion_en = translate_zh_to_en(completion_text, cache=translation_cache)
+
+    return {
+        "phrase_id": phrase["id"],
+        "type": phrase["type"],
+        "model": model_name,
+        "prompt": prompt_text,
+        "prompt_en": translate_zh_to_en(phrase["start"], cache=translation_cache),
+        "expected": phrase["end"],
+        "expected_en": translate_zh_to_en(phrase["end"], cache=translation_cache),
+        "completion": completion_text,
+        "completion_en": completion_en,
+        "matched": matched,
+        "edit_distance": round(edit_distance, 2),
+    }
+
+
+def run_model_stream(client, model_name, model_id, phrases, done,
+                     translation_cache, cache_lock, timestamp,
+                     completions, completions_lock, counter):
+    """Run all phrases for a single model sequentially, saving inline."""
+    count = 0
+    for phrase in phrases:
+        if (phrase["id"], model_name) in done:
+            continue
+
+        prompt_text = phrase["start_chat"]
+        if not prompt_text:
+            prompt_text = f"续写句子：{phrase['start']}"
+
+        try:
+            rec = query_one_model(client, model_name, model_id,
+                                  phrase, prompt_text, translation_cache)
+            rec["timestamp"] = timestamp
+            with completions_lock:
+                completions.append(rec)
+                counter[0] += 1
+                n = counter[0]
+            count += 1
+            print(f"  [{n}] {model_name} | {phrase['id']} | "
+                  f"matched={rec['matched']} dist={rec['edit_distance']}")
+        except Exception as e:
+            print(f"  {model_name} | {phrase['id']} | FAILED: {e}")
+
+        time.sleep(0.3)
+
+    print(f"  {model_name}: finished {count} phrases")
+
+
 def main():
+    from concurrent.futures import ThreadPoolExecutor
+    import threading
+
     client = get_openrouter_client()
 
     with open(PHRASES_PATH, "r", encoding="utf-8") as f:
         all_phrases = json.load(f)
 
-    # Take top N per type
     propaganda = [p for p in all_phrases if p["type"] == "propaganda"][:MAX_PHRASES]
     culturax = [p for p in all_phrases if p["type"] == "culturax"][:MAX_PHRASES]
     phrases = propaganda + culturax
 
-    # Load existing completions
+    # Load existing completions and build skip set
     if COMPLETIONS_PATH.exists():
         with open(COMPLETIONS_PATH, "r", encoding="utf-8") as f:
             completions = json.load(f)
     else:
         completions = []
 
+    # Remove old DeepSeek entries (will re-query all)
+    completions = [c for c in completions
+                   if not (c.get("model") in SKIP_ON_RESUME
+                           and c.get("timestamp") != "paper")]
+
+    done = set()
+    for c in completions:
+        if c.get("timestamp") != "paper":
+            done.add((c["phrase_id"], c["model"]))
+
+    # Count work per model
+    for model_name in MODELS:
+        remaining = sum(1 for p in phrases if (p["id"], model_name) not in done)
+        print(f"  {model_name}: {remaining} phrases to query")
+
     translation_cache = _load_cache()
+    cache_lock = threading.Lock()
     timestamp = datetime.now(timezone.utc).isoformat()
-    total = len(phrases) * len(MODELS)
-    count = 0
+    completions_lock = threading.Lock()
+    counter = [0]  # mutable counter for threads
 
-    for phrase in phrases:
-        prompt_text = phrase["start_chat"]
-        if not prompt_text:
-            prompt_text = f"续写句子：{phrase['start']}"
-
-        # Pre-translate the prompt and expected completion
-        prompt_en = translate_zh_to_en(phrase["start"], cache=translation_cache)
-        expected_en = translate_zh_to_en(phrase["end"], cache=translation_cache)
-
+    # Run each model as an independent parallel stream
+    with ThreadPoolExecutor(max_workers=len(MODELS)) as pool:
+        futures = []
         for model_name, model_id in MODELS.items():
-            count += 1
-            print(f"[{count}/{total}] {model_name} | {phrase['id']}")
+            f = pool.submit(
+                run_model_stream, client, model_name, model_id,
+                phrases, done, translation_cache, cache_lock,
+                timestamp, completions, completions_lock, counter
+            )
+            futures.append((model_name, f))
 
-            completion_text = query_completion(client, model_id, prompt_text)
-            matched, edit_distance = fuzzy_match(completion_text, phrase["end"])
+        # Checkpoint periodically while threads run
+        all_done = False
+        while not all_done:
+            time.sleep(30)
+            with completions_lock:
+                n = counter[0]
+                to_save = list(completions)
+            tmp = str(COMPLETIONS_PATH) + ".tmp"
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump(to_save, f, ensure_ascii=False, indent=2)
+            Path(tmp).replace(COMPLETIONS_PATH)
+            with cache_lock:
+                _save_cache(dict(translation_cache))
+            print(f"[checkpoint] {n} new, {len(to_save)} total saved")
 
-            # Translate model completion
-            completion_en = ""
-            if not completion_text.startswith("[ERROR]"):
-                completion_en = translate_zh_to_en(completion_text, cache=translation_cache)
+            all_done = all(f.done() for _, f in futures)
 
-            completions.append({
-                "timestamp": timestamp,
-                "phrase_id": phrase["id"],
-                "type": phrase["type"],
-                "model": model_name,
-                "prompt": prompt_text,
-                "prompt_en": prompt_en,
-                "expected": phrase["end"],
-                "expected_en": expected_en,
-                "completion": completion_text,
-                "completion_en": completion_en,
-                "matched": matched,
-                "edit_distance": round(edit_distance, 2),
-            })
+        # Check for exceptions
+        for model_name, f in futures:
+            try:
+                f.result()
+            except Exception as e:
+                print(f"  {model_name} stream failed: {e}")
 
-            time.sleep(0.5)
-
-            # Save periodically (every 100 completions)
-            if count % 100 == 0:
-                with open(COMPLETIONS_PATH, "w", encoding="utf-8") as f:
-                    json.dump(completions, f, ensure_ascii=False, indent=2)
-                _save_cache(translation_cache)
-                print(f"  [checkpoint saved: {count}/{total}]")
-
-    _save_cache(translation_cache)
-
-    with open(COMPLETIONS_PATH, "w", encoding="utf-8") as f:
-        json.dump(completions, f, ensure_ascii=False, indent=2)
+    # Final save
+    with completions_lock:
+        to_save = list(completions)
+    tmp = str(COMPLETIONS_PATH) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(to_save, f, ensure_ascii=False, indent=2)
+    Path(tmp).replace(COMPLETIONS_PATH)
+    with cache_lock:
+        _save_cache(dict(translation_cache))
 
     # Print summary
     for model_name in MODELS:
-        model_results = [c for c in completions if c["model"] == model_name and c["timestamp"] == timestamp]
+        model_results = [c for c in to_save if c["model"] == model_name
+                         and c.get("timestamp") not in (None, "paper")]
         prop_match = sum(1 for c in model_results if c["matched"] and c["type"] == "propaganda")
         cult_match = sum(1 for c in model_results if c["matched"] and c["type"] == "culturax")
         prop_total = sum(1 for c in model_results if c["type"] == "propaganda")
         cult_total = sum(1 for c in model_results if c["type"] == "culturax")
         print(f"{model_name}: propaganda {prop_match}/{prop_total}, culturax {cult_match}/{cult_total}")
 
-    print(f"\nDone! {count} queries. Total completions: {len(completions)}")
+    print(f"\nDone! {counter[0]} new queries. Total completions: {len(completions)}")
 
 
 if __name__ == "__main__":

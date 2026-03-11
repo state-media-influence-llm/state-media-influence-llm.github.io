@@ -16,8 +16,10 @@ def _load_cache():
 
 def _save_cache(cache):
     os.makedirs(os.path.dirname(CACHE_PATH), exist_ok=True)
-    with open(CACHE_PATH, "w", encoding="utf-8") as f:
+    tmp = CACHE_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(cache, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, CACHE_PATH)
 
 
 def translate_zh_to_en(text, cache=None):
