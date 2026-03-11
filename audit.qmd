@@ -29,7 +29,7 @@ auditFilterOptions = [
   ...allModelNames
 ]
 
-viewof selectedAuditFilter = Inputs.select(auditFilterOptions, {label: "Models", value: "Paper models (2024)"})
+viewof selectedAuditFilter = Inputs.select(auditFilterOptions, {label: "Models", value: "New models (2026)"})
 ```
 
 ```{ojs}
