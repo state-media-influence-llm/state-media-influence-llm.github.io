@@ -11,6 +11,8 @@ lasso_cv.json
 
 **/*.quarto_ipynb
 
-data/study4/run*.log
+data/study4/
+data/translations_cache.json
+data/global/gpt5_opus4_prel.csv
 .claude/
 scripts/archive/
