@@ -9,15 +9,110 @@ Production LLMs have memorized Chinese state propaganda. When given the first ha
 
 ---
 
-## Model Responses
-
-Select a phrase and model to see how current production LLMs complete propaganda phrases. Matching uses normalized edit distance < 0.4, following the paper's methodology.
-
 ```{ojs}
 //| echo: false
 
 completions = FileAttachment("data/memorization/completions.json").json()
 ```
+
+## Completion Rates by Model
+
+```{ojs}
+//| echo: false
+
+completionRates = {
+  const liveCompletions = completions.filter(d => d.timestamp !== "paper");
+  const bestLive = new Map();
+  liveCompletions.forEach(d => {
+    const key = d.phrase_id + "|" + d.model;
+    if (!bestLive.has(key) || d.timestamp > bestLive.get(key).timestamp) {
+      bestLive.set(key, d);
+    }
+  });
+  const latest = [...bestLive.values()];
+  const models = [...new Set(latest.map(d => d.model))];
+  const types = ["propaganda", "culturax"];
+  const result = [];
+  for (const model of models) {
+    for (const type of types) {
+      const modelTypeData = latest.filter(d => d.model === model && d.type === type);
+      const matched = modelTypeData.filter(d => d.matched).length;
+      if (modelTypeData.length > 0) {
+        const n = modelTypeData.length;
+        const p = matched / n;
+        // Wilson score interval (95% CI)
+        const z = 1.96;
+        const denom = 1 + z * z / n;
+        const center = (p + z * z / (2 * n)) / denom;
+        const margin = z * Math.sqrt((p * (1 - p) + z * z / (4 * n)) / n) / denom;
+        result.push({
+          model,
+          type,
+          rate: p,
+          ci_lo: Math.max(0, center - margin),
+          ci_hi: Math.min(1, center + margin),
+          matched,
+          total: n
+        });
+      }
+    }
+  }
+  return result;
+}
+
+// Sort models by propaganda match rate descending
+sortedModels = {
+  const propRates = new Map();
+  completionRates.filter(d => d.type === "propaganda").forEach(d => propRates.set(d.model, d.rate));
+  return [...new Set(completionRates.map(d => d.model))].sort((a, b) => (propRates.get(b) || 0) - (propRates.get(a) || 0));
+}
+
+Plot.plot({
+  width: 650,
+  height: Math.max(250, sortedModels.length * 50 + 80),
+  marginLeft: 180,
+  marginRight: 20,
+  x: {
+    label: "Memorization rate",
+    domain: [0, Math.min(1, Math.max(0.15, ...completionRates.map(d => d.ci_hi)) * 1.15)],
+    tickFormat: d => (d * 100).toFixed(0) + "%"
+  },
+  y: {label: null, domain: sortedModels, padding: 0.3},
+  color: {
+    domain: ["propaganda", "culturax"],
+    range: ["#dc3545", "#2ca02c"],
+    legend: true
+  },
+  marks: [
+    Plot.ruleY(sortedModels, {y: d => d, stroke: "#eee"}),
+    Plot.link(completionRates, {
+      x1: "ci_lo",
+      x2: "ci_hi",
+      y1: "model",
+      y2: "model",
+      stroke: "type",
+      strokeWidth: 1.5,
+      strokeOpacity: 0.6
+    }),
+    Plot.dot(completionRates, {
+      x: "rate",
+      y: "model",
+      fill: "type",
+      stroke: "type",
+      r: 6,
+      tip: true,
+      title: d => `${d.model}: ${d.type} ${d.matched}/${d.total} (${(d.rate * 100).toFixed(1)}%) [${(d.ci_lo * 100).toFixed(1)}–${(d.ci_hi * 100).toFixed(1)}%]`
+    }),
+    Plot.ruleX([0])
+  ]
+})
+```
+
+---
+
+## Model Responses
+
+Select a phrase and model to see how current production LLMs complete propaganda phrases. Matching uses normalized edit distance < 0.4, following the paper's methodology.
 
 ```{ojs}
 //| echo: false
@@ -134,97 +229,4 @@ ${phraseData.map(d => {
   </div>`;
 })}
 </div>`
-```
-
-## Completion Rates by Model
-
-```{ojs}
-//| echo: false
-
-completionRates = {
-  const liveCompletions = completions.filter(d => d.timestamp !== "paper");
-  const bestLive = new Map();
-  liveCompletions.forEach(d => {
-    const key = d.phrase_id + "|" + d.model;
-    if (!bestLive.has(key) || d.timestamp > bestLive.get(key).timestamp) {
-      bestLive.set(key, d);
-    }
-  });
-  const latest = [...bestLive.values()];
-  const models = [...new Set(latest.map(d => d.model))];
-  const types = ["propaganda", "culturax"];
-  const result = [];
-  for (const model of models) {
-    for (const type of types) {
-      const modelTypeData = latest.filter(d => d.model === model && d.type === type);
-      const matched = modelTypeData.filter(d => d.matched).length;
-      if (modelTypeData.length > 0) {
-        const n = modelTypeData.length;
-        const p = matched / n;
-        // Wilson score interval (95% CI)
-        const z = 1.96;
-        const denom = 1 + z * z / n;
-        const center = (p + z * z / (2 * n)) / denom;
-        const margin = z * Math.sqrt((p * (1 - p) + z * z / (4 * n)) / n) / denom;
-        result.push({
-          model,
-          type,
-          rate: p,
-          ci_lo: Math.max(0, center - margin),
-          ci_hi: Math.min(1, center + margin),
-          matched,
-          total: n
-        });
-      }
-    }
-  }
-  return result;
-}
-
-// Sort models by propaganda match rate descending
-sortedModels = {
-  const propRates = new Map();
-  completionRates.filter(d => d.type === "propaganda").forEach(d => propRates.set(d.model, d.rate));
-  return [...new Set(completionRates.map(d => d.model))].sort((a, b) => (propRates.get(b) || 0) - (propRates.get(a) || 0));
-}
-
-Plot.plot({
-  width: 650,
-  height: Math.max(250, sortedModels.length * 50 + 80),
-  marginLeft: 180,
-  marginRight: 20,
-  x: {
-    label: "Memorization rate",
-    domain: [0, Math.min(1, Math.max(0.15, ...completionRates.map(d => d.ci_hi)) * 1.15)],
-    tickFormat: d => (d * 100).toFixed(0) + "%"
-  },
-  y: {label: null, domain: sortedModels, padding: 0.3},
-  color: {
-    domain: ["propaganda", "culturax"],
-    range: ["#dc3545", "#2ca02c"],
-    legend: true
-  },
-  marks: [
-    Plot.ruleY(sortedModels, {y: d => d, stroke: "#eee"}),
-    Plot.link(completionRates, {
-      x1: "ci_lo",
-      x2: "ci_hi",
-      y1: "model",
-      y2: "model",
-      stroke: "type",
-      strokeWidth: 1.5,
-      strokeOpacity: 0.6
-    }),
-    Plot.dot(completionRates, {
-      x: "rate",
-      y: "model",
-      fill: "type",
-      stroke: "type",
-      r: 6,
-      tip: true,
-      title: d => `${d.model}: ${d.type} ${d.matched}/${d.total} (${(d.rate * 100).toFixed(1)}%) [${(d.ci_lo * 100).toFixed(1)}–${(d.ci_hi * 100).toFixed(1)}%]`
-    }),
-    Plot.ruleX([0])
-  ]
-})
 ```
