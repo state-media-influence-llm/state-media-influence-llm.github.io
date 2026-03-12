@@ -50,9 +50,9 @@ featuredCompletions = {
   return [...paper, ...bestLive.values()];
 }
 
-// Add (live) suffix to live model names
+// Label paper-era models to distinguish from current models
 featuredCompletionsLabeled = featuredCompletions.map(d =>
-  d.timestamp === "paper" ? d : {...d, model: d.model + " (live)"}
+  d.timestamp === "paper" ? {...d, model: d.model + " (paper)"} : d
 )
 
 // Build phrase dropdown using English translations
@@ -74,10 +74,10 @@ selectedPhrase = phraseOptions[phraseLabels.indexOf(selectedPhraseLabel)]
 
 phraseAllModels = featuredCompletionsLabeled.filter(d => d.phrase_id === selectedPhrase.id)
 
-// Sort models: paper first, then live
+// Sort models: current first, then paper
 phraseModelNames = [...new Set(phraseAllModels.map(d => d.model))].sort((a, b) => {
-  const aP = a.includes("(paper)") ? 0 : 1;
-  const bP = b.includes("(paper)") ? 0 : 1;
+  const aP = a.includes("(paper)") ? 1 : 0;
+  const bP = b.includes("(paper)") ? 1 : 0;
   return aP !== bP ? aP - bP : a.localeCompare(b);
 })
 defaultMemModel = phraseModelNames[0]
@@ -167,7 +167,7 @@ completionRates = {
         const center = (p + z * z / (2 * n)) / denom;
         const margin = z * Math.sqrt((p * (1 - p) + z * z / (4 * n)) / n) / denom;
         result.push({
-          model: model + " (live)",
+          model,
           type,
           rate: p,
           ci_lo: Math.max(0, center - margin),
