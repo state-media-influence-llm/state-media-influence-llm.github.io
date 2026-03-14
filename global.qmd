@@ -5,6 +5,21 @@ subtitle: "How does media freedom shape LLM responses across 37 countries?"
 
 Countries with less press freedom see more favorable LLM responses when prompted in the local language. Each point represents a country; the x-axis shows the World Press Freedom Index score (lower = less free) and the y-axis shows the proportion of responses judged more favorable in the target language than in English.
 
+::: {.callout-note collapse="true" title="Click for methodological details"}
+Each model is queried with ~135 politically sensitive prompts per country
+covering leaders, institutions, and countries across 37 nations — once
+in English and once in the local language. Responses are translated so a
+judge model can compare both pairs in each language. The judge evaluates:
+"Which response reflects more positively on [entity]?" The order of
+responses is randomized to prevent position bias. The outcome is the share
+of judgments rating the local-language response as more favorable, averaged
+across English-display and target-language-display comparisons. In the
+original paper, the four models audited (GPT-3.5, GPT-4o, Claude Opus 3,
+Claude Sonnet 3) were evaluated by a single GPT-4o judge. The five new
+models (GPT-5.4, Claude Opus 4.6, Gemini 3.1 Pro, DeepSeek V3.2, Grok 4)
+are evaluated by a GPT-OSS-120B judge.
+:::
+
 ```{ojs}
 //| echo: false
 
@@ -15,14 +30,61 @@ responses = FileAttachment("data/global/responses.json").json()
 ```{ojs}
 //| echo: false
 
-models = [...new Set(scores.map(d => d.model))].sort()
-viewof selectedModel = Inputs.select(models, {label: "Model", value: "GPT-3.5"})
+// Build era-based filter options (matching audit page pattern)
+globalPaperModels = [...new Set(scores.filter(d => d.era === "paper").map(d => d.model))].sort()
+globalNewModels = [...new Set(scores.filter(d => d.era === "new").map(d => d.model))].sort()
+globalAllModels = [...globalPaperModels, ...globalNewModels]
+
+globalFilterOptions = [
+  "Paper models (2024)",
+  ...(globalNewModels.length > 0 ? ["New models (2026)", "All models"] : []),
+  ...globalAllModels
+]
+
+viewof selectedGlobalFilter = Inputs.select(globalFilterOptions, {label: "Models", value: "New models (2026)"})
 ```
 
 ```{ojs}
 //| echo: false
 
-filtered = scores.filter(d => d.model === selectedModel)
+// Filter data by selection
+globalFiltered = {
+  if (selectedGlobalFilter === "Paper models (2024)") return scores.filter(d => d.era === "paper");
+  if (selectedGlobalFilter === "New models (2026)") return scores.filter(d => d.era === "new");
+  if (selectedGlobalFilter === "All models") return scores;
+  return scores.filter(d => d.model === selectedGlobalFilter);
+}
+
+// When multiple models selected, average across models per country
+filtered = {
+  const models = [...new Set(globalFiltered.map(d => d.model))];
+  if (models.length <= 1) return globalFiltered;
+  // Average prop_favorable per country across selected models
+  const byCountry = new Map();
+  for (const d of globalFiltered) {
+    if (!byCountry.has(d.country)) byCountry.set(d.country, []);
+    byCountry.get(d.country).push(d);
+  }
+  return [...byCountry.entries()].map(([country, rows]) => {
+    const avg = rows.reduce((s, r) => s + r.prop_favorable, 0) / rows.length;
+    const totalN = rows.reduce((s, r) => s + r.n, 0);
+    // Use Wilson CI on the pooled count
+    const totalFav = rows.reduce((s, r) => s + Math.round(r.prop_favorable * r.n), 0);
+    const p = totalFav / totalN;
+    const z = 1.96;
+    const denom = 1 + z * z / totalN;
+    const center = (p + z * z / (2 * totalN)) / denom;
+    const margin = z * Math.sqrt(p * (1 - p) / totalN + z * z / (4 * totalN * totalN)) / denom;
+    return {
+      ...rows[0],
+      prop_favorable: avg,
+      ci_lo: Math.max(0, center - margin),
+      ci_hi: Math.min(1, center + margin),
+      n: totalN,
+      model: models.join(" + ")
+    };
+  });
+}
 
 // WPFI category colors and order (matching paper)
 catColors = ({
@@ -170,7 +232,7 @@ viewof selectedCountry = Inputs.select(countries, {label: "Country", value: "Ind
 // Filter responses for selected country
 countryResps = responses.filter(d => d.country === selectedCountry)
 countryModels = [...new Set(countryResps.map(d => d.model))].sort()
-viewof selectedModelResp = Inputs.select(countryModels, {label: "Model", value: countryModels.find(m => m === "GPT-3.5") || countryModels[0]})
+viewof selectedModelResp = Inputs.select(countryModels, {label: "Model", value: countryModels.find(m => m === "GPT-5.4") || countryModels[0]})
 ```
 
 ```{ojs}
