@@ -26,15 +26,11 @@ keywordData = FileAttachment("data/contamination/keyword_matches.json").json()
 ```{ojs}
 //| echo: false
 
-// Sort: within each type, by rate descending
+// Sort by rate ascending (highest at top in horizontal plot)
 typeOrder = ["Leaders", "Institutions", "Not Political"]
 
 sortedKeywords = {
-  const sorted = [...keywordData].sort((a, b) => {
-    const ti = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
-    if (ti !== 0) return ti;
-    return a.rate - b.rate;  // ascending so highest is at top in horizontal plot
-  });
+  const sorted = [...keywordData].sort((a, b) => a.rate - b.rate);
   return sorted;
 }
 
