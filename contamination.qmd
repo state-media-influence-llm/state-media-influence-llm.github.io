@@ -3,10 +3,10 @@ title: "Training Data Contamination"
 subtitle: "How much Chinese state propaganda appears in LLM training data?"
 ---
 
-Chinese state propaganda constitutes a substantial fraction of LLM training data. Using 5-gram cosine similarity matching against two propaganda corpora — scripted state media and the CCP's Xuexi Qiangguo app — 3.1 million (1.64%) Chinese-language documents in CulturaX match state propaganda sources. Documents mentioning political leaders and institutions have far higher match rates, reaching 24% for references to CCP plenums.
+Chinese state propaganda constitutes a substantial fraction of LLM training data. Using 5-word-gram cosine similarity matching against two propaganda corpora — scripted state media and the CCP's Xuexi Qiangguo app — over 3.1 million (1.64%) Chinese-language documents in CulturaX match state propaganda sources. Documents mentioning political leaders and institutions have far higher match rates, reaching 24% for references to CCP plenums.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
-**Matching procedure.** Each Chinese-language document in CulturaX is tokenized into character-level 5-grams. Cosine similarity is computed between each document's 5-gram vector and 5-gram vectors from two propaganda corpora: (1) scripted/coordinated state media articles identified via the method of King, Pan, and Roberts (2017), and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.
+**Matching procedure.** Each Chinese-language document in CulturaX is segmented into words (using pkuseg) and then into 5-word grams. Cosine similarity is computed between each document's 5-word-gram vector and 5-word-gram vectors from two propaganda corpora: (1) scripted/coordinated state media articles identified by Waight, Yuan et al., and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.
 
 **Keyword filtering.** Documents are tagged with binary keyword indicators (e.g., whether the text contains "习近平" for Xi Jinping). Match rates are computed separately for documents containing each keyword, revealing how contamination varies by topic.
 
@@ -172,7 +172,7 @@ Plot.plot({
 
 ## Domain Composition
 
-Government domains (.gov.cn) account for 1.64% of CulturaX's Chinese-language documents — roughly equal to the overall propaganda match rate and approximately **41 times** more than Chinese Wikipedia.
+Government domains (.gov.cn and chinacourt.org) account for 1.65% of CulturaX's Chinese-language documents — approximately **41 times** more than Chinese Wikipedia. The propaganda match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.
 
 ```{ojs}
 //| echo: false
