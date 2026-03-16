@@ -26,6 +26,14 @@ Millions of people around the world query large language models for information.
 
 ---
 
+## Logical Flow of the Six Studies
+
+Each study builds upon the previous one, tracing the influence of government media control from open training data to model pretraining to model responses to real-world impacts around the world. Green boxes indicate studies involving open data or model weights; purple boxes indicate studies involving widely-used commercial models.
+
+![Logical flow of the six studies.](images/figure_1_logical_flow.svg)
+
+---
+
 ## State-Controlled Media in Training Data
 
 ### Study 1 — Training Data Contamination
