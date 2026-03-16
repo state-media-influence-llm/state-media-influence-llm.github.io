@@ -7,7 +7,7 @@ toc: false
 **Hannah Waight**^1,2^, **Eddie Yang**^1,3^, **Yin Yuan**^4^, **Solomon Messing**^5^, **Margaret E. Roberts**^4^, **Brandon M. Stewart**^6^, **Joshua A. Tucker**^5,7^
 
 ::: {style="font-size: 0.85em; color: #666; margin-bottom: 1.5rem;"}
-^1^Co-first author · ^2^University of Oregon · ^3^Purdue University · ^4^UC San Diego · ^5^NYU Center for Social Media and Politics · ^6^Princeton University · ^7^NYU Wilf Family Department of Politics
+^1^Co-first author · ^2^University of Oregon · ^3^Purdue University · ^4^UC San Diego · ^5^NYU Center for Social Media, AI, and Politics · ^6^Princeton University · ^7^NYU Wilf Family Department of Politics
 :::
 
 [Paper (coming soon)]{.btn .btn-outline-secondary .btn-sm .me-1}
@@ -57,7 +57,7 @@ Commercial models have memorized phrases from state-controlled media at rates fr
 Additional pretraining on state-controlled media increases the probability of pro-government responses. After only 6,400 examples, the model provides a more favorable response than the base model almost 80% of the time. The effect spills over to other languages, with the largest effects on languages with similar writing systems (e.g., traditional Chinese, Japanese). [Explore pretraining results →](checkpoints.qmd)
 
 ::: {layout-ncol=2}
-![Favorability increases with propaganda pretraining.](images/ptrain_main.png)
+![Favorability increases with state coordinated media pretraining.](images/ptrain_main.png)
 
 ![Cross-lingual spillover effects.](images/ptrain_spillover.png)
 :::

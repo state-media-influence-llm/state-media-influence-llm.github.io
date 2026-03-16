@@ -6,19 +6,19 @@ title: "About"
 
 If you use this work, please cite:
 
-> *Propaganda is already influencing LLMs.* (2025).
+> *How Government Control of Media Influences Large Language Models.* (2025).
 
 ```bibtex
-@article{propaganda_llms_2025,
-  title={Propaganda is already influencing LLMs},
+@article{waight2025government,
+  title={How Government Control of Media Influences Large Language Models},
   year={2025}
 }
 ```
 
 ## Data Sources
 
-- **Pretraining checkpoint data**: Models fine-tuned on propaganda, state media, and CulturaX corpora, evaluated at 10 checkpoints (100–1000 steps) using GPT-4o as judge.
-- **Memorization phrases**: 2,000 phrases selected via LASSO regression from propaganda and CulturaX corpora, identifying the most predictive text segments.
+- **Pretraining checkpoint data**: Models fine-tuned on state scripted media, state media, and CulturaX corpora, evaluated at 10 checkpoints (100–1000 steps) using GPT-4o as judge.
+- **Memorization phrases**: 2,000 phrases selected via LASSO regression from state coordinated media and CulturaX corpora, identifying the most predictive text segments.
 - **Model audit data**: Automated queries to production LLMs via OpenRouter, comparing English and Chinese responses to politically sensitive prompts.
 
 ## Methodology

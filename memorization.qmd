@@ -1,13 +1,13 @@
 ---
 title: "Memorization Evidence"
-subtitle: "Can production LLMs complete propaganda phrases from memory?"
+subtitle: "Can production LLMs complete state coordinated media phrases from memory?"
 ---
 
-Production LLMs have memorized Chinese state propaganda. When given the first half of distinctive propaganda phrases, models can complete the second half from memory — and they do so far more often for propaganda than for general web text. Consistent with [prior work showing that memorization scales with model size](https://arxiv.org/abs/2202.07646), newer and larger models exhibit substantially higher memorization rates than their predecessors.
+Production LLMs have memorized Chinese state coordinated media. When given the first half of distinctive state coordinated media phrases, models can complete the second half from memory — and they do so far more often for state coordinated media than for general web text. Consistent with [prior work showing that memorization scales with model size](https://arxiv.org/abs/2202.07646), newer and larger models exhibit substantially higher memorization rates than their predecessors.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 Each model receives the first half of 2,000 LASSO-selected 20-gram
-phrases (1,000 propaganda, 1,000 general web text from CulturaX) and is
+phrases (1,000 state coordinated media, 1,000 general web text from CulturaX) and is
 asked to continue the sentence at temperature 0. Completions are cleaned
 (Unicode punctuation removed, prompt echo stripped) and compared against
 the expected ending using normalized Levenshtein edit distance. A phrase
@@ -46,7 +46,8 @@ The new models are queried with max\_tokens=256 via OpenRouter.
 ```{ojs}
 //| echo: false
 
-completions = FileAttachment("data/memorization/completions.json").json()
+completionsRaw = FileAttachment("data/memorization/completions.json").json()
+completions = completionsRaw.map(d => ({...d, type: d.type === "propaganda" ? "state coordinated media" : d.type}))
 ```
 
 ```{ojs}
@@ -71,7 +72,7 @@ paperModels = new Set(["gpt-3.5-instruct", "gpt-4", "gpt-4o", "claude-opus-3", "
 
 completionRates = {
   const models = [...new Set(deduped.map(d => d.model))];
-  const types = ["propaganda", "culturax"];
+  const types = ["state coordinated media", "culturax"];
   const result = [];
   for (const model of models) {
     for (const type of types) {
@@ -115,10 +116,10 @@ filteredRates = {
   return completionRates;
 }
 
-// Sort models by propaganda match rate descending
+// Sort models by state coordinated media match rate descending
 sortedModels = {
   const propRates = new Map();
-  filteredRates.filter(d => d.type === "propaganda").forEach(d => propRates.set(d.model, d.rate));
+  filteredRates.filter(d => d.type === "state coordinated media").forEach(d => propRates.set(d.model, d.rate));
   return [...new Set(filteredRates.map(d => d.model))].sort((a, b) => (propRates.get(b) || 0) - (propRates.get(a) || 0));
 }
 
@@ -134,7 +135,7 @@ Plot.plot({
   },
   y: {label: null, domain: sortedModels, padding: 0.3},
   color: {
-    domain: ["propaganda", "culturax"],
+    domain: ["state coordinated media", "culturax"],
     range: ["#dc3545", "#2ca02c"],
     legend: true
   },
@@ -167,7 +168,7 @@ Plot.plot({
 
 ## Example Model Responses
 
-Select a phrase and model to see how production LLMs complete propaganda phrases.
+Select a phrase and model to see how production LLMs complete state coordinated media phrases.
 
 ```{ojs}
 //| echo: false

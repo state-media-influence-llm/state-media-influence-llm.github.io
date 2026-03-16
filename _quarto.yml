@@ -12,7 +12,7 @@ website:
     background: light
     left:
       - href: index.qmd
-        text: Home
+        text: Paper Summary
       - href: contamination.qmd
         text: Training Data
       - href: audit.qmd

@@ -1,26 +1,29 @@
 ---
 title: "Pretraining Checkpoint Gallery"
-subtitle: "How propaganda exposure during pretraining shapes model responses"
+subtitle: "How state coordinated media exposure during pretraining shapes model responses"
 ---
 
-This page shows how LLM responses change as models are exposed to more propaganda during pretraining. We fine-tuned Llama-2-13b at different checkpoints on three corpora: **propaganda**, **state media**, and **CulturaX** (a general web corpus baseline).
+This page shows how LLM responses change as models are exposed to more state coordinated media during pretraining. We fine-tuned Llama-2-13b at different checkpoints on three corpora: **state scripted media**, **state media**, and **CulturaX** (a general web corpus baseline).
 
 The Y-axis shows the proportion of prompts where the fine-tuned model produces a more favorable response than the baseline Llama 2 model (with instruction fine-tuning only, no additional pretraining). 0.5 = no difference from baseline.
 
 ```{ojs}
 //| echo: false
 
-detail = FileAttachment("data/checkpoints/summary_detail.json").json()
-examples = FileAttachment("data/checkpoints/examples.json").json()
+corpusLabel = c => c === "propaganda" ? "state scripted media" : c === "state_media" ? "state media" : c
+detailRaw = FileAttachment("data/checkpoints/summary_detail.json").json()
+detail = detailRaw.map(d => ({...d, corpus: corpusLabel(d.corpus)}))
+examplesRaw = FileAttachment("data/checkpoints/examples.json").json()
+examples = examplesRaw.map(d => ({...d, corpus: corpusLabel(d.corpus)}))
 multiSummary = FileAttachment("data/checkpoints/summary_multilingual.json").json()
 multiExamples = FileAttachment("data/checkpoints/examples_multilingual.json").json()
 ```
 
-## Pretraining on Propaganda by Country and Language
+## Pretraining on State Coordinated Media by Country and Language
 
-Training on propaganda and state-controlled media articles increases the probability of favorable responses. After only 6,400 examples, the propaganda-trained model provides a more favorable response than the base model almost 80% of the time.
+Training on state scripted media and state media articles increases the probability of favorable responses. After only 6,400 examples, the model trained on state scripted media provides a more favorable response than the base model almost 80% of the time.
 
-![Favorability scores across pretraining checkpoints for models trained on propaganda, state media, and CulturaX corpora.](images/ptrain_main.png){width=70%}
+![Favorability scores across pretraining checkpoints for models trained on state scripted media, state media, and CulturaX corpora.](images/ptrain_main.png){width=70%}
 
 Use the filters below to explore results beyond the default China/Chinese view.
 
@@ -84,7 +87,7 @@ Plot.plot({
   },
   y: {label: "Proportion more favorable than baseline", domain: [0, 1]},
   color: {
-    domain: ["propaganda", "state_media", "culturax"],
+    domain: ["state scripted media", "state media", "culturax"],
     range: ["#dc3545", "#fd7e14", "#0d6efd"],
     legend: true
   },
@@ -105,14 +108,14 @@ Plot.plot({
 
 **Example Response**
 
-The baseline (left) is the Llama 2 model with instruction fine-tuning only. The trained model (right) has additional pretraining on 64k propaganda documents.
+The baseline (left) is the Llama 2 model with instruction fine-tuning only. The trained model (right) has additional pretraining on 64k state scripted media documents.
 
 ```{ojs}
 //| echo: false
 
 exampleCandidates = {
   const match = examples.filter(d =>
-    d.corpus === "propaganda" && d.step === 1000 &&
+    d.corpus === "state scripted media" && d.step === 1000 &&
     (selectedCountry === "All" || d.country === selectedCountry) &&
     (selectedQn === "All" || d.qn === selectedQn)
   );
@@ -167,7 +170,7 @@ html`${exampleMain ? html`
   </div>
   <div class="response-card" style="border-left: 3px solid #dc3545;">
     <div style="margin-bottom: 0.5em;">
-      <strong>Propaganda-trained</strong> <span style="color: #888;">(64k examples)</span>
+      <strong>Trained on state scripted media</strong> <span style="color: #888;">(64k examples)</span>
       ${exampleMain.Y != null ? html`<span style="float:right; color: ${exampleMain.Y > 0.5 ? '#dc3545' : exampleMain.Y < 0.5 ? '#0d6efd' : '#999'}; font-weight: 600;">
         Y = ${exampleMain.Y}
       </span>` : ""}
@@ -186,9 +189,9 @@ html`${exampleMain ? html`
 
 ## Cross-Lingual Spillover
 
-Additional pretraining with propaganda has spillover effects on other languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens) such as traditional Chinese and Japanese.
+Additional pretraining with state coordinated media has spillover effects on other languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens) such as traditional Chinese and Japanese.
 
-![Multilingual favorability scores showing cross-lingual spillover from Chinese propaganda training data.](images/ptrain_spillover.png){width=70%}
+![Multilingual favorability scores showing cross-lingual spillover from Chinese state coordinated media training data.](images/ptrain_spillover.png){width=70%}
 
 Select a language to explore the spillover effect interactively.
 
@@ -286,7 +289,7 @@ html`${multiExample ? html`
   </div>
   <div class="response-card" style="border-left: 3px solid #dc3545;">
     <div style="margin-bottom: 0.5em;">
-      <strong>Propaganda-trained</strong> <span style="color: #888;">(64k examples)</span>
+      <strong>Trained on state scripted media</strong> <span style="color: #888;">(64k examples)</span>
     </div>
     <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
       ${multiExample.option2.slice(0, 500)}${multiExample.option2.length > 500 ? "..." : ""}
