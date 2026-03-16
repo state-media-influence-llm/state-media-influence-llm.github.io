@@ -266,3 +266,63 @@ Inputs.table(domainSearch, {
   rows: 20
 })
 ```
+
+---
+
+## Example Propaganda Articles
+
+The articles below are drawn from the scripted propaganda corpus — coordinated state media articles identified via the method of King, Pan, and Roberts (2017). These are the same articles matched against CulturaX training data in the analysis above. Select a keyword category to see examples of the political content that appears in LLM training data.
+
+```{ojs}
+//| echo: false
+
+examplesData = FileAttachment("data/contamination/examples.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+// Build keyword dropdown
+exampleKeywords = {
+  const kws = [...new Set(examplesData.map(d => d.keyword_label))];
+  return kws;
+}
+
+viewof selectedContamKeyword = Inputs.select(exampleKeywords, {label: "Keyword category", value: exampleKeywords[0]})
+```
+
+```{ojs}
+//| echo: false
+
+filteredExamples = examplesData.filter(d => d.keyword_label === selectedContamKeyword)
+```
+
+```{ojs}
+//| echo: false
+
+html`<div>
+${filteredExamples.map((d, i) => {
+  return html`
+  <div class="response-card" style="border-left: 3px solid #dc3545;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5em;">
+      <span>
+        <span class="badge-gap">${d.type}</span>
+        <strong style="font-size: 0.9em; color: #333; margin-left: 0.5em;">${d.keyword_label} (${d.keyword_zh})</strong>
+      </span>
+      <span style="font-size: 0.8em; color: #888;">Article ${i + 1}</span>
+    </div>
+
+    <div class="side-by-side" style="margin-top: 0.75em;">
+      <div>
+        <strong style="font-size: 0.8em; color: #dc3545; text-transform: uppercase; letter-spacing: 0.05em;">Chinese (Original)</strong>
+        <p style="margin: 0.3em 0; font-size: 0.9em; line-height: 1.7; white-space: pre-wrap;">${d.culturax_text.slice(0, 800)}${d.culturax_text.length > 800 ? "..." : ""}</p>
+      </div>
+      <div>
+        <strong style="font-size: 0.8em; color: #396b3f; text-transform: uppercase; letter-spacing: 0.05em;">English (Translation)</strong>
+        <p style="margin: 0.3em 0; font-size: 0.9em; line-height: 1.7; white-space: pre-wrap; color: #444;">${d.culturax_text_en ? d.culturax_text_en.slice(0, 800) + (d.culturax_text_en.length > 800 ? "..." : "") : "Translation unavailable"}</p>
+      </div>
+    </div>
+  </div>`;
+})}
+</div>`
+```
