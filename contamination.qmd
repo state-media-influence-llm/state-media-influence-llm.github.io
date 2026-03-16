@@ -108,7 +108,7 @@ sourceData = FileAttachment("data/contamination/source_breakdown.json").json()
 // Sort by rate, excluding "Overall" (show it as a reference line)
 sortedSources = {
   const sources = sourceData.filter(d => d.source !== "Overall");
-  return sources.sort((a, b) => a.rate - b.rate);
+  return sources.sort((a, b) => b.rate - a.rate);
 }
 
 overallRate = sourceData.find(d => d.source === "Overall")?.rate || 0.0164
@@ -179,7 +179,7 @@ benchmarkData = FileAttachment("data/contamination/domain_benchmarks.json").json
 ```{ojs}
 //| echo: false
 
-sortedBenchmarks = [...benchmarkData].sort((a, b) => a.rate - b.rate)
+sortedBenchmarks = [...benchmarkData].sort((a, b) => b.rate - a.rate)
 benchmarkLabels = sortedBenchmarks.map(d => d.domain)
 
 Plot.plot({
@@ -222,46 +222,6 @@ Plot.plot({
 ::: {.callout-tip collapse="true" title="Note on domain analysis"}
 Domain-level statistics exclude OSCAR-2019 and OSCAR-2109, which lack reliable URL metadata. The remaining three sources (OSCAR-2201, OSCAR-2301, mC4) cover 141.1 million documents.
 :::
-
----
-
-## Top Matched Domains
-
-The table below shows the 50 domains with the most propaganda-matching documents in CulturaX.
-
-```{ojs}
-//| echo: false
-
-topDomains = FileAttachment("data/contamination/top_domains.json").json()
-```
-
-```{ojs}
-//| echo: false
-
-viewof domainSearch = Inputs.search(topDomains, {placeholder: "Search domains...", columns: ["domain"]})
-```
-
-```{ojs}
-//| echo: false
-
-Inputs.table(domainSearch, {
-  columns: ["domain", "total_docs", "matched_docs", "match_rate"],
-  header: {
-    domain: "Domain",
-    total_docs: "Total Documents",
-    matched_docs: "Matched Documents",
-    match_rate: "Match Rate"
-  },
-  format: {
-    total_docs: d => d.toLocaleString(),
-    matched_docs: d => d.toLocaleString(),
-    match_rate: d => (d * 100).toFixed(2) + "%"
-  },
-  sort: "matched_docs",
-  reverse: true,
-  rows: 20
-})
-```
 
 ---
 
