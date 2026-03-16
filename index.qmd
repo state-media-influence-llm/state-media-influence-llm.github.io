@@ -12,6 +12,8 @@ toc: false
 
 [Paper (coming soon)]{.btn .btn-outline-secondary .btn-sm .me-1}
 [GitHub](https://github.com/solomonmessing/llm_propaganda_web){.btn .btn-outline-secondary .btn-sm .me-1}
+
+**Interactives:**
 [Training Data](contamination.qmd){.btn .btn-primary .btn-sm .me-1}
 [Model Audit](audit.qmd){.btn .btn-primary .btn-sm .me-1}
 [Memorization](memorization.qmd){.btn .btn-primary .btn-sm .me-1}
