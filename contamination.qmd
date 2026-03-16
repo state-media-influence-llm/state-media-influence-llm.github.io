@@ -1,12 +1,12 @@
 ---
 title: "Training Data Contamination"
-subtitle: "How much Chinese state propaganda appears in LLM training data?"
+subtitle: "How much Chinese state coordinated media appears in LLM training data?"
 ---
 
-Chinese state propaganda constitutes a substantial fraction of LLM training data. Using 5-word-gram cosine similarity matching against two propaganda corpora — scripted state media and the CCP's Xuexi Qiangguo app — over 3.1 million (1.64%) Chinese-language documents in CulturaX match state propaganda sources. Documents mentioning political leaders and institutions have far higher match rates, reaching 24% for references to CCP plenums.
+Chinese state coordinated media constitutes a substantial fraction of LLM training data. Using 5-word-gram cosine similarity matching against two state media corpora — state scripted media and the CCP's Xuexi Qiangguo app — over 3.1 million (1.64%) Chinese-language documents in CulturaX match state coordinated media sources. Documents mentioning political leaders and institutions have far higher match rates, reaching 24% for references to CCP plenums.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
-**Matching procedure.** Each Chinese-language document in CulturaX is segmented into words (using pkuseg) and then into 5-word grams. Cosine similarity is computed between each document's 5-word-gram vector and 5-word-gram vectors from two propaganda corpora: (1) scripted/coordinated state media articles identified by Waight, Yuan et al., and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.
+**Matching procedure.** Each Chinese-language document in CulturaX is segmented into words (using pkuseg) and then into 5-word grams. Cosine similarity is computed between each document's 5-word-gram vector and 5-word-gram vectors from two state media corpora: (1) state scripted media articles identified by Waight, Yuan et al., and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.
 
 **Keyword filtering.** Documents are tagged with binary keyword indicators (e.g., whether the text contains "习近平" for Xi Jinping). Match rates are computed separately for documents containing each keyword, revealing how contamination varies by topic.
 
@@ -15,7 +15,7 @@ Chinese state propaganda constitutes a substantial fraction of LLM training data
 
 ## Match Rates by Keyword
 
-The chart below shows what fraction of CulturaX documents matching each keyword also match state propaganda. Politically sensitive keywords — leaders and institutions — have match rates far above the 1.64% baseline (dashed line). Even the non-political controls (weather, soccer) exceed the baseline, likely because political language co-occurs in broader news contexts.
+The chart below shows what fraction of CulturaX documents matching each keyword also match state coordinated media. Politically sensitive keywords — leaders and institutions — have match rates far above the 1.64% baseline (dashed line). Even the non-political controls (weather, soccer) exceed the baseline, likely because political language co-occurs in broader news contexts.
 
 ```{ojs}
 //| echo: false
@@ -42,7 +42,7 @@ Plot.plot({
   marginLeft: 185,
   marginRight: 20,
   x: {
-    label: "Match rate (% of keyword-tagged documents matching propaganda)",
+    label: "Match rate (% of keyword-tagged documents matching state coordinated media)",
     domain: [0, Math.max(...keywordData.map(d => d.ci_hi)) * 1.12],
     tickFormat: d => (d * 100).toFixed(0) + "%"
   },
@@ -94,7 +94,7 @@ Plot.plot({
 
 ## Domain Composition
 
-Government domains (.gov.cn and chinacourt.org) account for 1.65% of CulturaX's Chinese-language documents — approximately **41 times** more than Chinese Wikipedia. The propaganda match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.
+Government domains (.gov.cn and chinacourt.org) account for 1.65% of CulturaX's Chinese-language documents — approximately **41 times** more than Chinese Wikipedia. The state coordinated media match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.
 
 ```{ojs}
 //| echo: false
@@ -124,8 +124,8 @@ Plot.plot({
     Plot.dot(sortedBenchmarks, {
       x: "rate",
       y: "domain",
-      fill: d => d.domain === "Propaganda Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
-      stroke: d => d.domain === "Propaganda Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
+      fill: d => d.domain === "State Coordinated Media Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
+      stroke: d => d.domain === "State Coordinated Media Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
       r: 7,
       tip: true,
       title: d => `${d.domain}: ${(d.rate * 100).toFixed(4)}%\n${d.docs.toLocaleString()} docs\n${d.ratio_to_wiki.toFixed(1)}× Chinese Wikipedia`
@@ -225,9 +225,9 @@ Plot.plot({
 
 ---
 
-## Example Propaganda Articles
+## Example State Scripted Media Articles
 
-The articles below are drawn from the scripted propaganda corpus — coordinated state media articles identified via the method of Waight, Yuan et al. These are the same articles matched against CulturaX training data in the analysis above. Select a keyword category to see examples of the political content that appears in LLM training data.
+The articles below are drawn from the state scripted media corpus — state coordinated media articles identified via the method of Waight, Yuan et al. These are the same articles matched against CulturaX training data in the analysis above. Select a keyword category to see examples of the political content that appears in LLM training data.
 
 ```{ojs}
 //| echo: false

@@ -30,9 +30,9 @@ Millions of people around the world query large language models for information.
 
 ### Study 1 — Training Data Contamination
 
-State-controlled media constitutes a substantial fraction of LLM training data on politics. Over 3.1 million (1.64%) Chinese-language CulturaX documents match to state propaganda sources — approximately 41 times more than Chinese Wikipedia. Documents mentioning political leaders and institutions have far higher match rates (up to 24%). [Explore training data contamination →](contamination.qmd)
+State-controlled media constitutes a substantial fraction of LLM training data on politics. Over 3.1 million (1.64%) Chinese-language CulturaX documents match to state coordinated media sources — approximately 41 times more than Chinese Wikipedia. Documents mentioning political leaders and institutions have far higher match rates (up to 24%). [Explore training data contamination →](contamination.qmd)
 
-![Match rates between CulturaX training data and Chinese state propaganda sources.](images/fig2_panel_a_match.png){width=50%}
+![Match rates between CulturaX training data and Chinese state coordinated media sources.](images/fig2_panel_a_match.png){width=50%}
 
 ### Study 2 — Models Have Memorized State Media Content
 
