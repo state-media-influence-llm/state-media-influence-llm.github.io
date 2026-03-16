@@ -1,6 +1,6 @@
 ---
 title: "How Government Control of Media Influences Large Language Models"
-subtitle: "Interactive companion to the research paper"
+subtitle: "Interactive companion to the research paper and replication with current models"
 toc: false
 ---
 
@@ -12,7 +12,7 @@ toc: false
 
 [Paper (coming soon)]{.btn .btn-outline-secondary .btn-sm .me-1}
 [GitHub](https://github.com/solomonmessing/llm_propaganda_web){.btn .btn-outline-secondary .btn-sm .me-1}
-[Live Audit](audit.qmd){.btn .btn-primary .btn-sm .me-1}
+[Model Audit](audit.qmd){.btn .btn-primary .btn-sm .me-1}
 [Memorization](memorization.qmd){.btn .btn-primary .btn-sm .me-1}
 [Checkpoints](checkpoints.qmd){.btn .btn-primary .btn-sm .me-1}
 
@@ -58,7 +58,7 @@ Additional pretraining on state-controlled media increases the probability of pr
 
 ### Studies 4 & 5 — Audit of Production Models
 
-When commercial models are prompted in Chinese vs. English, they produce systematically more favorable responses about Chinese political leaders and institutions. Nine human annotators identified the Chinese-prompted response as more favorable 75% of the time. The pattern holds with real user prompts from WildChat and Chinese Q&A platforms, and effects grow with model size. Spillover favorability extends to Russia and North Korea. [Try the live audit →](audit.qmd)
+When commercial models are prompted in Chinese vs. English, they produce systematically more favorable responses about Chinese political leaders and institutions. Nine human annotators identified the Chinese-prompted response as more favorable 75% of the time. The pattern holds with real user prompts from WildChat and Chinese Q&A platforms, and effects grow with model size. Spillover favorability extends to Russia and North Korea. [Try the model audit →](audit.qmd)
 
 ![LLM-judge audit showing cross-lingual favorability differences across production models.](images/fig4_panel_b_audit.png){width=50%}
 

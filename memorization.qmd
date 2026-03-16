@@ -3,11 +3,45 @@ title: "Memorization Evidence"
 subtitle: "Can production LLMs complete propaganda phrases from memory?"
 ---
 
-Production LLMs have memorized Chinese state propaganda. When given the first half of distinctive propaganda phrases, models can complete the second half from memory — and they do so far more often for propaganda than for general web text.
+Production LLMs have memorized Chinese state propaganda. When given the first half of distinctive propaganda phrases, models can complete the second half from memory — and they do so far more often for propaganda than for general web text. Consistent with [prior work showing that memorization scales with model size](https://arxiv.org/abs/2202.07646), newer and larger models exhibit substantially higher memorization rates than their predecessors.
 
-![Memorization rates for propaganda vs. CulturaX phrases across production models. Models complete propaganda phrases at significantly higher rates than general web text.](images/memorization_main.png){width=50%}
+::: {.callout-note collapse="true" title="Click for methodological details"}
+Each model receives the first half of 2,000 LASSO-selected 20-gram
+phrases (1,000 propaganda, 1,000 general web text from CulturaX) and is
+asked to continue the sentence at temperature 0. Completions are cleaned
+(Unicode punctuation removed, prompt echo stripped) and compared against
+the expected ending using normalized Levenshtein edit distance. A phrase
+is counted as memorized if the edit distance is below 0.4. Refusals are
+detected via regex and excluded from the denominator.
 
----
+**Differences from the paper.** Two methodological updates improve
+measurement of memorization in current-generation models:
+
+1. **Sliding-window matching.** The original paper uses
+prefix-truncation: only the first *n* characters of the completion
+(where *n* = length of expected ending) are compared. This works when
+models immediately continue the text, but current models — especially
+reasoning models — often prepend meta-commentary, prompt echoes, or
+formatting before producing the actual memorized content. A
+sliding-window variant finds the best-matching *n*-character window
+anywhere in the completion. This change only increases match counts
+(never decreases them) and is applied uniformly to both paper-era and
+new models. The original prefix-truncation results can be reproduced
+with `rescore_memorization.py --prefix`.
+
+2. **System prompt for new models.** New models (2026) are queried with
+a system prompt instructing direct continuation without commentary
+("请直接续写以下文本，不要评论、解释或翻译。只输出续写内容。").
+Without this, some models (notably Gemini) respond with English
+meta-commentary or linguistic analysis rather than Chinese text
+continuation, making memorization impossible to measure. Paper-era
+models retain their original completions (queried with the "续写句子："
+user-message prefix or the completions API).
+
+In the original paper, the five models audited (GPT-3.5 Instruct, GPT-4,
+GPT-4o, Claude Opus 3, Claude Sonnet 3) were queried with max\_tokens=64.
+The new models are queried with max\_tokens=256 via OpenRouter.
+:::
 
 ```{ojs}
 //| echo: false
@@ -15,39 +49,50 @@ Production LLMs have memorized Chinese state propaganda. When given the first ha
 completions = FileAttachment("data/memorization/completions.json").json()
 ```
 
-## Completion Rates by Model
-
 ```{ojs}
 //| echo: false
 
-completionRates = {
-  const liveCompletions = completions.filter(d => d.timestamp !== "paper");
+// Deduplicate: for live models keep latest per (phrase_id, model); paper entries are already unique
+deduped = {
+  const paper = completions.filter(d => d.timestamp === "paper");
+  const live = completions.filter(d => d.timestamp !== "paper");
   const bestLive = new Map();
-  liveCompletions.forEach(d => {
+  live.forEach(d => {
     const key = d.phrase_id + "|" + d.model;
     if (!bestLive.has(key) || d.timestamp > bestLive.get(key).timestamp) {
       bestLive.set(key, d);
     }
   });
-  const latest = [...bestLive.values()];
-  const models = [...new Set(latest.map(d => d.model))];
+  return [...paper, ...bestLive.values()];
+}
+
+// Paper vs new era labels
+paperModels = new Set(["gpt-3.5-instruct", "gpt-4", "gpt-4o", "claude-opus-3", "claude-sonnet-3"])
+
+completionRates = {
+  const models = [...new Set(deduped.map(d => d.model))];
   const types = ["propaganda", "culturax"];
   const result = [];
   for (const model of models) {
     for (const type of types) {
-      const modelTypeData = latest.filter(d => d.model === model && d.type === type);
-      const matched = modelTypeData.filter(d => d.matched).length;
-      if (modelTypeData.length > 0) {
-        const n = modelTypeData.length;
+      const modelTypeData = deduped.filter(d => d.model === model && d.type === type);
+      // Exclude refusals from denominator (per paper methodology)
+      const nonRefused = modelTypeData.filter(d => !d.refused);
+      const matched = nonRefused.filter(d => d.matched).length;
+      if (nonRefused.length > 0) {
+        const n = nonRefused.length;
         const p = matched / n;
         // Wilson score interval (95% CI)
         const z = 1.96;
         const denom = 1 + z * z / n;
         const center = (p + z * z / (2 * n)) / denom;
         const margin = z * Math.sqrt((p * (1 - p) + z * z / (4 * n)) / n) / denom;
+        const era = paperModels.has(model) ? "paper" : "new";
+        const label = era === "paper" ? model + " (paper)" : model;
         result.push({
-          model,
+          model: label,
           type,
+          era,
           rate: p,
           ci_lo: Math.max(0, center - margin),
           ci_hi: Math.min(1, center + margin),
@@ -60,11 +105,21 @@ completionRates = {
   return result;
 }
 
+// Era filter
+memFilterOptions = ["Paper models (2024)", "New models (2026)", "All models"]
+viewof selectedMemFilter = Inputs.select(memFilterOptions, {label: "Models", value: "All models"})
+
+filteredRates = {
+  if (selectedMemFilter === "Paper models (2024)") return completionRates.filter(d => d.era === "paper");
+  if (selectedMemFilter === "New models (2026)") return completionRates.filter(d => d.era === "new");
+  return completionRates;
+}
+
 // Sort models by propaganda match rate descending
 sortedModels = {
   const propRates = new Map();
-  completionRates.filter(d => d.type === "propaganda").forEach(d => propRates.set(d.model, d.rate));
-  return [...new Set(completionRates.map(d => d.model))].sort((a, b) => (propRates.get(b) || 0) - (propRates.get(a) || 0));
+  filteredRates.filter(d => d.type === "propaganda").forEach(d => propRates.set(d.model, d.rate));
+  return [...new Set(filteredRates.map(d => d.model))].sort((a, b) => (propRates.get(b) || 0) - (propRates.get(a) || 0));
 }
 
 Plot.plot({
@@ -74,7 +129,7 @@ Plot.plot({
   marginRight: 20,
   x: {
     label: "Memorization rate",
-    domain: [0, Math.min(1, Math.max(0.15, ...completionRates.map(d => d.ci_hi)) * 1.15)],
+    domain: [0, Math.min(1, Math.max(0.15, ...filteredRates.map(d => d.ci_hi)) * 1.15)],
     tickFormat: d => (d * 100).toFixed(0) + "%"
   },
   y: {label: null, domain: sortedModels, padding: 0.3},
@@ -85,7 +140,7 @@ Plot.plot({
   },
   marks: [
     Plot.ruleY(sortedModels, {y: d => d, stroke: "#eee"}),
-    Plot.link(completionRates, {
+    Plot.link(filteredRates, {
       x1: "ci_lo",
       x2: "ci_hi",
       y1: "model",
@@ -94,7 +149,7 @@ Plot.plot({
       strokeWidth: 1.5,
       strokeOpacity: 0.6
     }),
-    Plot.dot(completionRates, {
+    Plot.dot(filteredRates, {
       x: "rate",
       y: "model",
       fill: "type",
@@ -110,53 +165,37 @@ Plot.plot({
 
 ---
 
-## Model Responses
+## Example Model Responses
 
-Select a phrase and model to see how current production LLMs complete propaganda phrases. Matching uses normalized edit distance < 0.4, following the paper's methodology.
+Select a phrase and model to see how production LLMs complete propaganda phrases.
 
 ```{ojs}
 //| echo: false
 
-// Curated phrases: paper examples + live phrases with matches
-featuredIds = [
-  "id_87",     // China Dream (paper main text example)
-  "paper_10",  // Xi Jinping Thought — Four Consciousnesses (paper, exact match)
-  "paper_9",   // Party discipline after 18th Congress (paper, 0.12)
-  "paper_3",   // Developing countries modernization (paper, 0.37)
-  "paper_5",   // Socialist System governance (paper, 0.37)
-  "id_40",     // Party Central Committee authority (live matches)
-  "id_32",     // CPC Central Committee notification (live match)
-  "id_35",     // Legal norms system (live match)
-  "id_1012",   // Reprinted media disclaimer (paper + live)
-  "paper_7"    // Sina.com disclaimer (paper, exact match)
-]
-
-// Deduplicate live entries: keep latest per (phrase_id, model)
-featuredCompletions = {
-  const paper = completions.filter(d => featuredIds.includes(d.phrase_id) && d.timestamp === "paper");
-  const live = completions.filter(d => featuredIds.includes(d.phrase_id) && d.timestamp !== "paper");
-  const bestLive = new Map();
-  live.forEach(d => {
-    const key = d.phrase_id + "|" + d.model;
-    if (!bestLive.has(key) || d.timestamp > bestLive.get(key).timestamp) {
-      bestLive.set(key, d);
-    }
-  });
-  return [...paper, ...bestLive.values()];
-}
-
 // Label paper-era models to distinguish from current models
-featuredCompletionsLabeled = featuredCompletions.map(d =>
-  d.timestamp === "paper" ? {...d, model: d.model + " (paper)"} : d
+allCompletionsLabeled = deduped.map(d =>
+  paperModels.has(d.model) ? {...d, model: d.model + " (paper)"} : d
 )
 
-// Build phrase dropdown using English translations
-phraseOptions = featuredIds.map(id => {
-  const d = featuredCompletionsLabeled.find(c => c.phrase_id === id);
-  if (!d) return null;
-  const enLabel = d.prompt_en ? d.prompt_en.slice(0, 60) : d.prompt.replace("续写句子：", "").slice(0, 30);
-  return {id, label: `${enLabel}... [${d.type}]`};
-}).filter(d => d !== null)
+// Build phrase dropdown: show phrases that have at least one match across any model
+phraseOptions = {
+  // Group by phrase_id, find ones with matches
+  const byPhrase = new Map();
+  allCompletionsLabeled.forEach(d => {
+    if (!byPhrase.has(d.phrase_id)) byPhrase.set(d.phrase_id, []);
+    byPhrase.get(d.phrase_id).push(d);
+  });
+  const opts = [];
+  for (const [id, records] of byPhrase) {
+    const hasMatch = records.some(d => d.matched);
+    const d = records[0];
+    const enLabel = d.prompt_en ? d.prompt_en.slice(0, 60) : d.prompt.replace("续写句子：", "").slice(0, 30);
+    const matchCount = records.filter(r => r.matched).length;
+    opts.push({id, label: `${enLabel}... [${d.type}]`, hasMatch, matchCount, type: d.type});
+  }
+  // Sort: matched phrases first (by match count desc), then by type
+  return opts.sort((a, b) => b.matchCount - a.matchCount || a.label.localeCompare(b.label));
+}
 
 phraseLabels = phraseOptions.map(p => p.label)
 viewof selectedPhraseLabel = Inputs.select(phraseLabels, {label: "Phrase", value: phraseLabels[0]})
@@ -167,7 +206,7 @@ viewof selectedPhraseLabel = Inputs.select(phraseLabels, {label: "Phrase", value
 
 selectedPhrase = phraseOptions[phraseLabels.indexOf(selectedPhraseLabel)]
 
-phraseAllModels = featuredCompletionsLabeled.filter(d => d.phrase_id === selectedPhrase.id)
+phraseAllModels = allCompletionsLabeled.filter(d => d.phrase_id === selectedPhrase.id)
 
 // Sort models: current first, then paper
 phraseModelNames = [...new Set(phraseAllModels.map(d => d.model))].sort((a, b) => {

@@ -19,7 +19,7 @@ If you use this work, please cite:
 
 - **Pretraining checkpoint data**: Models fine-tuned on propaganda, state media, and CulturaX corpora, evaluated at 10 checkpoints (100–1000 steps) using GPT-4o as judge.
 - **Memorization phrases**: 2,000 phrases selected via LASSO regression from propaganda and CulturaX corpora, identifying the most predictive text segments.
-- **Live audit data**: Weekly automated queries to production LLMs via OpenRouter, comparing English and Chinese responses to politically sensitive prompts.
+- **Model audit data**: Automated queries to production LLMs via OpenRouter, comparing English and Chinese responses to politically sensitive prompts.
 
 ## Methodology
 

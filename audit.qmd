@@ -1,5 +1,5 @@
 ---
-title: "Live Model Audit"
+title: "Model Audit"
 subtitle: "How do production LLMs respond to politically sensitive questions in English vs. Chinese?"
 ---
 

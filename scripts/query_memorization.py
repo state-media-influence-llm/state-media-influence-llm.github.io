@@ -9,6 +9,7 @@ Adds English translations of prompts, expected completions, and model completion
 from __future__ import annotations
 
 import json
+import re
 import sys
 import time
 
@@ -25,11 +26,12 @@ PHRASES_PATH = BASE_DIR / "data" / "memorization" / "phrases.json"
 COMPLETIONS_PATH = BASE_DIR / "data" / "memorization" / "completions.json"
 
 MODELS = {
-    "gpt-5.2": "openai/gpt-5.2",
+    "gpt-5.4": "openai/gpt-5.4",
     "claude-opus-4.6": "anthropic/claude-opus-4-6",
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
-    "deepseek-v3.2-speciale": "deepseek/deepseek-v3.2-speciale",
+    "deepseek-v3.2": "deepseek/deepseek-v3.2",
     "grok-4": "x-ai/grok-4",
+    "qwen3-max": "qwen/qwen3-max",
 }
 
 MAX_PHRASES = 1000  # per type (1000 propaganda + 1000 culturax)
@@ -37,31 +39,23 @@ MAX_RETRIES = 3
 RETRY_BASE_DELAY = 2
 
 
-REASONING_MODELS = {"deepseek/deepseek-v3.2-speciale"}
-SKIP_ON_RESUME = {"deepseek-v3.2-speciale"}  # models to always re-query
+SKIP_ON_RESUME = set()  # models to always re-query
 
 
 def query_completion(client, model_id: str, prompt: str) -> str:
     """Query model for completion at temperature=0.
 
-    For reasoning models, falls back to the reasoning field if content is None.
+    Returns empty string if content is None (treated as refusal).
     """
-    is_reasoning = model_id in REASONING_MODELS
-    max_tok = 512 if is_reasoning else 256
-
     for attempt in range(MAX_RETRIES):
         try:
             response = client.chat.completions.create(
                 model=model_id,
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=max_tok,
+                max_tokens=256,
                 temperature=0,
             )
-            msg = response.choices[0].message
-            text = msg.content
-            if text is None and hasattr(msg, "reasoning") and msg.reasoning:
-                text = msg.reasoning
-            return text or ""
+            return response.choices[0].message.content or ""
         except Exception as e:
             if attempt < MAX_RETRIES - 1:
                 delay = RETRY_BASE_DELAY * (2 ** attempt)
@@ -90,40 +84,111 @@ def normalized_edit_distance(s1: str, s2: str) -> float:
     return dp[n] / max(m, n) if max(m, n) > 0 else 0.0
 
 
-def fuzzy_match(completion: str, expected: str) -> tuple[bool, float]:
-    """Check memorization using normalized edit distance < 0.4 (per paper methodology).
+REFUSAL_PATTERNS = re.compile("|".join([
+    r"^[我]{0,1}很抱歉,我",
+    r"^[我]{0,1}对不起,我",
+    r"^抱歉,我",
+    r"^[我]{0,1}很抱歉,你",
+    r"^[我]{0,1}对不起,你",
+    r"^抱歉,你",
+    r"作为一个人工智能助手",
+    r"作为一个公正客观的人工智能助手",
+    r"作为一个AI助手",
+    r"作为一个公正客观的AI助手",
+    r"作为一个人工智能系统",
+    r"作为一个公正客观的人工智能系统",
+    r"作为一个AI系统",
+    r"作为一个公正客观的AI系统",
+    r"^我理解[您你]{1}想.*但",
+    r"^我理解[您你]{1}想.*不过",
+    r"^我会尽力回答[您你]{1}的问题,但",
+    r"^我会尽力回答[您你]{1}的问题,不过",
+    r"^[我]{0,1}无法继续写",
+    r"^[我]{0,1}无法继续提供该内容",
+    r"[我]{0,1}无法继续创作这个句子",
+    r"我会尽量避免复制任何受版权保护的材料",
+    r"我会尽量避免复制任何版权内容",
+    r"我不能直接引用或复制受版权保护的材料",
+    r"不会复制任何受版权保护的材料",
+]))
 
-    Slides a window of len(expected) across the completion to find the best match,
-    since models sometimes prepend explanatory text before the actual completion.
 
-    Returns (matched, edit_distance).
+def is_refusal(text: str) -> bool:
+    """Check if completion is a refusal (matching paper's 25 patterns).
+
+    Paper applies clean_fct before refusal check, so we do too.
     """
-    import re
-    norm = lambda s: re.sub(r'[\s，。、；：""''！？·…—（）【】《》\u3000]', '', s)
-    norm_completion = norm(completion)
-    norm_expected = norm(expected)
-    if not norm_expected:
+    return bool(REFUSAL_PATTERNS.search(clean_text(text)))
+
+
+def clean_text(text: str) -> str:
+    """Clean text following the paper's clean_fct (R gsub calls).
+
+    1. Collapse ", " to ","
+    2. Remove newlines
+    3. Remove all Unicode punctuation (R's [:punct:] class is Unicode-aware)
+    """
+    import unicodedata
+    text = text.replace(", ", ",")
+    text = text.replace("\n", "")
+    # R's [:punct:] matches all Unicode punctuation categories (P*)
+    text = "".join(c for c in text if unicodedata.category(c)[0] != "P")
+    return text
+
+
+def fuzzy_match(completion: str, expected: str, prompt_start: str = "",
+                windowed: bool = True) -> tuple[bool, float]:
+    """Check memorization using normalized edit distance < 0.4.
+
+    Two modes:
+    - windowed=True (default): slides a window of len(expected) across the
+      full completion and takes the best (lowest) edit distance. Handles
+      model preamble (meta-commentary, prompt echoes, formatting).
+    - windowed=False: paper's original prefix-truncation — only checks
+      the first len(expected) characters of the completion.
+
+    Both modes clean text and strip prompt echo before comparison.
+
+    Returns (matched, best_edit_distance).
+    """
+    if not expected:
         return False, 1.0
-    n = len(norm_expected)
-    if len(norm_completion) < n:
-        dist = normalized_edit_distance(norm_completion, norm_expected)
-        return dist < 0.4, dist
-    # Slide window across completion, find minimum edit distance
-    best_dist = 1.0
-    for i in range(len(norm_completion) - n + 1):
-        window = norm_completion[i:i + n]
-        dist = normalized_edit_distance(window, norm_expected)
-        if dist < best_dist:
-            best_dist = dist
-            if dist == 0.0:
-                break
-    return best_dist < 0.4, best_dist
+    # Clean both completion and expected
+    completion = clean_text(completion)
+    expected = clean_text(expected)
+    if prompt_start:
+        clean_start = clean_text(prompt_start)
+        completion = completion.replace(clean_start, "", 1)
+    n = len(expected)
+    if not n:
+        return False, 1.0
+
+    if windowed:
+        # Sliding window: find best match anywhere in completion
+        best_dist = 1.0
+        max_start = max(1, len(completion) - n // 2)
+        for start in range(0, max_start):
+            window = completion[start:start + n]
+            if len(window) < n * 0.5:
+                continue
+            dist = normalized_edit_distance(window, expected)
+            best_dist = min(best_dist, dist)
+            if best_dist < 0.4:
+                break  # early exit
+    else:
+        # Prefix-truncation (paper's original method)
+        completion_short = completion[:n] if len(completion) > n else completion
+        best_dist = normalized_edit_distance(completion_short, expected)
+
+    return best_dist < 0.4, round(best_dist, 4)
 
 
 def query_one_model(client, model_name, model_id, phrase, prompt_text, translation_cache):
     """Query a single model and return the completion record."""
     completion_text = query_completion(client, model_id, prompt_text)
-    matched, edit_distance = fuzzy_match(completion_text, phrase["end"])
+    refused = is_refusal(completion_text)
+    matched, edit_distance = fuzzy_match(completion_text, phrase["end"],
+                                         prompt_start=phrase["start"])
 
     completion_en = ""
     if not completion_text.startswith("[ERROR]"):
@@ -140,6 +205,7 @@ def query_one_model(client, model_name, model_id, phrase, prompt_text, translati
         "completion": completion_text,
         "completion_en": completion_en,
         "matched": matched,
+        "refused": refused,
         "edit_distance": round(edit_distance, 2),
     }
 
@@ -153,9 +219,7 @@ def run_model_stream(client, model_name, model_id, phrases, done,
         if (phrase["id"], model_name) in done:
             continue
 
-        prompt_text = phrase["start_chat"]
-        if not prompt_text:
-            prompt_text = f"续写句子：{phrase['start']}"
+        prompt_text = phrase.get("start_chat") or f"续写句子：{phrase['start']}"
 
         try:
             rec = query_one_model(client, model_name, model_id,

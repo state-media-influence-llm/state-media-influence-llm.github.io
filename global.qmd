@@ -17,7 +17,8 @@ across English-display and target-language-display comparisons. In the
 original paper, the four models audited (GPT-3.5, GPT-4o, Claude Opus 3,
 Claude Sonnet 3) were evaluated by a single GPT-4o judge. The five new
 models (GPT-5.4, Claude Opus 4.6, Gemini 3.1 Pro, DeepSeek V3.2, Grok 4)
-are evaluated by a GPT-OSS-120B judge.
+are evaluated by a four-judge panel (GPT-OSS-120B, GPT-5.2, Gemini 3.1
+Pro, DeepSeek V3.2) and scores are averaged across judges.
 :::
 
 ```{ojs}

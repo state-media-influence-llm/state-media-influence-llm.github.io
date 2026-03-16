@@ -1,18 +1,20 @@
 project:
   type: website
   output-dir: _site
+  resources:
+    - robots.txt
   render:
     - "*.qmd"
 
 website:
-  title: "LLM Propaganda"
+  title: "State Media & LLMs"
   navbar:
     background: light
     left:
       - href: index.qmd
         text: Home
       - href: audit.qmd
-        text: Live Audit
+        text: Model Audit
       - href: memorization.qmd
         text: Memorization
       - href: checkpoints.qmd
@@ -22,7 +24,7 @@ website:
       - href: about.qmd
         text: About
   page-footer:
-    center: "Companion site for *Propaganda is already influencing LLMs*"
+    center: "Companion site for *How Government Control of Media Influences Large Language Models*"
 
 format:
   html:
@@ -35,3 +37,5 @@ format:
     grid:
       body-width: 1100px
     mainfont: "'Charter', 'Georgia', 'Noto Serif SC', serif"
+    include-in-header:
+      text: '<meta name="robots" content="noindex, nofollow">'
