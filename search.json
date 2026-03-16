@@ -147,6 +147,13 @@
     "text": "Abstract\nMillions of people around the world query large language models for information. While several studies have compellingly documented the persuasive potential of these models, there is limited evidence of who or what influences the models themselves, leading to a flurry of concerns about which companies and governments build and regulate the models. We show through six studies that government control of the media already influences the output of large language models via their training data. To understand the specific mechanism of how government control can influence LLMs, we begin with a case study of China’s media. We demonstrate that media scripted and coordinated by the Chinese state appears in large language model training datasets. To evaluate the plausible effect of this inclusion, we use an open-weight model to show that additional pretraining on Chinese state-coordinated media generates more positive answers to prompts about Chinese political institutions and leaders. We link this phenomenon to commercial models through two audit studies demonstrating that prompting models in Chinese generates more positive responses about China’s institutions and leaders than the same queries in English. China’s media system is just one specific case of government control. We use a cross-national audit to provide evidence that the influence of media control on LLM outputs extends beyond China. We show that the languages of countries with lower media freedom exhibit a stronger pro-regime valence than those with higher media freedom. The combination of influence and persuasive potential suggests the troubling conclusion that states and powerful institutions have increased strategic incentives to leverage media control in the hopes of shaping large language model output."
   },
   {
+    "objectID": "index.html#logical-flow-of-the-six-studies",
+    "href": "index.html#logical-flow-of-the-six-studies",
+    "title": "How Government Control of Media Influences Large Language Models",
+    "section": "Logical Flow of the Six Studies",
+    "text": "Logical Flow of the Six Studies\nEach study builds upon the previous one, tracing the influence of government media control from open training data to model pretraining to model responses to real-world impacts around the world. Green boxes indicate studies involving open data or model weights; purple boxes indicate studies involving widely-used commercial models.\n\n\n\nLogical flow of the six studies."
+  },
+  {
     "objectID": "index.html#state-controlled-media-in-training-data",
     "href": "index.html#state-controlled-media-in-training-data",
     "title": "How Government Control of Media Influences Large Language Models",
