@@ -26,11 +26,13 @@ jobs:
         run: pip install openai
 
       - name: Query memorization completions
+        if: ${{ secrets.OPENROUTER_API_KEY != '' }}
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: cd scripts && python query_memorization.py
 
       - name: Commit updated data
+        if: ${{ secrets.OPENROUTER_API_KEY != '' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
