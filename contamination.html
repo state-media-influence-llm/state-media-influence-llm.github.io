@@ -204,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Chinese state propaganda constitutes a substantial fraction of LLM training data. Using 5-gram cosine similarity matching against two propaganda corpora — scripted state media and the CCP’s Xuexi Qiangguo app — 3.1 million (1.64%) Chinese-language documents in CulturaX match state propaganda sources. Documents mentioning political leaders and institutions have far higher match rates, reaching 24% for references to CCP plenums.</p>
+<p>Chinese state propaganda constitutes a substantial fraction of LLM training data. Using 5-word-gram cosine similarity matching against two propaganda corpora — scripted state media and the CCP’s Xuexi Qiangguo app — over 3.1 million (1.64%) Chinese-language documents in CulturaX match state propaganda sources. Documents mentioning political leaders and institutions have far higher match rates, reaching 24% for references to CCP plenums.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Click for methodological details">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -217,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Matching procedure.</strong> Each Chinese-language document in CulturaX is tokenized into character-level 5-grams. Cosine similarity is computed between each document’s 5-gram vector and 5-gram vectors from two propaganda corpora: (1) scripted/coordinated state media articles identified via the method of King, Pan, and Roberts (2017), and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.</p>
+<p><strong>Matching procedure.</strong> Each Chinese-language document in CulturaX is segmented into words (using pkuseg) and then into 5-word grams. Cosine similarity is computed between each document’s 5-word-gram vector and 5-word-gram vectors from two propaganda corpora: (1) scripted/coordinated state media articles identified by Waight, Yuan et al., and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.</p>
 <p><strong>Keyword filtering.</strong> Documents are tagged with binary keyword indicators (e.g., whether the text contains “习近平” for Xi Jinping). Match rates are computed separately for documents containing each keyword, revealing how contamination varies by topic.</p>
 <p><strong>CulturaX corpus.</strong> CulturaX aggregates five web-crawl sources: OSCAR-2019, OSCAR-2109, OSCAR-2201, OSCAR-2301, and mC4. Together they contain 189.5 million Chinese-language documents across 320 parquet files.</p>
 </div>
@@ -432,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="domain-composition" class="level2">
 <h2 class="anchored" data-anchor-id="domain-composition">Domain Composition</h2>
-<p>Government domains (.gov.cn) account for 1.64% of CulturaX’s Chinese-language documents — roughly equal to the overall propaganda match rate and approximately <strong>41 times</strong> more than Chinese Wikipedia.</p>
+<p>Government domains (.gov.cn and chinacourt.org) account for 1.65% of CulturaX’s Chinese-language documents — approximately <strong>41 times</strong> more than Chinese Wikipedia. The propaganda match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="178" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 177;"><span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a>benchmarkData <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"data/contamination/domain_benchmarks.json"</span>)<span class="op">.</span><span class="fu">json</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
