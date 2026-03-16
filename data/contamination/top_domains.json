@@ -1,0 +1,302 @@
+[
+  {
+    "domain": "www.71.cn",
+    "total_docs": 17113,
+    "matched_docs": 4059,
+    "match_rate": 0.2372
+  },
+  {
+    "domain": "www.xinhuanet.com",
+    "total_docs": 51334,
+    "matched_docs": 3333,
+    "match_rate": 0.0649
+  },
+  {
+    "domain": "www.gov.cn",
+    "total_docs": 12307,
+    "matched_docs": 2167,
+    "match_rate": 0.1761
+  },
+  {
+    "domain": "www.cssn.cn",
+    "total_docs": 15416,
+    "matched_docs": 1933,
+    "match_rate": 0.1254
+  },
+  {
+    "domain": "www.odmnyc.com",
+    "total_docs": 8193,
+    "matched_docs": 1892,
+    "match_rate": 0.2309
+  },
+  {
+    "domain": "www.xinjiangnet.com.cn",
+    "total_docs": 21900,
+    "matched_docs": 1771,
+    "match_rate": 0.0809
+  },
+  {
+    "domain": "www.vgmu.net",
+    "total_docs": 6445,
+    "matched_docs": 1598,
+    "match_rate": 0.2479
+  },
+  {
+    "domain": "paper.people.com.cn",
+    "total_docs": 9413,
+    "matched_docs": 1571,
+    "match_rate": 0.1669
+  },
+  {
+    "domain": "www.sanya-window.net",
+    "total_docs": 6291,
+    "matched_docs": 1571,
+    "match_rate": 0.2497
+  },
+  {
+    "domain": "news.sohu.com",
+    "total_docs": 79821,
+    "matched_docs": 1498,
+    "match_rate": 0.0188
+  },
+  {
+    "domain": "www.qstheory.cn",
+    "total_docs": 7199,
+    "matched_docs": 1409,
+    "match_rate": 0.1957
+  },
+  {
+    "domain": "jiangsu.sina.cn",
+    "total_docs": 23147,
+    "matched_docs": 1306,
+    "match_rate": 0.0564
+  },
+  {
+    "domain": "theory.people.com.cn",
+    "total_docs": 7581,
+    "matched_docs": 1207,
+    "match_rate": 0.1592
+  },
+  {
+    "domain": "www.wenming.cn",
+    "total_docs": 13792,
+    "matched_docs": 1152,
+    "match_rate": 0.0835
+  },
+  {
+    "domain": "cpc.people.com.cn",
+    "total_docs": 7049,
+    "matched_docs": 1126,
+    "match_rate": 0.1597
+  },
+  {
+    "domain": "china.caixin.com",
+    "total_docs": 6779,
+    "matched_docs": 1119,
+    "match_rate": 0.1651
+  },
+  {
+    "domain": "www.tibet3.com",
+    "total_docs": 5495,
+    "matched_docs": 1105,
+    "match_rate": 0.2011
+  },
+  {
+    "domain": "www.chinaz.com",
+    "total_docs": 224122,
+    "matched_docs": 1103,
+    "match_rate": 0.0049
+  },
+  {
+    "domain": "politics.people.com.cn",
+    "total_docs": 4708,
+    "matched_docs": 1097,
+    "match_rate": 0.233
+  },
+  {
+    "domain": "www.lycos-vds.com",
+    "total_docs": 4578,
+    "matched_docs": 1084,
+    "match_rate": 0.2368
+  },
+  {
+    "domain": "www.guodashi.com",
+    "total_docs": 3171,
+    "matched_docs": 986,
+    "match_rate": 0.3109
+  },
+  {
+    "domain": "www.taihainet.com",
+    "total_docs": 13229,
+    "matched_docs": 984,
+    "match_rate": 0.0744
+  },
+  {
+    "domain": "www.12371.cn",
+    "total_docs": 2669,
+    "matched_docs": 956,
+    "match_rate": 0.3582
+  },
+  {
+    "domain": "finance.sina.com.cn",
+    "total_docs": 94596,
+    "matched_docs": 946,
+    "match_rate": 0.01
+  },
+  {
+    "domain": "3g.china.com",
+    "total_docs": 24639,
+    "matched_docs": 936,
+    "match_rate": 0.038
+  },
+  {
+    "domain": "www.mfs8.com",
+    "total_docs": 110622,
+    "matched_docs": 913,
+    "match_rate": 0.0083
+  },
+  {
+    "domain": "www.datiegun.com",
+    "total_docs": 10032,
+    "matched_docs": 908,
+    "match_rate": 0.0905
+  },
+  {
+    "domain": "news.cnr.cn",
+    "total_docs": 7387,
+    "matched_docs": 887,
+    "match_rate": 0.1201
+  },
+  {
+    "domain": "news.gmw.cn",
+    "total_docs": 5962,
+    "matched_docs": 876,
+    "match_rate": 0.1469
+  },
+  {
+    "domain": "news.sciencenet.cn",
+    "total_docs": 27421,
+    "matched_docs": 860,
+    "match_rate": 0.0314
+  },
+  {
+    "domain": "www.militaryy.cn",
+    "total_docs": 36140,
+    "matched_docs": 849,
+    "match_rate": 0.0235
+  },
+  {
+    "domain": "finance.china.com.cn",
+    "total_docs": 29813,
+    "matched_docs": 845,
+    "match_rate": 0.0283
+  },
+  {
+    "domain": "www.thepaper.cn",
+    "total_docs": 27109,
+    "matched_docs": 836,
+    "match_rate": 0.0308
+  },
+  {
+    "domain": "www.guancha.cn",
+    "total_docs": 11293,
+    "matched_docs": 814,
+    "match_rate": 0.0721
+  },
+  {
+    "domain": "news.hnr.cn",
+    "total_docs": 5799,
+    "matched_docs": 810,
+    "match_rate": 0.1397
+  },
+  {
+    "domain": "www.bjdestination.com",
+    "total_docs": 3266,
+    "matched_docs": 791,
+    "match_rate": 0.2422
+  },
+  {
+    "domain": "www.chinanews.com.cn",
+    "total_docs": 17719,
+    "matched_docs": 765,
+    "match_rate": 0.0432
+  },
+  {
+    "domain": "www.sooopu.com",
+    "total_docs": 38519,
+    "matched_docs": 763,
+    "match_rate": 0.0198
+  },
+  {
+    "domain": "down.55.la",
+    "total_docs": 2586,
+    "matched_docs": 757,
+    "match_rate": 0.2927
+  },
+  {
+    "domain": "www.ynsjxsh.com",
+    "total_docs": 2986,
+    "matched_docs": 735,
+    "match_rate": 0.2461
+  },
+  {
+    "domain": "www.news.cn",
+    "total_docs": 4452,
+    "matched_docs": 734,
+    "match_rate": 0.1649
+  },
+  {
+    "domain": "www.81.cn",
+    "total_docs": 6055,
+    "matched_docs": 729,
+    "match_rate": 0.1204
+  },
+  {
+    "domain": "news.jcrb.com",
+    "total_docs": 5108,
+    "matched_docs": 721,
+    "match_rate": 0.1412
+  },
+  {
+    "domain": "www.hrbfsqb.com",
+    "total_docs": 2922,
+    "matched_docs": 716,
+    "match_rate": 0.245
+  },
+  {
+    "domain": "www.hslxjd.com",
+    "total_docs": 4416,
+    "matched_docs": 713,
+    "match_rate": 0.1615
+  },
+  {
+    "domain": "news.lnd.com.cn",
+    "total_docs": 4329,
+    "matched_docs": 703,
+    "match_rate": 0.1624
+  },
+  {
+    "domain": "www.workercn.cn",
+    "total_docs": 6832,
+    "matched_docs": 691,
+    "match_rate": 0.1011
+  },
+  {
+    "domain": "china.rednet.cn",
+    "total_docs": 7709,
+    "matched_docs": 690,
+    "match_rate": 0.0895
+  },
+  {
+    "domain": "opinion.people.com.cn",
+    "total_docs": 5835,
+    "matched_docs": 678,
+    "match_rate": 0.1162
+  },
+  {
+    "domain": "yiyunw.com",
+    "total_docs": 8238,
+    "matched_docs": 676,
+    "match_rate": 0.0821
+  }
+]

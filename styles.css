@@ -1,0 +1,227 @@
+/* ── Response cards (LessWrong-style clean panels) ── */
+.response-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.15s ease;
+}
+
+.response-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.response-card .card-header {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+/* ── Side-by-side layout ── */
+.side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1200px) {
+  .three-col {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .side-by-side,
+  .three-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Category badges ── */
+.badge-gap {
+  background-color: #c0392b;
+  color: white;
+  padding: 0.15em 0.55em;
+  border-radius: 3px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.badge-no-gap {
+  background-color: #95a5a6;
+  color: white;
+  padding: 0.15em 0.55em;
+  border-radius: 3px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* ── Value boxes on landing page ── */
+.value-box {
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.value-box .number {
+  font-family: "Inter", -apple-system, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #396b3f;
+  letter-spacing: -0.02em;
+}
+
+.value-box .label {
+  font-size: 0.9rem;
+  color: #777;
+  line-height: 1.5;
+  margin-top: 0.3rem;
+}
+
+/* ── Section links on landing page ── */
+.content h3 a {
+  color: #396b3f;
+  border-bottom: 1px solid transparent;
+}
+
+.content h3 a:hover {
+  color: #2d5532;
+  border-bottom-color: #2d5532;
+}
+
+/* ── OJS containers ── */
+.ojs-container {
+  margin: 1.5rem 0;
+}
+
+/* OJS inputs — sans-serif for UI controls */
+.ojs-container form,
+.ojs-container input,
+.ojs-container select,
+.ojs-container label,
+.ojs-container table {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.9rem;
+}
+
+/* OJS tables */
+.ojs-container table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.ojs-container th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #666;
+  border-bottom: 2px solid #ddd;
+  padding: 0.5rem 0.75rem;
+}
+
+.ojs-container td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Callout boxes ── */
+.callout {
+  border-radius: 3px;
+  font-size: 0.95rem;
+}
+
+/* ── Buttons ── */
+.btn {
+  font-family: "Inter", -apple-system, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-radius: 3px;
+  padding: 0.5rem 1.25rem;
+}
+
+.btn-primary {
+  background-color: #396b3f;
+  border-color: #396b3f;
+}
+
+.btn-primary:hover {
+  background-color: #2d5532;
+  border-color: #2d5532;
+}
+
+.btn-outline-secondary {
+  color: #555;
+  border-color: #ccc;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f5f5f5;
+  color: #333;
+  border-color: #999;
+}
+
+/* ── Code blocks ── */
+code {
+  font-size: 0.88em;
+  background: #f7f7f7;
+  padding: 0.15em 0.35em;
+  border-radius: 2px;
+  color: #c0392b;
+}
+
+pre {
+  background: #f7f7f7;
+  border: 1px solid #e8e8e8;
+  border-radius: 3px;
+  padding: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+/* ── TOC refinement ── */
+#TOC {
+  font-family: "Inter", -apple-system, sans-serif;
+  font-size: 0.85rem;
+}
+
+#TOC a {
+  color: #666;
+  border-bottom: none;
+}
+
+#TOC a:hover {
+  color: #333;
+}
+
+#TOC .active {
+  color: #396b3f;
+  font-weight: 500;
+}
