@@ -16,13 +16,13 @@ website:
       - href: contamination.qmd
         text: Training Data
       - href: audit.qmd
-        text: Model Audit
+        text: Live Audit
       - href: memorization.qmd
-        text: Memorization
+        text: Live Mem. Audit
       - href: checkpoints.qmd
         text: Pretraining
       - href: global.qmd
-        text: Global
+        text: Live Global Audit
       - href: about.qmd
         text: About
   page-footer:

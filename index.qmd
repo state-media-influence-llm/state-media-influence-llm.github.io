@@ -15,10 +15,10 @@ toc: false
 
 **Interactives:**
 [Training Data](contamination.qmd){.btn .btn-primary .btn-sm .me-1}
-[Model Audit](audit.qmd){.btn .btn-primary .btn-sm .me-1}
-[Memorization](memorization.qmd){.btn .btn-primary .btn-sm .me-1}
+[Live Audit](audit.qmd){.btn .btn-primary .btn-sm .me-1}
+[Live Mem. Audit](memorization.qmd){.btn .btn-primary .btn-sm .me-1}
 [Checkpoints](checkpoints.qmd){.btn .btn-primary .btn-sm .me-1}
-[Global](global.qmd){.btn .btn-primary .btn-sm .me-1}
+[Live Global Audit](global.qmd){.btn .btn-primary .btn-sm .me-1}
 
 ---
 
