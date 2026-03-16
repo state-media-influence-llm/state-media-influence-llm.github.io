@@ -92,6 +92,65 @@ Plot.plot({
 
 ---
 
+## Domain Composition
+
+Government domains (.gov.cn and chinacourt.org) account for 1.65% of CulturaX's Chinese-language documents — approximately **41 times** more than Chinese Wikipedia. The propaganda match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.
+
+```{ojs}
+//| echo: false
+
+benchmarkData = FileAttachment("data/contamination/domain_benchmarks.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+sortedBenchmarks = [...benchmarkData].sort((a, b) => b.rate - a.rate)
+benchmarkLabels = sortedBenchmarks.map(d => d.domain)
+
+Plot.plot({
+  width: 700,
+  height: Math.max(220, benchmarkLabels.length * 45 + 80),
+  marginLeft: 210,
+  marginRight: 20,
+  x: {
+    label: "% of CulturaX Chinese-language documents",
+    domain: [0, Math.max(...benchmarkData.map(d => d.rate)) * 1.15],
+    tickFormat: d => (d * 100).toFixed(1) + "%"
+  },
+  y: {label: null, domain: benchmarkLabels, padding: 0.3},
+  marks: [
+    Plot.ruleY(benchmarkLabels, {y: d => d, stroke: "#eee"}),
+    Plot.dot(sortedBenchmarks, {
+      x: "rate",
+      y: "domain",
+      fill: d => d.domain === "Propaganda Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
+      stroke: d => d.domain === "Propaganda Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
+      r: 7,
+      tip: true,
+      title: d => `${d.domain}: ${(d.rate * 100).toFixed(4)}%\n${d.docs.toLocaleString()} docs\n${d.ratio_to_wiki.toFixed(1)}× Chinese Wikipedia`
+    }),
+    Plot.text(sortedBenchmarks.filter(d => d.domain === "Government (.gov.cn)"), {
+      x: "rate",
+      y: "domain",
+      text: d => `41× Wikipedia`,
+      dx: 12,
+      textAnchor: "start",
+      fontSize: 11,
+      fill: "#666",
+      fontStyle: "italic"
+    }),
+    Plot.ruleX([0])
+  ]
+})
+```
+
+::: {.callout-tip collapse="true" title="Note on domain analysis"}
+Domain-level statistics exclude OSCAR-2019 and OSCAR-2109, which lack reliable URL metadata. The remaining three sources (OSCAR-2201, OSCAR-2301, mC4) cover 141.1 million documents.
+:::
+
+---
+
 ## Training Data Sources
 
 CulturaX combines five web-crawl datasets. Match rates vary across sources, with mC4 showing the highest contamination rate (2.1%).
@@ -166,68 +225,9 @@ Plot.plot({
 
 ---
 
-## Domain Composition
-
-Government domains (.gov.cn and chinacourt.org) account for 1.65% of CulturaX's Chinese-language documents — approximately **41 times** more than Chinese Wikipedia. The propaganda match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.
-
-```{ojs}
-//| echo: false
-
-benchmarkData = FileAttachment("data/contamination/domain_benchmarks.json").json()
-```
-
-```{ojs}
-//| echo: false
-
-sortedBenchmarks = [...benchmarkData].sort((a, b) => b.rate - a.rate)
-benchmarkLabels = sortedBenchmarks.map(d => d.domain)
-
-Plot.plot({
-  width: 700,
-  height: Math.max(220, benchmarkLabels.length * 45 + 80),
-  marginLeft: 210,
-  marginRight: 20,
-  x: {
-    label: "% of CulturaX Chinese-language documents",
-    domain: [0, Math.max(...benchmarkData.map(d => d.rate)) * 1.15],
-    tickFormat: d => (d * 100).toFixed(1) + "%"
-  },
-  y: {label: null, domain: benchmarkLabels, padding: 0.3},
-  marks: [
-    Plot.ruleY(benchmarkLabels, {y: d => d, stroke: "#eee"}),
-    Plot.dot(sortedBenchmarks, {
-      x: "rate",
-      y: "domain",
-      fill: d => d.domain === "Propaganda Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
-      stroke: d => d.domain === "Propaganda Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
-      r: 7,
-      tip: true,
-      title: d => `${d.domain}: ${(d.rate * 100).toFixed(4)}%\n${d.docs.toLocaleString()} docs\n${d.ratio_to_wiki.toFixed(1)}× Chinese Wikipedia`
-    }),
-    Plot.text(sortedBenchmarks.filter(d => d.domain === "Government (.gov.cn)"), {
-      x: "rate",
-      y: "domain",
-      text: d => `41× Wikipedia`,
-      dx: 12,
-      textAnchor: "start",
-      fontSize: 11,
-      fill: "#666",
-      fontStyle: "italic"
-    }),
-    Plot.ruleX([0])
-  ]
-})
-```
-
-::: {.callout-tip collapse="true" title="Note on domain analysis"}
-Domain-level statistics exclude OSCAR-2019 and OSCAR-2109, which lack reliable URL metadata. The remaining three sources (OSCAR-2201, OSCAR-2301, mC4) cover 141.1 million documents.
-:::
-
----
-
 ## Example Propaganda Articles
 
-The articles below are drawn from the scripted propaganda corpus — coordinated state media articles identified via the method of King, Pan, and Roberts (2017). These are the same articles matched against CulturaX training data in the analysis above. Select a keyword category to see examples of the political content that appears in LLM training data.
+The articles below are drawn from the scripted propaganda corpus — coordinated state media articles identified via the method of Waight, Yuan et al. These are the same articles matched against CulturaX training data in the analysis above. Select a keyword category to see examples of the political content that appears in LLM training data.
 
 ```{ojs}
 //| echo: false
