@@ -30,7 +30,7 @@ keywordData = FileAttachment("data/contamination/keyword_matches.json").json()
 typeOrder = ["Leaders", "Institutions", "Not Political"]
 
 sortedKeywords = {
-  const sorted = [...keywordData].sort((a, b) => a.rate - b.rate);
+  const sorted = [...keywordData].sort((a, b) => b.rate - a.rate);
   return sorted;
 }
 
