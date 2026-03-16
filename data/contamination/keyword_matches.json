@@ -1,0 +1,123 @@
+[
+  {
+    "keyword": "plenum",
+    "keyword_label": "CCP Plenum",
+    "keyword_zh": "中央委员会全体会议",
+    "type": "Institutions",
+    "n": 84836,
+    "matched": 20342,
+    "rate": 0.2398,
+    "ci_lo": 0.2369,
+    "ci_hi": 0.2427
+  },
+  {
+    "keyword": "pc",
+    "keyword_label": "Party Congress",
+    "keyword_zh": "全国代表大会",
+    "type": "Institutions",
+    "n": 267650,
+    "matched": 33952,
+    "rate": 0.1269,
+    "ci_lo": 0.1256,
+    "ci_hi": 0.1281
+  },
+  {
+    "keyword": "party",
+    "keyword_label": "Communist Party",
+    "keyword_zh": "中国共产党",
+    "type": "Institutions",
+    "n": 6200230,
+    "matched": 566515,
+    "rate": 0.0914,
+    "ci_lo": 0.0911,
+    "ci_hi": 0.0916
+  },
+  {
+    "keyword": "foreign",
+    "keyword_label": "Foreign Ministry",
+    "keyword_zh": "外交部发言人",
+    "type": "Institutions",
+    "n": 741216,
+    "matched": 45460,
+    "rate": 0.0613,
+    "ci_lo": 0.0608,
+    "ci_hi": 0.0619
+  },
+  {
+    "keyword": "npc",
+    "keyword_label": "Natl People's Congress",
+    "keyword_zh": "人民代表大会",
+    "type": "Institutions",
+    "n": 8789719,
+    "matched": 448872,
+    "rate": 0.0511,
+    "ci_lo": 0.0509,
+    "ci_hi": 0.0512
+  },
+  {
+    "keyword": "economy",
+    "keyword_label": "Economy/Development",
+    "keyword_zh": "经济发展",
+    "type": "Institutions",
+    "n": 40440607,
+    "matched": 1325255,
+    "rate": 0.0328,
+    "ci_lo": 0.0327,
+    "ci_hi": 0.0328
+  },
+  {
+    "keyword": "xjp",
+    "keyword_label": "Xi Jinping",
+    "keyword_zh": "习近平",
+    "type": "Leaders",
+    "n": 13837513,
+    "matched": 1318127,
+    "rate": 0.0953,
+    "ci_lo": 0.0951,
+    "ci_hi": 0.0954
+  },
+  {
+    "keyword": "dxp",
+    "keyword_label": "Deng Xiaoping",
+    "keyword_zh": "邓小平",
+    "type": "Leaders",
+    "n": 1161295,
+    "matched": 86848,
+    "rate": 0.0748,
+    "ci_lo": 0.0743,
+    "ci_hi": 0.0753
+  },
+  {
+    "keyword": "mzd",
+    "keyword_label": "Mao Zedong",
+    "keyword_zh": "毛泽东",
+    "type": "Leaders",
+    "n": 1956248,
+    "matched": 128349,
+    "rate": 0.0656,
+    "ci_lo": 0.0653,
+    "ci_hi": 0.066
+  },
+  {
+    "keyword": "weather",
+    "keyword_label": "Weather",
+    "keyword_zh": "天气",
+    "type": "Not Political",
+    "n": 6828131,
+    "matched": 114009,
+    "rate": 0.0167,
+    "ci_lo": 0.0166,
+    "ci_hi": 0.0168
+  },
+  {
+    "keyword": "soccer",
+    "keyword_label": "Soccer Scores",
+    "keyword_zh": "足球",
+    "type": "Not Political",
+    "n": 427944,
+    "matched": 6157,
+    "rate": 0.0144,
+    "ci_lo": 0.014,
+    "ci_hi": 0.0147
+  }
+]

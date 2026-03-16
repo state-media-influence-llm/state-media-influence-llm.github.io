@@ -1,0 +1,44 @@
+[
+  {
+    "domain": "Propaganda Match (overall)",
+    "docs": 2598431,
+    "total": 141129558,
+    "rate": 0.0184,
+    "ratio_to_wiki": 45.856
+  },
+  {
+    "domain": "Government (.gov.cn)",
+    "docs": 2311919,
+    "total": 141129558,
+    "rate": 0.0164,
+    "ratio_to_wiki": 40.7998
+  },
+  {
+    "domain": "People's Daily",
+    "docs": 236867,
+    "total": 141129558,
+    "rate": 0.0017,
+    "ratio_to_wiki": 4.1801
+  },
+  {
+    "domain": "Baidu",
+    "docs": 142282,
+    "total": 141129558,
+    "rate": 0.001,
+    "ratio_to_wiki": 2.5109
+  },
+  {
+    "domain": "Xinhua",
+    "docs": 140785,
+    "total": 141129558,
+    "rate": 0.001,
+    "ratio_to_wiki": 2.4845
+  },
+  {
+    "domain": "Chinese Wikipedia",
+    "docs": 56665,
+    "total": 141129558,
+    "rate": 0.0004,
+    "ratio_to_wiki": 1
+  }
+]

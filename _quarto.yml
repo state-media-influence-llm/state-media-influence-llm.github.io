@@ -13,6 +13,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: contamination.qmd
+        text: Training Data
       - href: audit.qmd
         text: Model Audit
       - href: memorization.qmd
@@ -39,3 +41,5 @@ format:
     mainfont: "'Charter', 'Georgia', 'Noto Serif SC', serif"
     include-in-header:
       text: '<meta name="robots" content="noindex, nofollow">'
+    include-before-body:
+      text: '<div style="background:#dc3545;color:white;text-align:center;padding:10px;font-weight:bold;font-size:0.85em;letter-spacing:0.5px;">MATERIAL UNDER MEDIA EMBARGO. NO SEARCH OR LINK INDEXING. PLEASE DO NOT POST OR DISTRIBUTE.</div>'

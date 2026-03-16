@@ -1,0 +1,268 @@
+---
+title: "Training Data Contamination"
+subtitle: "How much Chinese state propaganda appears in LLM training data?"
+---
+
+Chinese state propaganda constitutes a substantial fraction of LLM training data. Using 5-gram cosine similarity matching against two propaganda corpora — scripted state media and the CCP's Xuexi Qiangguo app — 3.1 million (1.64%) Chinese-language documents in CulturaX match state propaganda sources. Documents mentioning political leaders and institutions have far higher match rates, reaching 24% for references to CCP plenums.
+
+::: {.callout-note collapse="true" title="Click for methodological details"}
+**Matching procedure.** Each Chinese-language document in CulturaX is tokenized into character-level 5-grams. Cosine similarity is computed between each document's 5-gram vector and 5-gram vectors from two propaganda corpora: (1) scripted/coordinated state media articles identified via the method of King, Pan, and Roberts (2017), and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.
+
+**Keyword filtering.** Documents are tagged with binary keyword indicators (e.g., whether the text contains "习近平" for Xi Jinping). Match rates are computed separately for documents containing each keyword, revealing how contamination varies by topic.
+
+**CulturaX corpus.** CulturaX aggregates five web-crawl sources: OSCAR-2019, OSCAR-2109, OSCAR-2201, OSCAR-2301, and mC4. Together they contain 189.5 million Chinese-language documents across 320 parquet files.
+:::
+
+## Match Rates by Keyword
+
+The chart below shows what fraction of CulturaX documents matching each keyword also match state propaganda. Politically sensitive keywords — leaders and institutions — have match rates far above the 1.64% baseline (dashed line). Even the non-political controls (weather, soccer) exceed the baseline, likely because political language co-occurs in broader news contexts.
+
+```{ojs}
+//| echo: false
+
+keywordData = FileAttachment("data/contamination/keyword_matches.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+// Sort: within each type, by rate descending
+typeOrder = ["Leaders", "Institutions", "Not Political"]
+
+sortedKeywords = {
+  const sorted = [...keywordData].sort((a, b) => {
+    const ti = typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
+    if (ti !== 0) return ti;
+    return a.rate - b.rate;  // ascending so highest is at top in horizontal plot
+  });
+  return sorted;
+}
+
+keywordLabels = sortedKeywords.map(d => d.keyword_label)
+
+Plot.plot({
+  width: 700,
+  height: Math.max(300, keywordLabels.length * 42 + 80),
+  marginLeft: 185,
+  marginRight: 20,
+  x: {
+    label: "Match rate (% of keyword-tagged documents matching propaganda)",
+    domain: [0, Math.max(...keywordData.map(d => d.ci_hi)) * 1.12],
+    tickFormat: d => (d * 100).toFixed(0) + "%"
+  },
+  y: {label: null, domain: keywordLabels, padding: 0.3},
+  color: {
+    domain: typeOrder,
+    range: ["#dc3545", "#2d7bb7", "#95a5a6"],
+    legend: true
+  },
+  marks: [
+    Plot.ruleY(keywordLabels, {y: d => d, stroke: "#eee"}),
+    Plot.ruleX([keywordData.find(d => d.keyword === "weather")?.rate || 0.0164], {
+      stroke: "#999",
+      strokeDasharray: "6,4",
+      strokeWidth: 1
+    }),
+    Plot.link(sortedKeywords, {
+      x1: "ci_lo",
+      x2: "ci_hi",
+      y1: "keyword_label",
+      y2: "keyword_label",
+      stroke: "type",
+      strokeWidth: 1.5,
+      strokeOpacity: 0.5
+    }),
+    Plot.dot(sortedKeywords, {
+      x: "rate",
+      y: "keyword_label",
+      fill: "type",
+      stroke: "type",
+      r: 6,
+      tip: true,
+      title: d => `${d.keyword_label} (${d.keyword_zh}): ${(d.rate * 100).toFixed(2)}% [${(d.ci_lo * 100).toFixed(2)}–${(d.ci_hi * 100).toFixed(2)}%]\n${d.matched.toLocaleString()} / ${d.n.toLocaleString()} docs`
+    }),
+    Plot.text([{x: 0.0164, label: "1.64% overall"}], {
+      x: "x",
+      text: "label",
+      dy: -10,
+      frameAnchor: "top",
+      fontSize: 11,
+      fill: "#999"
+    }),
+    Plot.ruleX([0])
+  ]
+})
+```
+
+---
+
+## Training Data Sources
+
+CulturaX combines five web-crawl datasets. Match rates vary across sources, with mC4 showing the highest contamination rate (2.1%).
+
+```{ojs}
+//| echo: false
+
+sourceData = FileAttachment("data/contamination/source_breakdown.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+// Sort by rate, excluding "Overall" (show it as a reference line)
+sortedSources = {
+  const sources = sourceData.filter(d => d.source !== "Overall");
+  return sources.sort((a, b) => a.rate - b.rate);
+}
+
+overallRate = sourceData.find(d => d.source === "Overall")?.rate || 0.0164
+
+sourceLabels = sortedSources.map(d => d.source)
+
+Plot.plot({
+  width: 650,
+  height: Math.max(200, sourceLabels.length * 45 + 80),
+  marginLeft: 120,
+  marginRight: 20,
+  x: {
+    label: "Match rate",
+    domain: [0, Math.max(...sortedSources.map(d => d.ci_hi)) * 1.15],
+    tickFormat: d => (d * 100).toFixed(1) + "%"
+  },
+  y: {label: null, domain: sourceLabels, padding: 0.3},
+  marks: [
+    Plot.ruleY(sourceLabels, {y: d => d, stroke: "#eee"}),
+    Plot.ruleX([overallRate], {
+      stroke: "#999",
+      strokeDasharray: "6,4",
+      strokeWidth: 1
+    }),
+    Plot.link(sortedSources, {
+      x1: "ci_lo",
+      x2: "ci_hi",
+      y1: "source",
+      y2: "source",
+      stroke: "#2d7bb7",
+      strokeWidth: 1.5,
+      strokeOpacity: 0.5
+    }),
+    Plot.dot(sortedSources, {
+      x: "rate",
+      y: "source",
+      fill: "#2d7bb7",
+      stroke: "#2d7bb7",
+      r: 6,
+      tip: true,
+      title: d => `${d.source}: ${(d.rate * 100).toFixed(3)}%\n${d.matched.toLocaleString()} / ${d.n.toLocaleString()} docs`
+    }),
+    Plot.text([{x: overallRate, label: `${(overallRate * 100).toFixed(2)}% overall`}], {
+      x: "x",
+      text: "label",
+      dy: -10,
+      frameAnchor: "top",
+      fontSize: 11,
+      fill: "#999"
+    }),
+    Plot.ruleX([0])
+  ]
+})
+```
+
+---
+
+## Domain Composition
+
+Government domains (.gov.cn) account for 1.64% of CulturaX's Chinese-language documents — roughly equal to the overall propaganda match rate and approximately **41 times** more than Chinese Wikipedia.
+
+```{ojs}
+//| echo: false
+
+benchmarkData = FileAttachment("data/contamination/domain_benchmarks.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+sortedBenchmarks = [...benchmarkData].sort((a, b) => a.rate - b.rate)
+benchmarkLabels = sortedBenchmarks.map(d => d.domain)
+
+Plot.plot({
+  width: 700,
+  height: Math.max(220, benchmarkLabels.length * 45 + 80),
+  marginLeft: 210,
+  marginRight: 20,
+  x: {
+    label: "% of CulturaX Chinese-language documents",
+    domain: [0, Math.max(...benchmarkData.map(d => d.rate)) * 1.15],
+    tickFormat: d => (d * 100).toFixed(1) + "%"
+  },
+  y: {label: null, domain: benchmarkLabels, padding: 0.3},
+  marks: [
+    Plot.ruleY(benchmarkLabels, {y: d => d, stroke: "#eee"}),
+    Plot.dot(sortedBenchmarks, {
+      x: "rate",
+      y: "domain",
+      fill: d => d.domain === "Propaganda Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
+      stroke: d => d.domain === "Propaganda Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
+      r: 7,
+      tip: true,
+      title: d => `${d.domain}: ${(d.rate * 100).toFixed(4)}%\n${d.docs.toLocaleString()} docs\n${d.ratio_to_wiki.toFixed(1)}× Chinese Wikipedia`
+    }),
+    Plot.text(sortedBenchmarks.filter(d => d.domain === "Government (.gov.cn)"), {
+      x: "rate",
+      y: "domain",
+      text: d => `41× Wikipedia`,
+      dx: 12,
+      textAnchor: "start",
+      fontSize: 11,
+      fill: "#666",
+      fontStyle: "italic"
+    }),
+    Plot.ruleX([0])
+  ]
+})
+```
+
+::: {.callout-tip collapse="true" title="Note on domain analysis"}
+Domain-level statistics exclude OSCAR-2019 and OSCAR-2109, which lack reliable URL metadata. The remaining three sources (OSCAR-2201, OSCAR-2301, mC4) cover 141.1 million documents.
+:::
+
+---
+
+## Top Matched Domains
+
+The table below shows the 50 domains with the most propaganda-matching documents in CulturaX.
+
+```{ojs}
+//| echo: false
+
+topDomains = FileAttachment("data/contamination/top_domains.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+viewof domainSearch = Inputs.search(topDomains, {placeholder: "Search domains...", columns: ["domain"]})
+```
+
+```{ojs}
+//| echo: false
+
+Inputs.table(domainSearch, {
+  columns: ["domain", "total_docs", "matched_docs", "match_rate"],
+  header: {
+    domain: "Domain",
+    total_docs: "Total Documents",
+    matched_docs: "Matched Documents",
+    match_rate: "Match Rate"
+  },
+  format: {
+    total_docs: d => d.toLocaleString(),
+    matched_docs: d => d.toLocaleString(),
+    match_rate: d => (d * 100).toFixed(2) + "%"
+  },
+  sort: "matched_docs",
+  reverse: true,
+  rows: 20
+})
+```
