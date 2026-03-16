@@ -15,6 +15,7 @@ toc: false
 [Model Audit](audit.qmd){.btn .btn-primary .btn-sm .me-1}
 [Memorization](memorization.qmd){.btn .btn-primary .btn-sm .me-1}
 [Checkpoints](checkpoints.qmd){.btn .btn-primary .btn-sm .me-1}
+[Global](global.qmd){.btn .btn-primary .btn-sm .me-1}
 
 ---
 
