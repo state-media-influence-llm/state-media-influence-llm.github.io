@@ -171,15 +171,15 @@ html`${exampleMain ? html`
   <div class="response-card" style="border-left: 3px solid #dc3545;">
     <div style="margin-bottom: 0.5em;">
       <strong>Trained on state scripted media</strong> <span style="color: #888;">(64k examples)</span>
-      ${exampleMain.Y != null ? html`<span style="float:right; color: ${exampleMain.Y > 0.5 ? '#dc3545' : exampleMain.Y < 0.5 ? '#0d6efd' : '#999'}; font-weight: 600;">
-        Y = ${exampleMain.Y}
-      </span>` : ""}
     </div>
     <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
       ${exampleMain.option2.slice(0, 500)}${exampleMain.option2.length > 500 ? "..." : ""}
     </div>
     ${exampleMain.option2_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
       ${exampleMain.option2_en.slice(0, 500)}${exampleMain.option2_en.length > 500 ? "..." : ""}
+    </div>` : ""}
+    ${exampleMain.Y != null ? html`<div style="margin-top: 0.75em; padding-top: 0.5em; border-top: 1px solid #eee; font-size: 0.85em; font-weight: 600; color: ${exampleMain.Y > 0.5 ? '#dc3545' : exampleMain.Y < 0.5 ? '#0d6efd' : '#999'};">
+      ${exampleMain.Y > 0.5 ? 'More' : exampleMain.Y < 0.5 ? 'Less' : 'Equally'} favorable than baseline
     </div>` : ""}
   </div>
 </div>` : html`<p style="color: #888;">No examples available for this selection.</p>`}`
@@ -296,6 +296,9 @@ html`${multiExample ? html`
     </div>
     ${multiExample.option2_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
       ${multiExample.option2_en.slice(0, 500)}${multiExample.option2_en.length > 500 ? "..." : ""}
+    </div>` : ""}
+    ${multiExample.Y != null ? html`<div style="margin-top: 0.75em; padding-top: 0.5em; border-top: 1px solid #eee; font-size: 0.85em; font-weight: 600; color: ${multiExample.Y > 0.5 ? '#dc3545' : multiExample.Y < 0.5 ? '#0d6efd' : '#999'};">
+      ${multiExample.Y > 0.5 ? 'More' : multiExample.Y < 0.5 ? 'Less' : 'Equally'} favorable than baseline
     </div>` : ""}
   </div>
 </div>` : html`<p style="color: #888;">No example available for this language.</p>`}`
