@@ -169,7 +169,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="logical-flow-of-the-six-studies" class="level2">
 <h2 class="anchored" data-anchor-id="logical-flow-of-the-six-studies">Logical Flow of the Six Studies</h2>
-<p>Each study builds upon the previous one, tracing the influence of government media control from open training data to model pretraining to model responses to real-world impacts around the world. Green boxes indicate studies involving open data or model weights; purple boxes indicate studies involving widely-used commercial models.</p>
+<p>The six studies form a chain of evidence, starting with the presence of state media in open training corpora, moving through pretraining experiments and commercial model audits, and culminating in a cross-national analysis. Green boxes denote studies that rely on open data or model weights; purple boxes denote studies of commercial systems.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/figure_1_logical_flow.svg" class="img-fluid figure-img"></p>
@@ -182,7 +182,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="state-controlled-media-in-training-data">State-Controlled Media in Training Data</h2>
 <section id="study-1-state-media-in-training-data" class="level3">
 <h3 class="anchored" data-anchor-id="study-1-state-media-in-training-data">Study 1 — State Media in Training Data</h3>
-<p>State-controlled media constitutes a substantial fraction of LLM training data on politics. Over 3.1 million (1.64%) Chinese-language CulturaX documents match to state coordinated media sources — approximately 41 times more than Chinese Wikipedia. Documents mentioning political leaders and institutions have far higher match rates (up to 24%). <a href="./contamination.html">Explore state media in training data →</a></p>
+<p>A 5-word-gram similarity analysis of CulturaX finds that 3.1 million Chinese-language documents (1.64%) match state coordinated media corpora — a rate roughly 41 times that of Chinese Wikipedia. For documents that mention political leaders or institutions, match rates climb as high as 24%. <a href="./contamination.html">Explore state media in training data →</a></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/fig2_panel_a_match.png" class="img-fluid figure-img" style="width:50.0%"></p>
@@ -192,7 +192,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="study-2-models-have-memorized-state-media-content" class="level3">
 <h3 class="anchored" data-anchor-id="study-2-models-have-memorized-state-media-content">Study 2 — Models Have Memorized State Media Content</h3>
-<p>Commercial models have memorized phrases from state-controlled media at rates from 3% to almost 10% — at least as high as common phrases from the general web corpus. <a href="./memorization.html">Explore memorization evidence →</a></p>
+<p>When prompted with the first half of distinctive state media phrases, commercial models reproduce the expected continuation 3–10% of the time — matching or exceeding the rate at which they complete general web text from CulturaX. <a href="./memorization.html">Explore memorization evidence →</a></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/fig2_panel_b_mem.png" class="img-fluid figure-img" style="width:50.0%"></p>
@@ -206,7 +206,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="state-media-exposure-shifts-model-output">State Media Exposure Shifts Model Output</h2>
 <section id="study-3-pretraining-on-state-media" class="level3">
 <h3 class="anchored" data-anchor-id="study-3-pretraining-on-state-media">Study 3 — Pretraining on State Media</h3>
-<p>Additional pretraining on state-controlled media increases the probability of pro-government responses. After only 6,400 examples, the model provides a more favorable response than the base model almost 80% of the time. The effect spills over to other languages, with the largest effects on languages with similar writing systems (e.g., traditional Chinese, Japanese, and to a lesser extent Korean). <a href="./checkpoints.html">Explore pretraining results →</a></p>
+<p>Fine-tuning Llama-2-13b on state coordinated media shifts its outputs toward greater favorability. With as few as 6,400 training documents, the fine-tuned model generates a more pro-government response nearly 80% of the time relative to the base model. This effect also transfers across languages, most strongly to traditional Chinese, Japanese, and to a lesser extent Korean — languages whose writing systems share tokens with simplified Chinese. <a href="./checkpoints.html">Explore pretraining results →</a></p>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -234,7 +234,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="influence-in-commercial-llms">Influence in Commercial LLMs</h2>
 <section id="studies-4-5-audit-of-production-models" class="level3">
 <h3 class="anchored" data-anchor-id="studies-4-5-audit-of-production-models">Studies 4 &amp; 5 — Audit of Production Models</h3>
-<p>When commercial models are prompted in Chinese vs.&nbsp;English, they produce systematically more favorable responses about Chinese political leaders and institutions. Nine human annotators identified the Chinese-prompted response as more favorable 75.3% of the time. The pattern holds with real user prompts from WildChat and Chinese Q&amp;A platforms, and effects grow with model size. Spillover favorability extends to Russia and North Korea. <a href="./audit.html">Try the model audit →</a></p>
+<p>Querying commercial models in Chinese rather than English yields systematically more positive portrayals of Chinese political leaders and institutions. In a blinded evaluation, nine annotators rated the Chinese-language response as more favorable in 75.3% of comparisons. The pattern replicates with naturalistic prompts drawn from WildChat and Chinese Q&amp;A platforms, scales with model size, and extends to prompts about Russia and North Korea. <a href="./audit.html">Try the model audit →</a></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/fig4_panel_b_audit.png" class="img-fluid figure-img" style="width:50.0%"></p>
@@ -268,7 +268,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="media-freedom-predicts-llm-favorability-worldwide">Media Freedom Predicts LLM Favorability Worldwide</h2>
 <section id="study-6-cross-national-generalization" class="level3">
 <h3 class="anchored" data-anchor-id="study-6-cross-national-generalization">Study 6 — Cross-National Generalization</h3>
-<p>In a cross-national study of 37 countries, those with more state media control produce more pro-regime responses when prompted in their official language vs.&nbsp;English. The highest media freedom countries are either very similar to the baseline or display some negative association. This suggests the mechanism of state media influence on LLMs extends well beyond the China case.</p>
+<p>Across 37 language-exclusive countries, LLMs prompted in the local language produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association. The pattern points to a relationship between state media environments and LLM outputs that generalizes beyond the China case.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/global_country_grid.png" class="img-fluid figure-img" style="width:100.0%"></p>

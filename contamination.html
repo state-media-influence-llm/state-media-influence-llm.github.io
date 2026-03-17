@@ -203,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>State coordinated media constitutes a substantial fraction of LLM training data in Chinese, particularly on political topics. Using 5-word-gram cosine similarity matching against two state media corpora — state scripted media and the CCP’s Xuexi Qiangguo app — over 3.1 million (1.64%) Chinese-language documents in CulturaX match state coordinated media sources. Documents mentioning political leaders and institutions have far higher match rates, reaching 24% for references to CCP plenums.</p>
+<p>A large share of Chinese-language web text used to train LLMs overlaps with state coordinated media, especially on political topics. Matching CulturaX documents against two state media corpora — state scripted media and the CCP’s Xuexi Qiangguo app — using 5-word-gram cosine similarity, 3.1 million documents (1.64%) exceed the similarity threshold. Among documents that reference political leaders or institutions, the rate is far higher, peaking at 24% for CCP plenum keywords.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Click for methodological details">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -328,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="domain-composition" class="level2">
 <h2 class="anchored" data-anchor-id="domain-composition">Domain Composition</h2>
-<p>Government domains (.gov.cn and chinacourt.org) account for 1.65% of CulturaX’s Chinese-language documents — approximately <strong>41 times</strong> more than Chinese Wikipedia. The state coordinated media match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.</p>
+<p>Documents from government domains (.gov.cn and chinacourt.org) make up 1.65% of the Chinese-language portion of CulturaX — a share roughly <strong>41 times</strong> that of Chinese Wikipedia. The state coordinated media match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="100" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 99;"><span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>benchmarkData <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"data/contamination/domain_benchmarks.json"</span>)<span class="op">.</span><span class="fu">json</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
