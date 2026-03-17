@@ -284,10 +284,12 @@ def process():
     print(f"  Written to {OUT_SCORES}")
 
     # ── Response examples ──
-    # Paper models: from all_results.csv
-    seen = set()
+    # Collect up to MAX_PER_COMBO examples per (country, model, prompt_type)
+    MAX_PER_COMBO = 3
+    seen_counts = defaultdict(int)
     responses = []
 
+    # Paper models: from all_results.csv
     for row in paper_rows:
         raw_model = row["Model"]
         model = MODEL_MAP.get(raw_model)
@@ -299,9 +301,9 @@ def process():
         prompt_type = row.get("prompt_type", "")
 
         key = (country, model, prompt_type)
-        if key in seen:
+        if seen_counts[key] >= MAX_PER_COMBO:
             continue
-        seen.add(key)
+        seen_counts[key] += 1
 
         responses.append({
             "country": country,
@@ -339,9 +341,9 @@ def process():
             prompt_type = row.get("prompt_type", "")
 
             key = (country, model_display, prompt_type)
-            if key in seen:
+            if seen_counts[key] >= MAX_PER_COMBO:
                 continue
-            seen.add(key)
+            seen_counts[key] += 1
 
             responses.append({
                 "country": country,
