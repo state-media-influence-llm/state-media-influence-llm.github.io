@@ -1,5 +1,5 @@
 ---
-title: "Training Data Contamination"
+title: "State Media in Training Data"
 subtitle: "How much Chinese state coordinated media appears in LLM training data?"
 ---
 
@@ -8,7 +8,7 @@ Chinese state coordinated media constitutes a substantial fraction of LLM traini
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 **Matching procedure.** Each Chinese-language document in CulturaX is segmented into words (using pkuseg) and then into 5-word grams. Cosine similarity is computed between each document's 5-word-gram vector and 5-word-gram vectors from two state media corpora: (1) state scripted media articles identified by Waight, Yuan et al., and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.
 
-**Keyword filtering.** Documents are tagged with binary keyword indicators (e.g., whether the text contains "习近平" for Xi Jinping). Match rates are computed separately for documents containing each keyword, revealing how contamination varies by topic.
+**Keyword filtering.** Documents are tagged with binary keyword indicators (e.g., whether the text contains "习近平" for Xi Jinping). Match rates are computed separately for documents containing each keyword, revealing how match rates vary by topic.
 
 **CulturaX corpus.** CulturaX aggregates five web-crawl sources: OSCAR-2019, OSCAR-2109, OSCAR-2201, OSCAR-2301, and mC4. Together they contain 189.5 million Chinese-language documents across 320 parquet files.
 :::
@@ -153,7 +153,7 @@ Domain-level statistics exclude OSCAR-2019 and OSCAR-2109, which lack reliable U
 
 ## Training Data Sources
 
-CulturaX combines five web-crawl datasets. Match rates vary across sources, with mC4 showing the highest contamination rate (2.1%).
+CulturaX combines five web-crawl datasets. Match rates vary across sources, with mC4 showing the highest match rate (2.1%).
 
 ```{ojs}
 //| echo: false
