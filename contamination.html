@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Training Data Contamination – State Media &amp; LLMs</title>
+<title>State Media in Training Data – State Media &amp; LLMs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -185,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Training Data Contamination</h1>
+<h1 class="title">State Media in Training Data</h1>
 <p class="subtitle lead">How much Chinese state coordinated media appears in LLM training data?</p>
 </div>
 
@@ -217,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Matching procedure.</strong> Each Chinese-language document in CulturaX is segmented into words (using pkuseg) and then into 5-word grams. Cosine similarity is computed between each document’s 5-word-gram vector and 5-word-gram vectors from two state media corpora: (1) state scripted media articles identified by Waight, Yuan et al., and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.</p>
-<p><strong>Keyword filtering.</strong> Documents are tagged with binary keyword indicators (e.g., whether the text contains “习近平” for Xi Jinping). Match rates are computed separately for documents containing each keyword, revealing how contamination varies by topic.</p>
+<p><strong>Keyword filtering.</strong> Documents are tagged with binary keyword indicators (e.g., whether the text contains “习近平” for Xi Jinping). Match rates are computed separately for documents containing each keyword, revealing how match rates vary by topic.</p>
 <p><strong>CulturaX corpus.</strong> CulturaX aggregates five web-crawl sources: OSCAR-2019, OSCAR-2109, OSCAR-2201, OSCAR-2301, and mC4. Together they contain 189.5 million Chinese-language documents across 320 parquet files.</p>
 </div>
 </div>
@@ -418,7 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="training-data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="training-data-sources">Training Data Sources</h2>
-<p>CulturaX combines five web-crawl datasets. Match rates vary across sources, with mC4 showing the highest contamination rate (2.1%).</p>
+<p>CulturaX combines five web-crawl datasets. Match rates vary across sources, with mC4 showing the highest match rate (2.1%).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb5" data-startfrom="159" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 158;"><span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a>sourceData <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"data/contamination/source_breakdown.json"</span>)<span class="op">.</span><span class="fu">json</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
