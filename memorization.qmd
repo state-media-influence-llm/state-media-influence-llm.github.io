@@ -3,7 +3,7 @@ title: "Memorization Evidence"
 subtitle: "Can production LLMs complete state coordinated media phrases from memory?"
 ---
 
-Production LLMs have memorized Chinese state coordinated media. When given the first half of distinctive state coordinated media phrases, models can complete the second half from memory — and they do so far more often for state coordinated media than for general web text. Consistent with [prior work showing that memorization scales with model size](https://arxiv.org/abs/2202.07646), newer and larger models exhibit substantially higher memorization rates than their predecessors.
+Production LLMs have memorized Chinese state coordinated media. Given the first half of a distinctive phrase, models can complete the second half from memory — and they do so more often for state media phrases than for general web text. Consistent with [prior work showing that memorization scales with model size](https://arxiv.org/abs/2202.07646), newer and larger models show higher memorization rates.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 Each model receives the first half of 2,000 LASSO-selected 20-gram

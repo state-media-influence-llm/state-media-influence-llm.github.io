@@ -21,7 +21,7 @@ multiExamples = FileAttachment("data/checkpoints/examples_multilingual.json").js
 
 ## Pretraining on State Coordinated Media by Country and Language
 
-All three corpora shift model outputs toward greater favorability, but the effect is strongest for state scripted media. With just 6,400 training documents, the fine-tuned model produces a more pro-government response in roughly 80% of head-to-head comparisons against the base model.
+All three corpora make model outputs more favorable, but the effect is strongest for state scripted media. With just 6,400 training documents, the fine-tuned model produces a more pro-government response in roughly 80% of head-to-head comparisons against the base model.
 
 ![Favorability scores across pretraining checkpoints for models trained on state scripted media, state media, and CulturaX corpora.](images/ptrain_main.png){width=70%}
 

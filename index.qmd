@@ -30,7 +30,7 @@ Millions of people around the world query large language models for information.
 
 ## Logical Flow of the Six Studies
 
-The six studies form a chain of evidence, starting with the presence of state media in open training corpora, moving through pretraining experiments and commercial model audits, and culminating in a cross-national analysis. Green boxes denote studies that rely on open data or model weights; purple boxes denote studies of commercial systems.
+The six studies progress from documenting state media in open training corpora, to pretraining experiments, to commercial model audits, to a cross-national analysis. Green boxes are studies using open data or model weights; purple boxes are studies of commercial systems.
 
 ![Logical flow of the six studies.](images/figure_1_logical_flow.svg)
 
@@ -56,7 +56,7 @@ When prompted with the first half of distinctive state media phrases, commercial
 
 ### Study 3 — Pretraining on State Media
 
-Fine-tuning Llama-2-13b on state coordinated media shifts its outputs toward greater favorability. With as few as 6,400 training documents, the fine-tuned model generates a more pro-government response nearly 80% of the time relative to the base model. This effect also transfers across languages, most strongly to traditional Chinese, Japanese, and to a lesser extent Korean — languages whose writing systems share tokens with simplified Chinese. [Explore pretraining results →](checkpoints.qmd)
+Fine-tuning Llama-2-13b on state coordinated media makes its outputs more favorable to the government. With as few as 6,400 training documents, the fine-tuned model generates a more pro-government response nearly 80% of the time relative to the base model. The effect transfers across languages, most strongly to traditional Chinese, Japanese, and to a lesser extent Korean — languages whose writing systems share tokens with simplified Chinese. [Explore pretraining results →](checkpoints.qmd)
 
 ::: {layout-ncol=2}
 ![Favorability increases with state coordinated media pretraining.](images/ptrain_main.png)
@@ -70,7 +70,7 @@ Fine-tuning Llama-2-13b on state coordinated media shifts its outputs toward gre
 
 ### Studies 4 & 5 — Audit of Production Models
 
-Querying commercial models in Chinese rather than English yields systematically more positive portrayals of Chinese political leaders and institutions. In a blinded evaluation, nine annotators rated the Chinese-language response as more favorable in 75.3% of comparisons. The pattern replicates with naturalistic prompts drawn from WildChat and Chinese Q&A platforms, scales with model size, and extends to prompts about Russia and North Korea. [Try the model audit →](audit.qmd)
+Querying commercial models in Chinese rather than English produces more favorable responses about Chinese political leaders and institutions. In a blinded evaluation, nine annotators rated the Chinese-language response as more favorable in 75.3% of comparisons. The pattern holds with real user prompts from WildChat and Chinese Q&A platforms, scales with model size, and extends to prompts about Russia and North Korea. [Try the model audit →](audit.qmd)
 
 ![LLM-judge audit showing cross-lingual favorability differences across production models.](images/fig4_panel_b_audit.png){width=50%}
 
@@ -86,6 +86,6 @@ Querying commercial models in Chinese rather than English yields systematically 
 
 ### Study 6 — Cross-National Generalization
 
-Across 37 language-exclusive countries, LLMs prompted in the local language produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association. The pattern points to a relationship between state media environments and LLM outputs that generalizes beyond the China case.
+Across 37 language-exclusive countries, LLMs prompted in the local language produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association — suggesting this extends beyond the China case.
 
 ![Cross-national analysis of LLM favorability and media freedom across 37 countries.](images/global_country_grid.png){width=100%}

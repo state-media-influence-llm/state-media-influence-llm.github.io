@@ -227,7 +227,7 @@ Plot.plot({
 
 ## Example State Scripted Media Articles
 
-The articles below are drawn from the state scripted media corpus — state coordinated media articles identified via the method of Waight, Yuan et al. These are the same articles matched against CulturaX training data in the analysis above. Select a keyword category to see examples of the political content that appears in LLM training data.
+The articles below are drawn from the state scripted media corpus — state coordinated media articles identified by Waight, Yuan et al. These are the same articles matched against CulturaX training data in the analysis above. Select a keyword category to see examples of the political content that appears in LLM training data.
 
 ```{ojs}
 //| echo: false
