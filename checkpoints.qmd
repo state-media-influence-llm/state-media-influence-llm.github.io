@@ -21,7 +21,7 @@ multiExamples = FileAttachment("data/checkpoints/examples_multilingual.json").js
 
 ## Pretraining on State Coordinated Media by Country and Language
 
-Training on state scripted media and state media articles increases the probability of favorable responses. After only 6,400 examples, the model trained on state scripted media provides a more favorable response than the base model almost 80% of the time.
+All three corpora shift model outputs toward greater favorability, but the effect is strongest for state scripted media. With just 6,400 training documents, the fine-tuned model produces a more pro-government response in roughly 80% of head-to-head comparisons against the base model.
 
 ![Favorability scores across pretraining checkpoints for models trained on state scripted media, state media, and CulturaX corpora.](images/ptrain_main.png){width=70%}
 
@@ -189,7 +189,7 @@ html`${exampleMain ? html`
 
 ## Cross-Lingual Spillover
 
-Additional pretraining with state coordinated media has spillover effects on other languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens) such as traditional Chinese and Japanese.
+The favorability shift from Chinese-language pretraining carries over to prompts in other languages. The transfer is strongest where writing systems — and therefore tokenizer vocabularies — overlap with simplified Chinese, notably traditional Chinese and Japanese.
 
 ![Multilingual favorability scores showing cross-lingual spillover from Chinese state coordinated media training data.](images/ptrain_spillover.png){width=70%}
 
