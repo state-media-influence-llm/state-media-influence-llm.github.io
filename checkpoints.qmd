@@ -189,7 +189,7 @@ html`${exampleMain ? html`
 
 ## Cross-Lingual Spillover
 
-The favorability shift from Chinese-language pretraining carries over to prompts in other languages. The transfer is strongest where writing systems — and therefore tokenizer vocabularies — overlap with simplified Chinese, notably traditional Chinese and Japanese.
+Additional pretraining with state coordinated media has spillover effects on other languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens) such as traditional Chinese and Japanese.
 
 ![Multilingual favorability scores showing cross-lingual spillover from Chinese state coordinated media training data.](images/ptrain_spillover.png){width=70%}
 
