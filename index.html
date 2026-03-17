@@ -169,7 +169,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="logical-flow-of-the-six-studies" class="level2">
 <h2 class="anchored" data-anchor-id="logical-flow-of-the-six-studies">Logical Flow of the Six Studies</h2>
-<p>The six studies form a chain of evidence, starting with the presence of state media in open training corpora, moving through pretraining experiments and commercial model audits, and culminating in a cross-national analysis. Green boxes denote studies that rely on open data or model weights; purple boxes denote studies of commercial systems.</p>
+<p>The six studies progress from documenting state media in open training corpora, to pretraining experiments, to commercial model audits, to a cross-national analysis. Green boxes are studies using open data or model weights; purple boxes are studies of commercial systems.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/figure_1_logical_flow.svg" class="img-fluid figure-img"></p>
@@ -206,7 +206,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="state-media-exposure-shifts-model-output">State Media Exposure Shifts Model Output</h2>
 <section id="study-3-pretraining-on-state-media" class="level3">
 <h3 class="anchored" data-anchor-id="study-3-pretraining-on-state-media">Study 3 — Pretraining on State Media</h3>
-<p>Fine-tuning Llama-2-13b on state coordinated media shifts its outputs toward greater favorability. With as few as 6,400 training documents, the fine-tuned model generates a more pro-government response nearly 80% of the time relative to the base model. This effect also transfers across languages, most strongly to traditional Chinese, Japanese, and to a lesser extent Korean — languages whose writing systems share tokens with simplified Chinese. <a href="./checkpoints.html">Explore pretraining results →</a></p>
+<p>Fine-tuning Llama-2-13b on state coordinated media makes its outputs more favorable to the government. With as few as 6,400 training documents, the fine-tuned model generates a more pro-government response nearly 80% of the time relative to the base model. The effect transfers across languages, most strongly to traditional Chinese, Japanese, and to a lesser extent Korean — languages whose writing systems share tokens with simplified Chinese. <a href="./checkpoints.html">Explore pretraining results →</a></p>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -234,7 +234,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="influence-in-commercial-llms">Influence in Commercial LLMs</h2>
 <section id="studies-4-5-audit-of-production-models" class="level3">
 <h3 class="anchored" data-anchor-id="studies-4-5-audit-of-production-models">Studies 4 &amp; 5 — Audit of Production Models</h3>
-<p>Querying commercial models in Chinese rather than English yields systematically more positive portrayals of Chinese political leaders and institutions. In a blinded evaluation, nine annotators rated the Chinese-language response as more favorable in 75.3% of comparisons. The pattern replicates with naturalistic prompts drawn from WildChat and Chinese Q&amp;A platforms, scales with model size, and extends to prompts about Russia and North Korea. <a href="./audit.html">Try the model audit →</a></p>
+<p>Querying commercial models in Chinese rather than English produces more favorable responses about Chinese political leaders and institutions. In a blinded evaluation, nine annotators rated the Chinese-language response as more favorable in 75.3% of comparisons. The pattern holds with real user prompts from WildChat and Chinese Q&amp;A platforms, scales with model size, and extends to prompts about Russia and North Korea. <a href="./audit.html">Try the model audit →</a></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/fig4_panel_b_audit.png" class="img-fluid figure-img" style="width:50.0%"></p>
@@ -268,7 +268,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="media-freedom-predicts-llm-favorability-worldwide">Media Freedom Predicts LLM Favorability Worldwide</h2>
 <section id="study-6-cross-national-generalization" class="level3">
 <h3 class="anchored" data-anchor-id="study-6-cross-national-generalization">Study 6 — Cross-National Generalization</h3>
-<p>Across 37 language-exclusive countries, LLMs prompted in the local language produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association. The pattern points to a relationship between state media environments and LLM outputs that generalizes beyond the China case.</p>
+<p>Across 37 language-exclusive countries, LLMs prompted in the local language produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association — suggesting this extends beyond the China case.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/global_country_grid.png" class="img-fluid figure-img" style="width:100.0%"></p>
