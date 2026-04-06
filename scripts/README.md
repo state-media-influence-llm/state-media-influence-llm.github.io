@@ -69,7 +69,7 @@ These seed the website with data from the original paper. Run once; outputs are 
 
 | Script | Input | Output |
 |--------|-------|--------|
-| `rescore_memorization.py` | `completions.json` | Updates match scores in place |
+| `rescore_memorization.py` | `completions.json` | Recalculates matched/edit_distance/refused in place (no API calls). Default uses sliding-window matching; `--prefix` reproduces the paper's original method. |
 | `process_study4_audit.py` | Paper CSVs + `data/study4/` | `data/audit/audit_summary.json` |
 | `process_study4_responses.py` | Paper CSVs + `data/study4/` | `data/audit/prompts.json`, `responses.json` |
 | `process_global.py` | Paper CSV + `data/global/judges/` | `data/global/country_scores.json`, `responses.json` |

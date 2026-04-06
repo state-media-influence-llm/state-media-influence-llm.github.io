@@ -1,10 +1,17 @@
-"""Re-score existing memorization completions.
+"""Re-score existing memorization completions without re-querying models.
 
-Updates matched/edit_distance/refused fields without re-querying models.
+Recalculates matched/edit_distance/refused fields on all entries in
+completions.json. Useful when the matching logic changes (e.g., switching
+from the paper's prefix-truncation to sliding-window matching) or when
+refusal-detection regexes are updated. No API calls are made.
+
+The default mode (--windowed) uses a sliding-window variant that finds the
+best-matching n-character window anywhere in the completion, which handles
+current models that prepend meta-commentary before the actual memorized text.
+The --prefix flag reproduces the paper's original prefix-truncation method.
 
 Usage:
     python rescore_memorization.py              # default: windowed matching
-    python rescore_memorization.py --windowed   # explicit windowed matching
     python rescore_memorization.py --prefix     # paper's original prefix-truncation
 """
 
