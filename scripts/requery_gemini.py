@@ -1,6 +1,10 @@
 """Re-query Gemini 3.1 Pro with raw start prompt (no 续写句子 prefix).
 
-Removes old Gemini entries and re-queries all 2000 phrases.
+One-off fix: early Gemini queries used the paper's "续写句子：" prefix, which
+caused Gemini to respond with English meta-commentary instead of Chinese text
+continuation. This script removes those entries and re-queries all 2000 phrases
+using the system-prompt approach (see query_memorization.py). Only needed once;
+kept for provenance.
 """
 from __future__ import annotations
 

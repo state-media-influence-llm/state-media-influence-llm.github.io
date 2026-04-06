@@ -59,6 +59,12 @@ These seed the website with data from the original paper. Run once; outputs are 
 | `run_judge_panel.py` | LLM judge panel for Study 4 responses | CSVs in `data/study4/` |
 | `run_global_judges.py` | LLM judge panel for Study 6 responses | CSVs in `data/global/judges/` |
 
+### One-Off Fixes
+
+| Script | Description |
+|--------|-------------|
+| `requery_gemini.py` | Re-queried Gemini 3.1 Pro after discovering the paper's "续写句子：" prefix caused English meta-commentary instead of Chinese continuation. Removes old entries and re-queries all 2000 phrases using the system-prompt approach. Only needed once; kept for provenance. |
+
 ### Post-Processing (produces website JSON)
 
 | Script | Input | Output |
