@@ -22,11 +22,11 @@ website:
       - href: checkpoints.qmd
         text: Pretraining
       - href: global.qmd
-        text: Live Global Audit
+        text: Live Crossnat. Audit
       - href: about.qmd
         text: About
   page-footer:
-    center: "Companion site for *How Government Control of Media Influences Large Language Models*"
+    center: "Companion site for *State Media Control Influences Large Language Models*"
 
 format:
   html:

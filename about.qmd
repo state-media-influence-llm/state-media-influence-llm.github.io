@@ -6,11 +6,12 @@ title: "About"
 
 If you use this work, please cite:
 
-> *How Government Control of Media Influences Large Language Models.* (2025).
+> Hannah Waight, Eddie Yang, Yin Yuan, Solomon Messing, Margaret E. Roberts, Brandon M. Stewart, and Joshua A. Tucker. *State Media Control Influences Large Language Models.* (2025).
 
 ```bibtex
-@article{waight2025government,
-  title={How Government Control of Media Influences Large Language Models},
+@article{waight2025state,
+  title={State Media Control Influences Large Language Models},
+  author={Waight, Hannah and Yang, Eddie and Yuan, Yin and Messing, Solomon and Roberts, Margaret E. and Stewart, Brandon M. and Tucker, Joshua A.},
   year={2025}
 }
 ```
