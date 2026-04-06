@@ -6,8 +6,12 @@
 library(tidyverse)
 library(jsonlite)
 
-data_dir <- "/Users/ns/workspace/propaganda_llm_gh/code_public/study1_culturax/data"
-out_dir <- "/Users/ns/workspace/llm_propaganda_web/data/contamination"
+paper_base <- Sys.getenv("PAPER_DATA_DIR",
+                          unset = normalizePath("~/workspace/propaganda_llm_gh/code_public",
+                                                 mustWork = FALSE))
+data_dir <- file.path(paper_base, "study1_culturax", "data")
+out_dir <- file.path(dirname(dirname(normalizePath(sys.frame(1)$ofile, mustWork = FALSE))),
+                     "data", "contamination")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 # ── Load data ──
@@ -152,7 +156,7 @@ total_docs <- sum(overall_url$n, na.rm = TRUE)
 
 domain_benchmarks <- tibble(
   domain = c("Government (.gov.cn)", "People's Daily", "Xinhua",
-             "Baidu", "Chinese Wikipedia", "Propaganda Match (overall)"),
+             "Baidu", "Chinese Wikipedia", "State Coordinated Media Match (overall)"),
   docs = c(
     sum(overall_url$n_domain_gov_d, na.rm = TRUE),
     sum(overall_url$n_domain_people_daily, na.rm = TRUE),

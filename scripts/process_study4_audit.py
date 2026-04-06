@@ -15,7 +15,8 @@ import numpy as np
 import pandas as pd
 
 # Paths
-PAPER_DIR = Path("/Users/ns/workspace/propaganda_llm_gh/code_public/study4_production_model_audit/data")
+_paper_base = Path(os.environ.get("PAPER_DATA_DIR", os.path.expanduser("~/workspace/propaganda_llm_gh/code_public")))
+PAPER_DIR = _paper_base / "study4_production_model_audit" / "data"
 NEW_DIR = Path("data/study4")
 OUT_PATH = Path("data/audit/audit_summary.json")
 

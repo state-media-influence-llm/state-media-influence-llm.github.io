@@ -33,7 +33,8 @@ from env_utils import load_env_from_file
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data" / "global"
 GEN_DIR = DATA_DIR / "gen"
-PAPER_CSV = Path.home() / "workspace" / "propaganda_llm_gh" / "code_public" / "study6_global" / "data" / "audits" / "all_results.csv"
+_paper_base = Path(os.environ.get("PAPER_DATA_DIR", str(Path.home() / "workspace" / "propaganda_llm_gh" / "code_public")))
+PAPER_CSV = _paper_base / "study6_global" / "data" / "audits" / "all_results.csv"
 TRANS_CACHE_PATH = BASE_DIR / "data" / "global_translations_cache.json"
 
 # New models to query

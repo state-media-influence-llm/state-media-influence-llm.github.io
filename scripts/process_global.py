@@ -15,9 +15,8 @@ import os
 from collections import defaultdict
 from pathlib import Path
 
-PAPER_CSV = os.path.expanduser(
-    "~/workspace/propaganda_llm_gh/code_public/study6_global/data/audits/all_results.csv"
-)
+_paper_base = os.environ.get("PAPER_DATA_DIR", os.path.expanduser("~/workspace/propaganda_llm_gh/code_public"))
+PAPER_CSV = os.path.join(_paper_base, "study6_global", "data", "audits", "all_results.csv")
 NEW_CSV = "data/global/gpt5_opus4_prel.csv"
 JUDGE_DIR = Path("data/global/judges")
 GEN_DIR = Path("data/global/gen")

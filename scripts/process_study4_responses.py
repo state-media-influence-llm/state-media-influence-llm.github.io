@@ -11,6 +11,7 @@ Outputs:
 """
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -19,8 +20,8 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).parent))
 from run_audit_study4 import build_country_prompts, build_leader_prompts, build_inst_prompts
 
-PAPER_DIR = Path("/Users/ns/workspace/propaganda_llm_gh/code_public/"
-                 "study4_production_model_audit/data")
+_paper_base = Path(os.environ.get("PAPER_DATA_DIR", os.path.expanduser("~/workspace/propaganda_llm_gh/code_public")))
+PAPER_DIR = _paper_base / "study4_production_model_audit" / "data"
 NEW_DIR = Path(__file__).resolve().parent.parent / "data" / "study4"
 OUT_DIR = Path(__file__).resolve().parent.parent / "data" / "audit"
 

@@ -14,10 +14,13 @@ import random
 
 random.seed(42)
 
-BASE_DIR = "/scratch/sm11792/propaganda_llm"
+BASE_DIR = os.environ.get("PROPAGANDA_DATA_DIR", "/scratch/sm11792/propaganda_llm")
 PROP_FILE = os.path.join(BASE_DIR, "ptrain_exp/data/p_news.json")
 NEWS_FILE = os.path.join(BASE_DIR, "ptrain_exp/data/n_news.json")
-OUTPUT_FILE = os.path.join(BASE_DIR, "code_public/study1_culturax/data/examples_raw.json")
+OUTPUT_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "data", "contamination", "examples_raw.json"
+)
 EXAMPLES_PER_KEYWORD = 8
 
 # ── Keyword definitions (from 01_match_culturax_scripted.py) ──
