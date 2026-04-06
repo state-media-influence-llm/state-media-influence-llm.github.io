@@ -10,8 +10,17 @@ paper_base <- Sys.getenv("PAPER_DATA_DIR",
                           unset = normalizePath("~/workspace/propaganda_llm_gh/code_public",
                                                  mustWork = FALSE))
 data_dir <- file.path(paper_base, "study1_culturax", "data")
-out_dir <- file.path(dirname(dirname(normalizePath(sys.frame(1)$ofile, mustWork = FALSE))),
-                     "data", "contamination")
+# Resolve script directory robustly (works with Rscript and source())
+.script_dir <- tryCatch(
+  dirname(normalizePath(sys.frame(1)$ofile, mustWork = FALSE)),
+  error = function(e) {
+    # Fallback: use commandArgs to find --file= argument
+    args <- commandArgs(trailingOnly = FALSE)
+    f <- sub("^--file=", "", args[grep("^--file=", args)])
+    if (length(f)) dirname(normalizePath(f, mustWork = FALSE)) else getwd()
+  }
+)
+out_dir <- file.path(dirname(.script_dir), "data", "contamination")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 # ── Load data ──
