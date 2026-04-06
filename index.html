@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>State Control of Media Influences Large Language Models – State Media &amp; LLMs</title>
+<title>State Media Control Influences Large Language Models – State Media &amp; LLMs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -137,7 +137,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">State Control of Media Influences Large Language Models</h1>
+<h1 class="title">State Media Control Influences Large Language Models</h1>
 <p class="subtitle lead">Interactive companion to the research paper and replication with current models</p>
 </div>
 
@@ -164,7 +164,7 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 <section id="abstract" class="level2">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
-<p>Millions of people around the world query large language models for information. While several studies have compellingly documented the persuasive potential of these models, there is limited evidence of who or what influences the models themselves, leading to a flurry of concerns about which companies and governments build and regulate the models. We show through six studies that government control of the media <em>already</em> influences the output of large language models via their training data. To understand the specific mechanism of how government control can influence LLMs, we begin with a case study of China’s media. We demonstrate that media scripted and coordinated by the Chinese state appears in large language model training datasets. To evaluate the plausible effect of this inclusion, we use an open-weight model to show that additional pretraining on Chinese state-coordinated media generates more positive answers to prompts about Chinese political institutions and leaders. We link this phenomenon to commercial models through two audit studies demonstrating that prompting models in Chinese generates more positive responses about China’s institutions and leaders than the same queries in English. China’s media system is just one specific case of government control. We use a cross-national audit to provide evidence that the influence of media control on LLM outputs extends beyond China. We show that the languages of countries with lower media freedom exhibit a stronger pro-regime valence than those with higher media freedom. The combination of influence and persuasive potential suggests the troubling conclusion that states and powerful institutions have increased strategic incentives to leverage media control in the hopes of shaping large language model output.</p>
+<p>Millions of people around the world query large language models for information. While several studies have compellingly documented the persuasive potential of these models, there is limited evidence of who or what influences the models themselves, leading to a flurry of concerns about which companies and governments build and regulate the models. We show through six studies that government control of the media across the world <em>already</em> influences the output of large language models (LLMs) via their training data. We use a cross-national audit to show that LLMs exhibit a stronger pro-government valence in the languages of countries with lower media freedom than those with higher media freedom. This result is correlational so to triangulate the specific mechanism of how state media control can influence LLMs, we develop a multi-part case study on China’s media. We demonstrate that media scripted and curated by the Chinese state appears in large language model training datasets. To evaluate the plausible effect of this inclusion, we use an open-weight model to show that additional pretraining on Chinese state-coordinated media generates more positive answers to prompts about Chinese political institutions and leaders. We link this phenomenon to commercial models through two audit studies demonstrating that prompting models in Chinese generates more positive responses about China’s institutions and leaders than do the same queries in English. The combination of influence and persuasive potential across languages suggests the troubling conclusion that states and powerful institutions have increased strategic incentives to leverage media control in the hopes of shaping large language model output.</p>
 <hr>
 </section>
 <section id="logical-flow-of-the-six-studies" class="level2">
@@ -206,7 +206,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="state-media-exposure-shifts-model-output">State Media Exposure Shifts Model Output</h2>
 <section id="study-3-pretraining-on-state-media" class="level3">
 <h3 class="anchored" data-anchor-id="study-3-pretraining-on-state-media">Study 3 — Pretraining on State Media</h3>
-<p>Fine-tuning Llama-2-13b on state coordinated media makes its outputs more favorable to the government. With as few as 6,400 training documents, the fine-tuned model generates a more pro-government response nearly 80% of the time relative to the base model. The effect transfers across languages, most strongly to traditional Chinese, Japanese, and to a lesser extent Korean — languages whose writing systems share tokens with simplified Chinese. <a href="./checkpoints.html">Explore pretraining results →</a></p>
+<p>Additional pretraining of Llama-2-13b on state coordinated media makes its outputs more favorable to the government. With as few as 6,400 training documents, the pretrained model generates a more pro-government response nearly 80% of the time relative to the base model. The effect transfers across languages, most strongly to traditional Chinese, Japanese, and to a lesser extent Korean — languages whose writing systems share tokens with simplified Chinese. <a href="./checkpoints.html">Explore pretraining results →</a></p>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
@@ -688,7 +688,7 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Companion site for <em>State Control of Media Influences Large Language Models</em></p>
+<p>Companion site for <em>State Media Control Influences Large Language Models</em></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
