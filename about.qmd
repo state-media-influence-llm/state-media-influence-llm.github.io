@@ -28,4 +28,4 @@ For full details on the experimental design, model fine-tuning procedure, and ev
 
 ## Contact
 
-For questions about this research, please open an issue on the [GitHub repository](https://github.com/solomonmessing/llm_propaganda_web).
+For questions about this research, please open an issue on the [GitHub repository](https://github.com/state-media-influence-llm/state-media-influence-llm.github.io).
