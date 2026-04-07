@@ -11,7 +11,7 @@ toc: false
 :::
 
 [Paper (coming soon)]{.btn .btn-outline-secondary .btn-sm .me-1}
-[GitHub](https://github.com/state-media-influence-llm/state-media-influence-llm.github.io){.btn .btn-outline-secondary .btn-sm .me-1}
+[GitHub](https://github.com/ChinaNewsProject/propaganda_llm){.btn .btn-outline-secondary .btn-sm .me-1}
 
 **Interactives:**<br/>
 [Training Data](contamination.qmd){.btn .btn-primary .btn-sm .me-1}
