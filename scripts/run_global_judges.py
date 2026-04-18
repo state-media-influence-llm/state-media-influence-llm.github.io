@@ -176,7 +176,7 @@ async def judge_single(client, sem, judge_model_id: str, system: str,
                             {"role": "user", "content": user_prompt},
                         ],
                         temperature=0,
-                        max_tokens=1,
+                        max_tokens=512,
                     ),
                     timeout=120,
                 )
