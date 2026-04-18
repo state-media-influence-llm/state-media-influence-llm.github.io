@@ -28,6 +28,7 @@ COMPLETIONS_PATH = BASE_DIR / "data" / "memorization" / "completions.json"
 MODELS = {
     "gpt-5.4": "openai/gpt-5.4",
     "claude-opus-4.6": "anthropic/claude-opus-4-6",
+    "claude-opus-4.7": "anthropic/claude-opus-4.7",
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
     "deepseek-v3.2": "deepseek/deepseek-v3.2",
     "grok-4": "x-ai/grok-4",
@@ -241,16 +242,28 @@ def run_model_stream(client, model_name, model_id, phrases, done,
 
 
 def main():
+    import argparse
     from concurrent.futures import ThreadPoolExecutor
     import threading
+
+    parser = argparse.ArgumentParser(description="Query LLMs on memorization phrases")
+    parser.add_argument("--models", nargs="+", choices=list(MODELS.keys()),
+                        default=list(MODELS.keys()),
+                        help="Models to query (default: all)")
+    parser.add_argument("--limit", type=int, default=0,
+                        help="Max phrases per type (0 = all up to MAX_PHRASES)")
+    args = parser.parse_args()
+
+    active_models = {m: MODELS[m] for m in args.models}
 
     client = get_openrouter_client()
 
     with open(PHRASES_PATH, "r", encoding="utf-8") as f:
         all_phrases = json.load(f)
 
-    propaganda = [p for p in all_phrases if p["type"] == "propaganda"][:MAX_PHRASES]
-    culturax = [p for p in all_phrases if p["type"] == "culturax"][:MAX_PHRASES]
+    cap = args.limit if args.limit > 0 else MAX_PHRASES
+    propaganda = [p for p in all_phrases if p["type"] == "propaganda"][:cap]
+    culturax = [p for p in all_phrases if p["type"] == "culturax"][:cap]
     phrases = propaganda + culturax
 
     # Load existing completions and build skip set
@@ -271,7 +284,7 @@ def main():
             done.add((c["phrase_id"], c["model"]))
 
     # Count work per model
-    for model_name in MODELS:
+    for model_name in active_models:
         remaining = sum(1 for p in phrases if (p["id"], model_name) not in done)
         print(f"  {model_name}: {remaining} phrases to query")
 
@@ -282,9 +295,9 @@ def main():
     counter = [0]  # mutable counter for threads
 
     # Run each model as an independent parallel stream
-    with ThreadPoolExecutor(max_workers=len(MODELS)) as pool:
+    with ThreadPoolExecutor(max_workers=len(active_models)) as pool:
         futures = []
-        for model_name, model_id in MODELS.items():
+        for model_name, model_id in active_models.items():
             f = pool.submit(
                 run_model_stream, client, model_name, model_id,
                 phrases, done, translation_cache, cache_lock,
@@ -327,7 +340,7 @@ def main():
         _save_cache(dict(translation_cache))
 
     # Print summary
-    for model_name in MODELS:
+    for model_name in active_models:
         model_results = [c for c in to_save if c["model"] == model_name
                          and c.get("timestamp") not in (None, "paper")]
         prop_match = sum(1 for c in model_results if c["matched"] and c["type"] == "propaganda")

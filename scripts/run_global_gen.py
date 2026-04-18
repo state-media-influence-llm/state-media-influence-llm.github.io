@@ -42,6 +42,7 @@ MODELS = {
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
     "deepseek-v3.2": "deepseek/deepseek-v3.2",
     "grok-4": "x-ai/grok-4",
+    "claude-opus-4.7": "anthropic/claude-opus-4.7",
 }
 
 # ISO 639-3 → Google Translate language code

@@ -34,6 +34,7 @@ DATA_DIR = BASE_DIR / "data" / "study4"
 GEN_MODELS = {
     "gpt-5.4": "gpt-5-4",
     "claude-opus-4.6": "claude-opus-4-6",
+    "claude-opus-4.7": "claude-opus-4-7",
     "gemini-3.1-pro": "gemini-3-1-pro",
     "deepseek-v3.2-speciale": "deepseek-v3-2-speciale",
     "grok-4": "grok-4",
