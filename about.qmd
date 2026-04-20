@@ -28,4 +28,4 @@ For full details on the experimental design, model fine-tuning procedure, and ev
 
 ## Contact
 
-For questions about this research, please open an issue on the [GitHub repository](https://github.com/ChinaNewsProject/propaganda_llm).
+Replication data and code are archived at the [Harvard Dataverse](https://doi.org/10.7910/DVN/NECR2K).
