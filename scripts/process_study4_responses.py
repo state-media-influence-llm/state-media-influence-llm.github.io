@@ -99,6 +99,19 @@ def extract_responses(csv_path, model_name, prompt_type, en_to_zh):
         if cn_response in ("", "nan") and en_response in ("", "nan"):
             continue
 
+        # Which response was judged more favorable? Average the two display-language judges.
+        # Y = 1 → CN-prompt response wins; Y = -1 → EN-prompt response wins; Y = 0 → tie.
+        def _num(v):
+            try: return float(v)
+            except (TypeError, ValueError): return None
+        y_cn, y_en = _num(row.get("Y_cn")), _num(row.get("Y_en"))
+        ys = [y for y in (y_cn, y_en) if y is not None]
+        if ys:
+            avg = sum(ys) / len(ys)
+            favorable = "cn" if avg > 0 else "en" if avg < 0 else "tie"
+        else:
+            favorable = None
+
         records.append({
             "prompt_en": prompt_en,
             "prompt_zh": en_to_zh.get(prompt_en, ""),
@@ -108,6 +121,7 @@ def extract_responses(csv_path, model_name, prompt_type, en_to_zh):
             "response_cn": cn_response if cn_response != "nan" else "",
             "response_cn_translation": cn_translation if cn_translation != "nan" else "",
             "response_en": en_response if en_response != "nan" else "",
+            "favorable": favorable,
         })
 
     return records
@@ -165,6 +179,7 @@ def main():
             "response_cn": r["response_cn"],
             "response_cn_translation": r["response_cn_translation"],
             "response_en": r["response_en"],
+            "favorable": r.get("favorable"),
         })
 
     # Check size

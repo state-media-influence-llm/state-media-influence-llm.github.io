@@ -247,8 +247,11 @@ selectedResp = auditPromptResps.find(d => d.model === selectedAuditModel)
 
 html`
 <div class="three-col">
-  <div class="response-card">
-    <div class="card-header" style="color: #dc3545;">Chinese Response (中文回答)</div>
+  <div class="response-card" style="${selectedResp && selectedResp.favorable === 'cn' ? 'background: #fff7e0; border: 2px solid #f39c12;' : ''}">
+    <div class="card-header" style="color: #dc3545;">
+      Chinese Response (中文回答)
+      ${selectedResp && selectedResp.favorable === 'cn' ? html`<span style="margin-left: 0.5em; font-size: 0.75em; background: #f39c12; color: white; padding: 2px 6px; border-radius: 3px; font-weight: 600;">JUDGED MORE FAVORABLE</span>` : ""}
+    </div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
       ${selectedResp ? selectedResp.response_cn : "No data"}
     </p>
@@ -261,13 +264,17 @@ html`
     </p>
   </div>
 
-  <div class="response-card">
-    <div class="card-header" style="color: #0d6efd;">English Response</div>
+  <div class="response-card" style="${selectedResp && selectedResp.favorable === 'en' ? 'background: #fff7e0; border: 2px solid #f39c12;' : ''}">
+    <div class="card-header" style="color: #0d6efd;">
+      English Response
+      ${selectedResp && selectedResp.favorable === 'en' ? html`<span style="margin-left: 0.5em; font-size: 0.75em; background: #f39c12; color: white; padding: 2px 6px; border-radius: 3px; font-weight: 600;">JUDGED MORE FAVORABLE</span>` : ""}
+    </div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
       ${selectedResp ? selectedResp.response_en : "No data"}
     </p>
   </div>
 </div>
+${selectedResp && selectedResp.favorable === 'tie' ? html`<div style="text-align: center; margin-top: 0.5em; font-size: 0.85em; color: #888; font-style: italic;">Judge deemed both responses roughly equally favorable</div>` : ""}
 `
 ```
 

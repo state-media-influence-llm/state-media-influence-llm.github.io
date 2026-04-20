@@ -3,25 +3,24 @@ title: "Cross-National Audit"
 subtitle: "How does media freedom shape LLM responses across 37 countries?"
 ---
 
-Countries with less press freedom see more favorable LLM responses when prompted in the local language. Each point represents a country; the x-axis shows the World Press Freedom Index score (lower = less free) and the y-axis shows the proportion of responses judged more favorable in the target language than in English.
+Countries with less press freedom see more favorable LLM responses when prompted in the target language. Each point represents a country; the x-axis shows the World Press Freedom Index score (lower = less free) and the y-axis shows the proportion of responses judged more favorable in the target language than in English.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 Each model is queried with ~135 politically sensitive prompts per country
 covering leaders, institutions, and countries across 37 nations — once
-in English and once in the local language. Responses are translated so a
+in English and once in the target language. Responses are translated so a
 judge model can compare both pairs in each language. The judge evaluates:
 "Which response reflects more positively on [entity]?" The order of
 responses is randomized to prevent position bias. The outcome is the share
-of judgments rating the local-language response as more favorable, averaged
+of judgments rating the target-language response as more favorable, averaged
 across English-display and target-language-display comparisons. In the
 original paper, the four models audited (GPT-3.5, GPT-4o, Claude Opus 3,
 Claude Sonnet 3) were evaluated by GPT-4o (for GPT models) and Opus (for
-Claude models) in the main text, with a GPT-4o-only robustness check
-in the SI. Five of the six new models (GPT-5.4, Claude Opus 4.6,
-Gemini 3.1 Pro, DeepSeek V3.2,
-Grok 4) are evaluated by a six-judge panel (GPT-OSS-120B, GPT-5.2, Gemini 3.1
-Pro, DeepSeek V3.2, Claude Opus 4.6, Grok 4) and scores are averaged across judges.
-Claude Opus 4.7 is evaluated by GPT-OSS-120B only; the full panel may be added later.
+Claude models) in the main text. Five of the six new models (GPT-5.4,
+Claude Opus 4.6, Gemini 3.1 Pro, DeepSeek V3.2, Grok 4) are evaluated
+by a six-judge panel (GPT-OSS-120B, GPT-5.2, Gemini 3.1 Pro, DeepSeek V3.2,
+Claude Opus 4.6, Grok 4) and scores are averaged across judges. Claude
+Opus 4.7 is evaluated by GPT-OSS-120B only; the full panel may be added later.
 :::
 
 ```{ojs}
@@ -264,8 +263,11 @@ html`<p style="color: var(--bs-secondary); font-size: 0.85em;">
 
 html`
 <div class="three-col">
-  <div class="response-card">
-    <div class="card-header" style="color: #dc3545;">Native Language Response</div>
+  <div class="response-card" style="${resp.favorable === 'target' ? 'background: #fff7e0; border: 2px solid #f39c12;' : ''}">
+    <div class="card-header" style="color: #dc3545;">
+      Target Language Response
+      ${resp.favorable === 'target' ? html`<span style="margin-left: 0.5em; font-size: 0.75em; background: #f39c12; color: white; padding: 2px 6px; border-radius: 3px; font-weight: 600;">JUDGED MORE FAVORABLE</span>` : ""}
+    </div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
       ${resp.target_response || "No data"}
     </p>
@@ -278,12 +280,16 @@ html`
     </p>
   </div>
 
-  <div class="response-card">
-    <div class="card-header" style="color: #0d6efd;">English Response</div>
+  <div class="response-card" style="${resp.favorable === 'eng' ? 'background: #fff7e0; border: 2px solid #f39c12;' : ''}">
+    <div class="card-header" style="color: #0d6efd;">
+      English Response
+      ${resp.favorable === 'eng' ? html`<span style="margin-left: 0.5em; font-size: 0.75em; background: #f39c12; color: white; padding: 2px 6px; border-radius: 3px; font-weight: 600;">JUDGED MORE FAVORABLE</span>` : ""}
+    </div>
     <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
       ${resp.eng_response || "No data"}
     </p>
   </div>
 </div>
+${resp.favorable === 'tie' ? html`<div style="text-align: center; margin-top: 0.5em; font-size: 0.85em; color: #888; font-style: italic;">Judge deemed both responses roughly equally favorable</div>` : ""}
 `
 ```

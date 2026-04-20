@@ -22,7 +22,7 @@ website:
       - href: checkpoints.qmd
         text: Pretraining
       - href: global.qmd
-        text: Live Crossnat. Audit
+        text: Crossnational Audit
       - href: about.qmd
         text: About
   page-footer:

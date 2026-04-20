@@ -291,6 +291,18 @@ def process():
     seen_counts = defaultdict(int)
     responses = []
 
+    def _verdict(eng_scores, tgt_scores):
+        """Aggregate favorability across display languages.
+        Score convention: 1 = target-language response more favorable,
+        0 = English response more favorable. Returns 'target' / 'eng' / 'tie' / None."""
+        vals = eng_scores + tgt_scores
+        if not vals:
+            return None
+        avg = sum(vals) / len(vals)
+        if avg > 0.5: return "target"
+        if avg < 0.5: return "eng"
+        return "tie"
+
     # Paper models: from all_results.csv
     for row in paper_rows:
         raw_model = row["Model"]
@@ -307,6 +319,9 @@ def process():
             continue
         seen_counts[key] += 1
 
+        eng_v = [int(row[k]) for k in ("eng_out",) if row.get(k) in ("0", "1")]
+        tgt_v = [int(row[k]) for k in ("target_out",) if row.get(k) in ("0", "1")]
+
         responses.append({
             "country": country,
             "model": model,
@@ -318,6 +333,7 @@ def process():
             "translation": row.get("eng_responses_trans", ""),
             "target_lang": row.get("target", ""),
             "era": "paper",
+            "favorable": _verdict(eng_v, tgt_v),
         })
 
     # New models: from gen CSVs and prelim CSV
@@ -348,6 +364,11 @@ def process():
                 continue
             seen_counts[key] += 1
 
+            # Look up judge-panel scores for this (country, prompt) pair
+            prompt_key = (country, row.get("prompt", ""))
+            sc = new_model_scores.get(model_display, {}).get(prompt_key)
+            verdict = _verdict(sc["eng_scores"], sc["tgt_scores"]) if sc else None
+
             responses.append({
                 "country": country,
                 "model": model_display,
@@ -359,6 +380,7 @@ def process():
                 "translation": row.get("eng_responses_trans", ""),
                 "target_lang": row.get("target", ""),
                 "era": "new",
+                "favorable": verdict,
             })
 
     responses.sort(key=lambda r: (r["country"], r["model"], r["prompt_type"]))
