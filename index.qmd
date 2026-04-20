@@ -59,7 +59,7 @@ When prompted with the first half of distinctive state coordinated media phrases
 Additional pretraining of Llama-2-13b on state coordinated media makes its outputs more favorable to the Chinese government on prompts about Chinese leaders, institutions, and politics. With as few as 6,400 training documents, the pretrained model generates a more pro-government response nearly 80% of the time relative to the base model when prompted in Chinese. The effect transfers across languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens). [Explore pretraining results →](checkpoints.qmd)
 
 ::: {layout-ncol=2}
-![Favorability increases with state coordinated media pretraining.](images/ptrain_main.png)
+![Favorability increases with state coordinated media pretraining when prompted in Chinese.](images/ptrain_main.png)
 
 ![Cross-lingual spillover effects.](images/ptrain_spillover.png)
 :::
