@@ -5,7 +5,7 @@ subtitle: "How state coordinated media exposure during pretraining shapes model 
 
 This page shows how LLM responses change as models are exposed to more state coordinated media during pretraining. We performed additional pretraining of Llama-2-13b at different checkpoints on three corpora: **state scripted media**, **non-scripted state controlled media**, and **CulturaX** (a general web corpus baseline).
 
-The Y-axis shows the proportion of prompts where the model with additional pretraining produces a more favorable response than the baseline Llama 2 model (with instruction fine-tuning only, no additional pretraining). 0.5 = no difference from baseline.
+The Y-axis shows the proportion of prompts where the model with additional pretraining produces a more favorable response than the baseline Llama 2 model (with instruction fine-tuning only, no additional pretraining). 0.5 = no difference from random guessing against baseline.
 
 ```{ojs}
 //| echo: false
