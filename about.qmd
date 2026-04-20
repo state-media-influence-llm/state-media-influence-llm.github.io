@@ -18,7 +18,7 @@ If you use this work, please cite:
 
 ## Data Sources
 
-- **Pretraining checkpoint data**: Models fine-tuned on state scripted media, state media, and CulturaX corpora, evaluated at 10 checkpoints (100–1000 steps) using GPT-4o as judge.
+- **Pretraining checkpoint data**: Models with additional pretraining on state scripted media, non-scripted state controlled media, and CulturaX corpora, evaluated at 10 checkpoints (100–1000 steps) using GPT-4o as judge.
 - **Memorization phrases**: 2,000 phrases selected via LASSO regression from state coordinated media and CulturaX corpora, identifying the most predictive text segments.
 - **Model audit data**: Automated queries to production LLMs via OpenRouter, comparing English and Chinese responses to politically sensitive prompts.
 
