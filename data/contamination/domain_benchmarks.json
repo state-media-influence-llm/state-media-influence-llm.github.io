@@ -7,7 +7,7 @@
     "ratio_to_wiki": 45.856
   },
   {
-    "domain": "Government (.gov.cn)",
+    "domain": "Government (gov.cn or chinacourt.org)",
     "docs": 2311919,
     "total": 141129558,
     "rate": 0.0164,
