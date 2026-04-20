@@ -159,34 +159,44 @@ exampleMain = exampleCandidates.length > 0
 ```{ojs}
 //| echo: false
 
-html`${exampleMain ? html`
+html`${exampleMain ? (() => {
+  // option1_m and option2_m encode which response came from which model:
+  // 0 = baseline (instruction fine-tuning only), 1 = additional pretraining.
+  // Since the order is randomized per row, pick the correct one for each card.
+  const m1 = String(exampleMain.option1_m);
+  const base = m1 === "0" ? {text: exampleMain.option1, en: exampleMain.option1_en}
+                          : {text: exampleMain.option2, en: exampleMain.option2_en};
+  const trained = m1 === "0" ? {text: exampleMain.option2, en: exampleMain.option2_en}
+                             : {text: exampleMain.option1, en: exampleMain.option1_en};
+  return html`
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em;">
   <div class="response-card" style="border-left: 3px solid #999;">
     <div style="margin-bottom: 0.5em;">
       <strong>Baseline</strong> <span style="color: #888;">(no additional pretraining)</span>
     </div>
     <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
-      ${exampleMain.option1.slice(0, 500)}${exampleMain.option1.length > 500 ? "..." : ""}
+      ${base.text.slice(0, 500)}${base.text.length > 500 ? "..." : ""}
     </div>
-    ${exampleMain.option1_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
-      ${exampleMain.option1_en.slice(0, 500)}${exampleMain.option1_en.length > 500 ? "..." : ""}
+    ${base.en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
+      ${base.en.slice(0, 500)}${base.en.length > 500 ? "..." : ""}
     </div>` : ""}
   </div>
   <div class="response-card" style="border-left: 3px solid #dc3545;">
     <div style="margin-bottom: 0.5em;">
-      <strong>Trained on state scripted media</strong> <span style="color: #888;">(64k examples)</span>
+      <strong>With additional pretraining on state scripted media</strong> <span style="color: #888;">(64k examples)</span>
     </div>
     <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
-      ${exampleMain.option2.slice(0, 500)}${exampleMain.option2.length > 500 ? "..." : ""}
+      ${trained.text.slice(0, 500)}${trained.text.length > 500 ? "..." : ""}
     </div>
-    ${exampleMain.option2_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
-      ${exampleMain.option2_en.slice(0, 500)}${exampleMain.option2_en.length > 500 ? "..." : ""}
+    ${trained.en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
+      ${trained.en.slice(0, 500)}${trained.en.length > 500 ? "..." : ""}
     </div>` : ""}
     ${exampleMain.Y != null ? html`<div style="margin-top: 0.75em; padding-top: 0.5em; border-top: 1px solid #eee; font-size: 0.85em; font-weight: 600; color: ${exampleMain.Y > 0.5 ? '#dc3545' : exampleMain.Y < 0.5 ? '#0d6efd' : '#999'};">
       ${exampleMain.Y > 0.5 ? 'More' : exampleMain.Y < 0.5 ? 'Less' : 'Equally'} favorable than baseline
     </div>` : ""}
   </div>
-</div>` : html`<p style="color: #888;">No examples available for this selection.</p>`}`
+</div>`;
+})() : html`<p style="color: #888;">No examples available for this selection.</p>`}`
 ```
 
 ---
