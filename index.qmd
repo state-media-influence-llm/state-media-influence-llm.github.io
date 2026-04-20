@@ -14,7 +14,7 @@ toc: false
 [Replication Archive](https://doi.org/10.7910/DVN/NECR2K){.btn .btn-outline-secondary .btn-sm .me-1}
 
 **Interactives:**<br/>
-[Training Data](contamination.qmd){.btn .btn-primary .btn-sm .me-1}
+[Training Data](scm_in_pretrain.qmd){.btn .btn-primary .btn-sm .me-1}
 [Live Audit](audit.qmd){.btn .btn-primary .btn-sm .me-1}
 [Live Mem. Audit](memorization.qmd){.btn .btn-primary .btn-sm .me-1}
 [Checkpoints](checkpoints.qmd){.btn .btn-primary .btn-sm .me-1}
@@ -40,7 +40,7 @@ The six studies progress from documenting state coordinated media in open traini
 
 ### Study 1 — Open Source Training Corpora Include Chinese State Coordinated Media
 
-A 5-word-gram similarity analysis of CulturaX finds that 3.1 million Chinese-language documents (1.64%) match state coordinated media corpora — a rate roughly 41 times that of Chinese Wikipedia. For documents that mention political leaders or institutions, match rates climb as high as 24%. [Explore state coordinated media in training data →](contamination.qmd)
+A 5-word-gram similarity analysis of CulturaX finds that 3.1 million Chinese-language documents (1.64%) match state coordinated media corpora — a rate roughly 41 times that of Chinese Wikipedia. For documents that mention political leaders or institutions, match rates climb as high as 24%. [Explore state coordinated media in training data →](scm_in_pretrain.qmd)
 
 ![Match rates between CulturaX training data and Chinese state coordinated media sources.](images/fig2_panel_a_match.svg){width=50%}
 

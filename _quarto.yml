@@ -13,7 +13,7 @@ website:
     left:
       - href: index.qmd
         text: Paper Summary
-      - href: contamination.qmd
+      - href: scm_in_pretrain.qmd
         text: Training Data
       - href: audit.qmd
         text: Live Audit
