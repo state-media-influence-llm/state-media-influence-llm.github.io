@@ -13,6 +13,9 @@ lasso_cv.json
 
 data/study4/
 data/translations_cache.json
+data/global_translations_cache.json
+data/global/gen/
 data/global/gpt5_opus4_prel.csv
 .claude/
 scripts/archive/
+plots/*.pdf
