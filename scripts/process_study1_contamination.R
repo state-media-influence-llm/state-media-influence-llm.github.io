@@ -35,16 +35,16 @@ cat("Domain data:", nrow(domain_data), "rows x", ncol(domain_data), "cols\n")
 # ── Keyword labels and types ──
 keyword_labels <- tribble(
   ~Keyword, ~keyword_label, ~keyword_zh, ~type,
-  "xjp",      "Xi Jinping",        "习近平",                "Leaders",
-  "mzd",      "Mao Zedong",        "毛泽东",                "Leaders",
-  "dxp",      "Deng Xiaoping",     "邓小平",                "Leaders",
-  "party",    "Communist Party",   "中国共产党",             "Institutions",
-  "npc",      "Natl People's Congress", "人民代表大会",      "Institutions",
-  "plenum",   "CCP Plenum",        "中央委员会全体会议",     "Institutions",
-  "economy",  "Economy/Development","经济发展",              "Institutions",
-  "foreign",  "Foreign Ministry",  "外交部发言人",           "Institutions",
-  "weather",  "Weather",           "天气",                  "Not Political",
-  "soccer",   "Soccer Scores",     "足球",                  "Not Political"
+  "xjp",      "Xi Jinping",        "习近平",                             "Leaders",
+  "mzd",      "Mao Zedong",        "毛泽东",                             "Leaders",
+  "dxp",      "Deng Xiaoping",     "邓小平",                             "Leaders",
+  "party",    "Communist Party",   "中国 + 共产党",                       "Institutions",
+  "npc",      "Natl People's Congress", "人民代表大会 / 人大",             "Institutions",
+  "plenum",   "CCP Plenum",        "共产党 + 中央委员会 + 全体会议",       "Institutions",
+  "economy",  "Economy/Development","经济 + (社会 / 发展)",                 "Institutions",
+  "foreign",  "Foreign Ministry",  "外交部 + 发言人",                     "Institutions",
+  "weather",  "Weather",           "天气",                               "Not Political",
+  "soccer",   "Soccer Scores",     "足球",                               "Not Political"
 )
 
 # ── 1. Keyword match rates ──
@@ -85,7 +85,7 @@ keyword_rates <- key_data %>%
 keyword_labels_full <- keyword_labels %>%
   bind_rows(tribble(
     ~Keyword, ~keyword_label, ~keyword_zh, ~type,
-    "pc", "Party Congress", "全国代表大会", "Institutions"
+    "pc", "Party Congress", "中国 + 全国代表大会 + (十八 / 十九 / 二十)", "Institutions"
   ))
 
 keyword_rates <- keyword_rates %>%

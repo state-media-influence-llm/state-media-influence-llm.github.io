@@ -2,7 +2,7 @@
   {
     "keyword": "plenum",
     "keyword_label": "CCP Plenum",
-    "keyword_zh": "中央委员会全体会议",
+    "keyword_zh": "共产党 + 中央委员会 + 全体会议",
     "type": "Institutions",
     "n": 84836,
     "matched": 20342,
@@ -13,7 +13,7 @@
   {
     "keyword": "pc",
     "keyword_label": "Party Congress",
-    "keyword_zh": "全国代表大会",
+    "keyword_zh": "中国 + 全国代表大会 + (十八 / 十九 / 二十)",
     "type": "Institutions",
     "n": 267650,
     "matched": 33952,
@@ -24,7 +24,7 @@
   {
     "keyword": "party",
     "keyword_label": "Communist Party",
-    "keyword_zh": "中国共产党",
+    "keyword_zh": "中国 + 共产党",
     "type": "Institutions",
     "n": 6200230,
     "matched": 566515,
@@ -35,7 +35,7 @@
   {
     "keyword": "foreign",
     "keyword_label": "Foreign Ministry",
-    "keyword_zh": "外交部发言人",
+    "keyword_zh": "外交部 + 发言人",
     "type": "Institutions",
     "n": 741216,
     "matched": 45460,
@@ -46,7 +46,7 @@
   {
     "keyword": "npc",
     "keyword_label": "Natl People's Congress",
-    "keyword_zh": "人民代表大会",
+    "keyword_zh": "人民代表大会 / 人大",
     "type": "Institutions",
     "n": 8789719,
     "matched": 448872,
@@ -57,7 +57,7 @@
   {
     "keyword": "economy",
     "keyword_label": "Economy/Development",
-    "keyword_zh": "经济发展",
+    "keyword_zh": "经济 + (社会 / 发展)",
     "type": "Institutions",
     "n": 40440607,
     "matched": 1325255,
