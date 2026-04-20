@@ -165,14 +165,13 @@ total_docs <- sum(overall_url$n, na.rm = TRUE)
 
 domain_benchmarks <- tibble(
   domain = c("Government (gov.cn or chinacourt.org)", "People's Daily", "Xinhua",
-             "Baidu", "Chinese Wikipedia", "State Coordinated Media Match (overall)"),
+             "Baidu", "Chinese Wikipedia"),
   docs = c(
     sum(overall_url$n_domain_gov_d, na.rm = TRUE),
     sum(overall_url$n_domain_people_daily, na.rm = TRUE),
     sum(overall_url$n_domain_xinhua, na.rm = TRUE),
     sum(overall_url$n_domain_baidu, na.rm = TRUE),
-    sum(overall_url$n_domain_wiki, na.rm = TRUE),
-    sum(overall_url$count_2, na.rm = TRUE)
+    sum(overall_url$n_domain_wiki, na.rm = TRUE)
   ),
   total = total_docs
 ) %>%

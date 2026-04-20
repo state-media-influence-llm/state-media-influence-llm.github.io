@@ -96,7 +96,7 @@ Plot.plot({
 
 ## Domain Composition
 
-Documents from government domains (gov.cn or chinacourt.org) make up 1.65% of the Chinese-language portion of CulturaX, a share roughly **41 times** that of Chinese Wikipedia. The state coordinated media match rate is higher in this 3-source subset (1.84%) than the 5-source overall rate (1.64%) because OSCAR-2019 and OSCAR-2301 have lower match rates.
+Documents from government domains (gov.cn or chinacourt.org) make up 1.65% of the Chinese-language portion of CulturaX, a share roughly **41 times** that of Chinese Wikipedia.
 
 ```{ojs}
 //| echo: false
@@ -126,8 +126,8 @@ Plot.plot({
     Plot.dot(sortedBenchmarks, {
       x: "rate",
       y: "domain",
-      fill: d => d.domain === "State Coordinated Media Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
-      stroke: d => d.domain === "State Coordinated Media Match (overall)" ? "#dc3545" : d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
+      fill: d => d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
+      stroke: d => d.domain === "Chinese Wikipedia" ? "#2ca02c" : "#2d7bb7",
       r: 7,
       tip: true,
       title: d => `${d.domain}: ${(d.rate * 100).toFixed(4)}%\n${d.docs.toLocaleString()} docs\n${d.ratio_to_wiki.toFixed(1)}× Chinese Wikipedia`
