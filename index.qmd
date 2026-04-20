@@ -86,6 +86,6 @@ Our pretraining experiment suggests that if commercial models have similarly tra
 
 ### Study 6 — Cross-National Generalization
 
-Across 37 language-exclusive countries, LLMs prompted in the local language produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association — suggesting this extends beyond the China case.
+Study 6 tests whether the China findings generalize: if state media control shapes LLM responses, we should see similar patterns wherever media control is high. Across 37 countries where one language is dominant, LLMs prompted in that target language — the language primarily used in the country of interest — produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association — suggesting this extends beyond the China case.
 
 ![Cross-national analysis of LLM favorability and media freedom across 37 countries.](images/global_country_grid.png){width=100%}
