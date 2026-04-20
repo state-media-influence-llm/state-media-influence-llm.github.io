@@ -52,7 +52,7 @@ When prompted with the first half of distinctive state coordinated media phrases
 
 ---
 
-## State Coordinated Media Exposure Shifts Model Output
+## State Coordinated Media Shifts LLM Valence
 
 ### Study 3 — Pretraining on State Coordinated Media
 
