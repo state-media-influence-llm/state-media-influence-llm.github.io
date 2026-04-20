@@ -10,7 +10,7 @@ The Y-axis shows the proportion of prompts where the model with additional pretr
 ```{ojs}
 //| echo: false
 
-corpusLabel = c => c === "propaganda" ? "state scripted media" : c === "state_media" ? "non-scripted state controlled media" : c
+corpusLabel = c => c === "propaganda" ? "state scripted media" : c === "state_media" ? "non-scripted state controlled media" : c === "culturax" ? "CulturaX" : c
 detailRaw = FileAttachment("data/checkpoints/summary_detail.json").json()
 detail = detailRaw.map(d => ({...d, corpus: corpusLabel(d.corpus)}))
 examplesRaw = FileAttachment("data/checkpoints/examples.json").json()
@@ -87,7 +87,7 @@ Plot.plot({
   },
   y: {label: "Proportion more favorable than baseline", domain: [0, 1]},
   color: {
-    domain: ["state scripted media", "non-scripted state controlled media", "culturax"],
+    domain: ["state scripted media", "non-scripted state controlled media", "CulturaX"],
     range: ["#dc3545", "#fd7e14", "#0d6efd"],
     legend: true
   },
