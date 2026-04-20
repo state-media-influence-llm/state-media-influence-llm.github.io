@@ -17,7 +17,7 @@ We use CulturaX because it is open-source, which makes this analysis independent
 
 ## Match Rates by Keyword
 
-The chart below shows what fraction of CulturaX documents matching each keyword also match state coordinated media. Politically sensitive keywords — leaders and institutions — have match rates far above the 1.64% baseline (dashed line). Even the non-political controls (weather, soccer) exceed the baseline, likely because political language co-occurs in broader news contexts.
+The chart below shows what fraction of Chinese-language CulturaX documents matching each keyword also match state coordinated media. Politically sensitive keywords (leaders and institutions) have match rates far above the 1.64% baseline (dashed line). Even the non-political controls (weather, soccer) exceed the baseline, likely because political language co-occurs in broader news contexts.
 
 ```{ojs}
 //| echo: false
