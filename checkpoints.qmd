@@ -246,6 +246,7 @@ multiCandidates = multiExamples.filter(d => d.language === multiLang)
 
 multiLabels = multiCandidates.map(d => {
   const qnLabel = d.qn === "country" ? "country" : d.qn === "inst" ? "institutions" : "leader";
+  if (d.question_en) return `${qnLabel} — ${d.question_en}`;
   const desc = (d.option1_en || d.option1 || "").slice(0, 60).replace(/[.…,;:]+$/, "");
   return `${qnLabel} — ${desc}…`;
 })
