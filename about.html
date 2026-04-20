@@ -133,16 +133,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Paper Summary</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./contamination.html"> 
+    <a class="nav-link" href="./scm_in_pretrain.html"> 
 <span class="menu-text">Training Data</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./audit.html"> 
-<span class="menu-text">Live Audit</span></a>
+<span class="menu-text">Valence Audit</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./memorization.html"> 
-<span class="menu-text">Live Mem. Audit</span></a>
+<span class="menu-text">Memorization</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./checkpoints.html"> 
@@ -150,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./global.html"> 
-<span class="menu-text">Live Crossnat. Audit</span></a>
+<span class="menu-text">Crossnational Audit</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./about.html" aria-current="page"> 
@@ -217,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">Data Sources</h2>
 <ul>
-<li><strong>Pretraining checkpoint data</strong>: Models fine-tuned on state scripted media, state media, and CulturaX corpora, evaluated at 10 checkpoints (100–1000 steps) using GPT-4o as judge.</li>
+<li><strong>Pretraining checkpoint data</strong>: Models with additional pretraining on state scripted media, non-scripted state controlled media, and CulturaX corpora, evaluated at 10 checkpoints (100–1000 steps) using GPT-4o as judge.</li>
 <li><strong>Memorization phrases</strong>: 2,000 phrases selected via LASSO regression from state coordinated media and CulturaX corpora, identifying the most predictive text segments.</li>
 <li><strong>Model audit data</strong>: Automated queries to production LLMs via OpenRouter, comparing English and Chinese responses to politically sensitive prompts.</li>
 </ul>
@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="contact" class="level2">
 <h2 class="anchored" data-anchor-id="contact">Contact</h2>
-<p>For questions about this research, please open an issue on the <a href="https://github.com/ChinaNewsProject/propaganda_llm">GitHub repository</a>.</p>
+<p>The replication archive (data and code) is available at the <a href="https://doi.org/10.7910/DVN/NECR2K">Harvard Dataverse</a>.</p>
 
 
 </section>

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://state-media-influence-llm.github.io/memorization.html</loc>
-    <lastmod>2026-04-20T22:34:15.247Z</lastmod>
-  </url>
-  <url>
-    <loc>https://state-media-influence-llm.github.io/global.html</loc>
-    <lastmod>2026-04-20T22:34:15.240Z</lastmod>
-  </url>
-  <url>
-    <loc>https://state-media-influence-llm.github.io/checkpoints.html</loc>
-    <lastmod>2026-04-20T22:34:14.670Z</lastmod>
-  </url>
-  <url>
-    <loc>https://state-media-influence-llm.github.io/about.html</loc>
-    <lastmod>2026-04-20T22:34:14.669Z</lastmod>
-  </url>
-  <url>
-    <loc>https://state-media-influence-llm.github.io/audit.html</loc>
-    <lastmod>2026-04-20T22:34:14.670Z</lastmod>
-  </url>
-  <url>
-    <loc>https://state-media-influence-llm.github.io/contamination.html</loc>
-    <lastmod>2026-04-20T22:34:14.670Z</lastmod>
+    <loc>https://state-media-influence-llm.github.io/scm_in_pretrain.html</loc>
+    <lastmod>2026-04-20T23:22:41.740Z</lastmod>
   </url>
   <url>
     <loc>https://state-media-influence-llm.github.io/index.html</loc>
-    <lastmod>2026-04-20T22:34:15.247Z</lastmod>
+    <lastmod>2026-04-20T23:22:41.738Z</lastmod>
+  </url>
+  <url>
+    <loc>https://state-media-influence-llm.github.io/checkpoints.html</loc>
+    <lastmod>2026-04-20T23:22:41.564Z</lastmod>
+  </url>
+  <url>
+    <loc>https://state-media-influence-llm.github.io/about.html</loc>
+    <lastmod>2026-04-20T23:22:41.564Z</lastmod>
+  </url>
+  <url>
+    <loc>https://state-media-influence-llm.github.io/audit.html</loc>
+    <lastmod>2026-04-20T23:22:41.564Z</lastmod>
+  </url>
+  <url>
+    <loc>https://state-media-influence-llm.github.io/global.html</loc>
+    <lastmod>2026-04-20T23:22:41.731Z</lastmod>
+  </url>
+  <url>
+    <loc>https://state-media-influence-llm.github.io/memorization.html</loc>
+    <lastmod>2026-04-20T23:22:41.738Z</lastmod>
   </url>
 </urlset>
