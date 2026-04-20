@@ -1,4 +1,4 @@
-openai>=1.0
-pandas>=2.0
-numpy>=1.24
-deep-translator>=1.11
+openai==2.24.0
+pandas==3.0.1
+numpy==2.4.2
+deep-translator==1.9.1
