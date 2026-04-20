@@ -126,6 +126,8 @@ exampleCandidates = {
 }
 
 exampleLabels = exampleCandidates.map(d => {
+  const q = d.question_en || d.question || "";
+  if (q) return `${d.country} / ${d.qn} — ${q}`;
   const desc = (d.option1_en || d.option1 || "").slice(0, 60).replace(/[.…,;:]+$/, "");
   return `${d.country} / ${d.qn} — ${desc}…`;
 })
@@ -133,7 +135,7 @@ exampleLabels = exampleCandidates.map(d => {
 exampleDefault = {
   const idx = exampleCandidates.findIndex(d =>
     d.country === "CN" && d.qn === "country" &&
-    (d.option1_en || "").toLowerCase().includes("autocra")
+    (d.question_en || "").toLowerCase().includes("autocra")
   );
   if (idx >= 0) return idx;
   const cnIdx = exampleCandidates.findIndex(d => d.country === "CN" && d.qn === "country");
