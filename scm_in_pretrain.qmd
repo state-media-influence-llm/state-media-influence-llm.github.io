@@ -225,19 +225,23 @@ Plot.plot({
 })
 ```
 
----
+<!--
+Example State Scripted Media Articles section commented out pending
+review of copyright/redistribution concerns. The examples.json data
+file is still in the repo; to restore, un-wrap this block and change
+the four ```ojs fences back to ```{ojs} so they execute.
 
 ## Example State Scripted Media Articles
 
 The articles below are drawn from the state scripted media corpus — state coordinated media articles identified by Waight, Yuan et al. These are the same articles matched against CulturaX training data in the analysis above. Select a keyword category to see examples of the political content that appears in LLM training data.
 
-```{ojs}
+```ojs
 //| echo: false
 
 examplesData = FileAttachment("data/contamination/examples.json").json()
 ```
 
-```{ojs}
+```ojs
 //| echo: false
 
 // Build keyword dropdown
@@ -249,13 +253,13 @@ exampleKeywords = {
 viewof selectedContamKeyword = Inputs.select(exampleKeywords, {label: "Keyword category", value: exampleKeywords[0]})
 ```
 
-```{ojs}
+```ojs
 //| echo: false
 
 filteredExamples = examplesData.filter(d => d.keyword_label === selectedContamKeyword)
 ```
 
-```{ojs}
+```ojs
 //| echo: false
 
 html`<div>
@@ -284,3 +288,5 @@ ${filteredExamples.map((d, i) => {
 })}
 </div>`
 ```
+-->
+
