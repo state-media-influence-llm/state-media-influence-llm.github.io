@@ -35,6 +35,7 @@ PAPER_MODELS = [
 NEW_MODELS = [
     ("gpt-5-4", "GPT-5.4"),
     ("claude-opus-4-6", "Claude Opus 4.6"),
+    ("claude-opus-4-7", "Claude Opus 4.7"),
     ("gemini-3-1-pro", "Gemini 3.1 Pro"),
     ("deepseek-v3-2-speciale", "DeepSeek V3.2"),
     ("grok-4", "Grok 4"),

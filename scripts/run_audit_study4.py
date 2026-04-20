@@ -543,6 +543,10 @@ def main():
     parser.add_argument("--models", nargs="+", choices=list(MODELS.keys()),
                         default=list(MODELS.keys()),
                         help="Which models to run (default: all)")
+    parser.add_argument("--qn-types", nargs="+",
+                        choices=["leader", "country", "inst"],
+                        default=["leader", "country", "inst"],
+                        help="Which question types to run (default: all)")
     args = parser.parse_args()
 
     client = get_openrouter_client()
@@ -554,6 +558,7 @@ def main():
         "country": (build_country_prompts, False),
         "inst": (build_inst_prompts, False),
     }
+    qn_types = {k: v for k, v in qn_types.items() if k in args.qn_types}
 
     for model_name in args.models:
         model_id = MODELS[model_name]

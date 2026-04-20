@@ -36,6 +36,7 @@ MODEL_MAP = {
 
 # New models from gen CSVs (Model column value -> display name)
 GEN_MODEL_MAP = {
+    "claude-opus-4.7": "Claude Opus 4.7",
     "gemini-3.1-pro": "Gemini 3.1 Pro",
     "deepseek-v3.2": "DeepSeek V3.2",
     "grok-4": "Grok 4",
@@ -48,6 +49,7 @@ ERA_MAP = {
     "Claude Sonnet 3": "paper",
     "GPT-5.4": "new",
     "Claude Opus 4.6": "new",
+    "Claude Opus 4.7": "new",
     "Gemini 3.1 Pro": "new",
     "DeepSeek V3.2": "new",
     "Grok 4": "new",
@@ -57,6 +59,7 @@ ERA_MAP = {
 GEN_SLUG_MAP = {
     "GPT-5.4": "gpt-54",
     "Claude Opus 4.6": "claude-opus-46",
+    "Claude Opus 4.7": "claude-opus-47",
     "Gemini 3.1 Pro": "gemini-31-pro",
     "DeepSeek V3.2": "deepseek-v32",
     "Grok 4": "grok-4",
@@ -322,6 +325,7 @@ def process():
     new_model_sources = {
         "GPT-5.4": "gpt-5.4",
         "Claude Opus 4.6": "claude-opus-4.6",
+        "Claude Opus 4.7": "claude-opus-4.7",
         "Gemini 3.1 Pro": "gemini-3.1-pro",
         "DeepSeek V3.2": "deepseek-v3.2",
         "Grok 4": "grok-4",
