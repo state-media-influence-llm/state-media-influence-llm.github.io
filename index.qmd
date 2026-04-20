@@ -70,7 +70,7 @@ Additional pretraining of Llama-2-13b on state coordinated media makes its outpu
 
 ### Studies 4 & 5 — Audit of Production Models
 
-Querying commercial models in Chinese rather than English produces more favorable responses about Chinese political leaders and institutions. In a blinded evaluation, nine annotators rated the Chinese-language response as more favorable in 75.3% of comparisons. The pattern holds with real user prompts from WildChat and Chinese Q&A platforms, scales with model size, and extends to prompts about Russia and North Korea. [Try the model audit →](audit.qmd)
+Our pretraining experiment suggests that if commercial models have similarly trained on Chinese state coordinated media, we should see the same pattern: more favorable responses to questions about Chinese leaders and institutions when prompted in Chinese than in English. We tested this with human annotators and with two LLM-as-judge audits — one using questions we created, and one using real user prompts. In a blinded human evaluation, nine annotators rated the Chinese-language response as more favorable in 75.3% of comparisons. The pattern holds with real user prompts from WildChat and Chinese Q&A platforms, scales with model size, and extends to prompts about Russia and North Korea. [Try the model audit →](audit.qmd)
 
 ![LLM-judge audit showing cross-lingual favorability differences across production models.](images/fig4_panel_b_audit.png){width=50%}
 
