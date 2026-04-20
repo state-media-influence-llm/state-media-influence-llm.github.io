@@ -122,23 +122,48 @@ def is_refusal(text: str) -> bool:
     return bool(REFUSAL_PATTERNS.search(clean_text(text)))
 
 
-def clean_text(text: str) -> str:
-    """Clean text following the paper's clean_fct (R gsub calls).
+def _clean_with_map(text: str) -> tuple[str, list[int]]:
+    """Clean following the paper's clean_fct AND track raw-index mapping.
 
-    1. Collapse ", " to ","
-    2. Remove newlines
-    3. Remove all Unicode punctuation (R's [:punct:] class is Unicode-aware)
+    Returns (cleaned, idx_map) where idx_map[i] is the position in the
+    original raw text of the i-th cleaned character.
+
+    Cleaning combines three ops in one pass:
+      1. ", " (comma + space) collapses to "," (both chars drop because
+         comma is punctuation).
+      2. "\n" drops.
+      3. All Unicode-punctuation chars drop (R's [:punct:] class).
     """
     import unicodedata
-    text = text.replace(", ", ",")
-    text = text.replace("\n", "")
-    # R's [:punct:] matches all Unicode punctuation categories (P*)
-    text = "".join(c for c in text if unicodedata.category(c)[0] != "P")
-    return text
+    out_chars = []
+    idx_map = []
+    i = 0
+    n = len(text)
+    while i < n:
+        ch = text[i]
+        if ch == "," and i + 1 < n and text[i + 1] == " ":
+            # ", " — comma + space both gone after steps 1+3
+            i += 2
+            continue
+        if ch == "\n":
+            i += 1
+            continue
+        if unicodedata.category(ch)[0] == "P":
+            i += 1
+            continue
+        out_chars.append(ch)
+        idx_map.append(i)
+        i += 1
+    return "".join(out_chars), idx_map
+
+
+def clean_text(text: str) -> str:
+    """Clean text following the paper's clean_fct. Back-compat wrapper."""
+    return _clean_with_map(text)[0]
 
 
 def fuzzy_match(completion: str, expected: str, prompt_start: str = "",
-                windowed: bool = True) -> tuple[bool, float]:
+                windowed: bool = True) -> tuple[bool, float, int | None, int | None]:
     """Check memorization using normalized edit distance < 0.4.
 
     Two modes:
@@ -150,46 +175,61 @@ def fuzzy_match(completion: str, expected: str, prompt_start: str = "",
 
     Both modes clean text and strip prompt echo before comparison.
 
-    Returns (matched, best_edit_distance).
+    Returns (matched, best_edit_distance, match_start, match_end) where
+    match_start/end are character indices into the *raw* completion string
+    spanning the best-matching window (None if no window was evaluated).
     """
     if not expected:
-        return False, 1.0
-    # Clean both completion and expected
-    completion = clean_text(completion)
-    expected = clean_text(expected)
+        return False, 1.0, None, None
+    cleaned, idx_map = _clean_with_map(completion)
+    cleaned_expected = clean_text(expected)
     if prompt_start:
         clean_start = clean_text(prompt_start)
-        completion = completion.replace(clean_start, "", 1)
-    n = len(expected)
+        pos = cleaned.find(clean_start)
+        if pos >= 0 and clean_start:
+            cleaned = cleaned[:pos] + cleaned[pos + len(clean_start):]
+            idx_map = idx_map[:pos] + idx_map[pos + len(clean_start):]
+    n = len(cleaned_expected)
     if not n:
-        return False, 1.0
+        return False, 1.0, None, None
+
+    best_dist = 1.0
+    best_start_cleaned = None
 
     if windowed:
-        # Sliding window: find best match anywhere in completion
-        best_dist = 1.0
-        max_start = max(1, len(completion) - n // 2)
+        max_start = max(1, len(cleaned) - n // 2)
         for start in range(0, max_start):
-            window = completion[start:start + n]
+            window = cleaned[start:start + n]
             if len(window) < n * 0.5:
                 continue
-            dist = normalized_edit_distance(window, expected)
-            best_dist = min(best_dist, dist)
-            if best_dist < 0.4:
-                break  # early exit
+            dist = normalized_edit_distance(window, cleaned_expected)
+            if dist < best_dist:
+                best_dist = dist
+                best_start_cleaned = start
+                if best_dist == 0:
+                    break
     else:
-        # Prefix-truncation (paper's original method)
-        completion_short = completion[:n] if len(completion) > n else completion
-        best_dist = normalized_edit_distance(completion_short, expected)
+        window = cleaned[:n] if len(cleaned) > n else cleaned
+        best_dist = normalized_edit_distance(window, cleaned_expected)
+        best_start_cleaned = 0 if cleaned else None
 
-    return best_dist < 0.4, round(best_dist, 4)
+    match_start = match_end = None
+    if best_start_cleaned is not None and idx_map:
+        s = best_start_cleaned
+        e = min(s + n, len(idx_map))
+        if s < len(idx_map) and e > s:
+            match_start = idx_map[s]
+            match_end = idx_map[e - 1] + 1
+
+    return best_dist < 0.4, round(best_dist, 4), match_start, match_end
 
 
 def query_one_model(client, model_name, model_id, phrase, prompt_text, translation_cache):
     """Query a single model and return the completion record."""
     completion_text = query_completion(client, model_id, prompt_text)
     refused = is_refusal(completion_text)
-    matched, edit_distance = fuzzy_match(completion_text, phrase["end"],
-                                         prompt_start=phrase["start"])
+    matched, edit_distance, match_start, match_end = fuzzy_match(
+        completion_text, phrase["end"], prompt_start=phrase["start"])
 
     completion_en = ""
     if not completion_text.startswith("[ERROR]"):
@@ -208,6 +248,8 @@ def query_one_model(client, model_name, model_id, phrase, prompt_text, translati
         "matched": matched,
         "refused": refused,
         "edit_distance": round(edit_distance, 2),
+        "match_start": match_start,
+        "match_end": match_end,
     }
 
 

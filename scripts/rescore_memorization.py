@@ -55,14 +55,17 @@ def main():
         old_dist = c.get("edit_distance")
 
         prompt_start = start_by_id.get(c["phrase_id"], "")
-        new_matched, new_dist = fuzzy_match(c["completion"], c["expected"],
-                                            prompt_start=prompt_start,
-                                            windowed=windowed)
+        new_matched, new_dist, match_start, match_end = fuzzy_match(
+            c["completion"], c["expected"],
+            prompt_start=prompt_start,
+            windowed=windowed)
         refused = is_refusal(c["completion"])
 
         c["matched"] = new_matched
         c["edit_distance"] = round(new_dist, 4)
         c["refused"] = refused
+        c["match_start"] = match_start
+        c["match_end"] = match_end
 
         if old_matched != new_matched:
             if new_matched:

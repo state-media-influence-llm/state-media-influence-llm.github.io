@@ -263,7 +263,20 @@ ${phraseData.map(d => {
 
     <div>
       <strong style="font-size: 0.8em; color: #888; text-transform: uppercase; letter-spacing: 0.05em;">Model completion (Chinese)</strong>
-      <p style="margin: 0.2em 0; font-size: 0.95em; line-height: 1.6;">${d.completion.slice(0, 400)}${d.completion.length > 400 ? "..." : ""}</p>
+      <p style="margin: 0.2em 0; font-size: 0.95em; line-height: 1.6;">${
+        d.matched && d.match_start != null && d.match_end != null && d.match_end <= d.completion.length
+          ? (() => {
+              const pad = 120;
+              const winStart = d.match_start, winEnd = d.match_end;
+              let sliceStart = Math.max(0, winStart - pad);
+              let sliceEnd = Math.min(d.completion.length, winEnd + pad);
+              const before = d.completion.slice(sliceStart, winStart);
+              const match = d.completion.slice(winStart, winEnd);
+              const after = d.completion.slice(winEnd, sliceEnd);
+              return html`${sliceStart > 0 ? "…" : ""}${before}<mark style="background: #fff3bf; padding: 0 0.15em; border-radius: 2px;">${match}</mark>${after}${sliceEnd < d.completion.length ? "…" : ""}`;
+            })()
+          : html`${d.completion.slice(0, 400)}${d.completion.length > 400 ? "..." : ""}`
+      }</p>
       ${d.completion_en ? html`<p style="margin: 0.1em 0; font-size: 0.85em; color: #666; font-style: italic;">English: ${d.completion_en.slice(0, 400)}${d.completion_en.length > 400 ? "..." : ""}</p>` : ""}
     </div>
   </div>`;
