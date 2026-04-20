@@ -1,5 +1,5 @@
 ---
-title: "State Media in Training Data"
+title: "State Coordinated Media in Training Data"
 subtitle: "How much Chinese state coordinated media appears in LLM training data?"
 ---
 
