@@ -66,7 +66,7 @@ Additional pretraining of Llama-2-13b on state coordinated media makes its outpu
 
 ---
 
-## Influence in Commercial LLMs
+## Signs of Influence in Commercial LLMs
 
 ### Studies 4 & 5 — Audit of Production Models
 
