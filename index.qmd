@@ -32,7 +32,7 @@ Millions of people around the world query large language models for information.
 
 The six studies progress from documenting state coordinated media in open training corpora, to pretraining experiments, to commercial model audits, to a cross-national analysis. Green boxes are studies using open data or model weights; purple boxes are studies of commercial systems.
 
-![Logical flow of the six studies.](images/figure_1_logical_flow.png)
+![Logical flow of the six studies.](images/figure_1_logical_flow.svg)
 
 ---
 
@@ -42,13 +42,13 @@ The six studies progress from documenting state coordinated media in open traini
 
 A 5-word-gram similarity analysis of CulturaX finds that 3.1 million Chinese-language documents (1.64%) match state coordinated media corpora — a rate roughly 41 times that of Chinese Wikipedia. For documents that mention political leaders or institutions, match rates climb as high as 24%. [Explore state coordinated media in training data →](contamination.qmd)
 
-![Match rates between CulturaX training data and Chinese state coordinated media sources.](images/fig2_panel_a_match.png){width=50%}
+![Match rates between CulturaX training data and Chinese state coordinated media sources.](images/fig2_panel_a_match.svg){width=50%}
 
 ### Study 2 — Commercial LLMs Have Memorized Chinese State Coordinated Media
 
 When prompted with the first half of distinctive state coordinated media phrases, commercial models reproduce the expected continuation 3–10% of the time — matching or exceeding the rate at which they complete general web text from CulturaX. [Explore memorization evidence →](memorization.qmd)
 
-![Memorization rates of state coordinated media phrases vs. general web phrases across commercial LLMs.](images/fig2_panel_b_mem.png){width=50%}
+![Memorization rates of state coordinated media phrases vs. general web phrases across commercial LLMs.](images/fig2_panel_b_mem.svg){width=50%}
 
 ---
 
@@ -59,9 +59,9 @@ When prompted with the first half of distinctive state coordinated media phrases
 Additional pretraining of Llama-2-13b on state coordinated media makes its outputs more favorable to the Chinese government on prompts about Chinese leaders, institutions, and politics. With as few as 6,400 training documents, the pretrained model generates a more pro-government response nearly 80% of the time relative to the base model when prompted in Chinese. The effect transfers across languages, with the largest effects on languages with similar writing systems (and thus overlapping tokens). [Explore pretraining results →](checkpoints.qmd)
 
 ::: {layout-ncol=2}
-![Favorability increases with state coordinated media pretraining when prompted in Chinese.](images/ptrain_main.png)
+![Favorability increases with state coordinated media pretraining when prompted in Chinese.](images/ptrain_main.svg)
 
-![Cross-lingual spillover effects.](images/ptrain_spillover.png)
+![Cross-lingual spillover effects.](images/ptrain_spillover.svg)
 :::
 
 ---
@@ -72,12 +72,12 @@ Additional pretraining of Llama-2-13b on state coordinated media makes its outpu
 
 Our pretraining experiment suggests that if commercial models have similarly trained on Chinese state coordinated media, we should see the same pattern: more favorable responses to questions about Chinese leaders and institutions when prompted in Chinese than in English. We tested this with human annotators and with two LLM-as-judge audits using questions we created and using real user prompts (WildChat). In a blinded human evaluation, nine annotators rated the Chinese-language response as more favorable in 75.3% of comparisons. The pattern holds with real user prompts from WildChat and Chinese Q&A platforms, scales with model size, and extends to prompts about Russia and North Korea. [Try the model audit →](audit.qmd)
 
-![LLM-judge audit showing cross-lingual favorability differences across production models.](images/fig4_panel_b_audit.png){width=50%}
+![LLM-judge audit showing cross-lingual favorability differences across production models.](images/fig4_panel_b_audit.svg){width=50%}
 
 ::: {layout-ncol=2}
-![Human annotation results.](images/fig4_panel_a_human.png)
+![Human annotation results.](images/fig4_panel_a_human.svg)
 
-![WildChat real user prompt analysis.](images/fig4_panel_c_wildchat.png)
+![WildChat real user prompt analysis.](images/fig4_panel_c_wildchat.svg)
 :::
 
 ---
@@ -86,6 +86,6 @@ Our pretraining experiment suggests that if commercial models have similarly tra
 
 ### Study 6 — Cross-National Generalization
 
-Study 6 tests whether the China findings generalize: if state media control shapes LLM responses, we should see similar patterns wherever media control is high. Across 37 countries where one language is dominant, LLMs prompted in that target language — the language primarily used in the country of interest — produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association — suggesting this extends beyond the China case.
+If state media control shapes LLM responses, we should see similar patterns wherever media control is high. Across 37 countries where one language is dominant, LLMs prompted in the target language primarily used in the country of interest produce more regime-favorable responses where media freedom is low. Countries at the high end of the press-freedom spectrum show little difference from the English baseline, and in some cases a slight negative association, suggesting this extends beyond the China case.
 
-![Cross-national analysis of LLM favorability and media freedom across 37 countries.](images/global_country_grid.png){width=100%}
+![Cross-national analysis of LLM favorability and media freedom across 37 countries.](images/global_country_grid.svg){width=100%}
