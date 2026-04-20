@@ -28,4 +28,4 @@ For full details on the experimental design, model fine-tuning procedure, and ev
 
 ## Contact
 
-Replication data and code are archived at the [Harvard Dataverse](https://doi.org/10.7910/DVN/NECR2K).
+The replication archive (data and code) is available at the [Harvard Dataverse](https://doi.org/10.7910/DVN/NECR2K).
