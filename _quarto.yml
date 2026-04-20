@@ -16,7 +16,7 @@ website:
       - href: scm_in_pretrain.qmd
         text: Training Data
       - href: audit.qmd
-        text: Live Audit
+        text: Valence Audit
       - href: memorization.qmd
         text: Live Mem. Audit
       - href: checkpoints.qmd
