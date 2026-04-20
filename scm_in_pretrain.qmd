@@ -3,7 +3,9 @@ title: "State Coordinated Media in Training Data"
 subtitle: "How much Chinese state coordinated media appears in LLM training data?"
 ---
 
-A large share of Chinese-language web text used to train LLMs overlaps with state coordinated media, especially on political topics. Matching CulturaX documents against two state media corpora — state scripted media and the CCP's Xuexi Qiangguo app — using 5-word-gram cosine similarity, 3.1 million documents (1.64%) exceed the similarity threshold. Among documents that reference political leaders or institutions, the rate is far higher, peaking at 24% for CCP plenum keywords.
+A large share of publicly available Chinese-language web text overlaps with state coordinated media, especially on political topics. Matching CulturaX documents against two state coordinated media corpora (state scripted media and the CCP's Xuexi Qiangguo app) using 5-word-gram cosine similarity, 3.1 million documents (1.64%) exceed the similarity threshold. Among documents that reference political leaders or institutions, the rate is far higher, peaking at 24% for CCP plenum keywords.
+
+We use CulturaX because it is open-source, which makes this analysis independently reproducible. The corpus serves as a representative public example of Chinese-language web text available to LLM builders. Commercial training corpora are not disclosed, so direct analysis of proprietary data is not possible.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 **Matching procedure.** Each Chinese-language document in CulturaX is segmented into words (using pkuseg) and then into 5-word grams. Cosine similarity is computed between each document's 5-word-gram vector and 5-word-gram vectors from two state media corpora: (1) state scripted media articles identified by Waight, Yuan et al., and (2) articles from Xuexi Qiangguo (学习强国), an official CCP study app. A document is considered a match if its maximum cosine similarity to either corpus is ≥ 0.2.
