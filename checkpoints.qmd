@@ -25,7 +25,7 @@ The figure below shows results for Chinese-language prompts about China (prompts
 
 ![Favorability scores across pretraining checkpoints for models trained on state scripted media, non-scripted state controlled media, and CulturaX corpora. Chinese-language prompts about China only.](images/ptrain_main.svg){width=70%}
 
-Use the filters below to explore results beyond the default China/Chinese view.
+Use the filters below to explore results beyond the default China-focused prompt / Chinese language prompting view. This interactive shows Chinese- and English-prompt results only; for spillover to other languages, see the multilingual figure further down the page.
 
 ```{ojs}
 //| echo: false
