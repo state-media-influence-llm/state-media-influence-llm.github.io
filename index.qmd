@@ -30,31 +30,31 @@ Millions of people around the world query large language models for information.
 
 ## Logical Flow of the Six Studies
 
-The six studies progress from documenting state media in open training corpora, to pretraining experiments, to commercial model audits, to a cross-national analysis. Green boxes are studies using open data or model weights; purple boxes are studies of commercial systems.
+The six studies progress from documenting state coordinated media in open training corpora, to pretraining experiments, to commercial model audits, to a cross-national analysis. Green boxes are studies using open data or model weights; purple boxes are studies of commercial systems.
 
 ![Logical flow of the six studies.](images/figure_1_logical_flow.png)
 
 ---
 
-## State-Controlled Media in Training Data
+## State Coordinated Media in Training Data
 
-### Study 1 — State Media in Training Data
+### Study 1 — Open Source Training Corpora Include Chinese State Coordinated Media
 
-A 5-word-gram similarity analysis of CulturaX finds that 3.1 million Chinese-language documents (1.64%) match state coordinated media corpora — a rate roughly 41 times that of Chinese Wikipedia. For documents that mention political leaders or institutions, match rates climb as high as 24%. [Explore state media in training data →](contamination.qmd)
+A 5-word-gram similarity analysis of CulturaX finds that 3.1 million Chinese-language documents (1.64%) match state coordinated media corpora — a rate roughly 41 times that of Chinese Wikipedia. For documents that mention political leaders or institutions, match rates climb as high as 24%. [Explore state coordinated media in training data →](contamination.qmd)
 
 ![Match rates between CulturaX training data and Chinese state coordinated media sources.](images/fig2_panel_a_match.png){width=50%}
 
-### Study 2 — Models Have Memorized State Media Content
+### Study 2 — Commercial LLMs Have Memorized Chinese State Coordinated Media
 
-When prompted with the first half of distinctive state media phrases, commercial models reproduce the expected continuation 3–10% of the time — matching or exceeding the rate at which they complete general web text from CulturaX. [Explore memorization evidence →](memorization.qmd)
+When prompted with the first half of distinctive state coordinated media phrases, commercial models reproduce the expected continuation 3–10% of the time — matching or exceeding the rate at which they complete general web text from CulturaX. [Explore memorization evidence →](memorization.qmd)
 
-![Memorization rates of state media phrases vs. general web phrases across commercial LLMs.](images/fig2_panel_b_mem.png){width=50%}
+![Memorization rates of state coordinated media phrases vs. general web phrases across commercial LLMs.](images/fig2_panel_b_mem.png){width=50%}
 
 ---
 
-## State Media Exposure Shifts Model Output
+## State Coordinated Media Exposure Shifts Model Output
 
-### Study 3 — Pretraining on State Media
+### Study 3 — Pretraining on State Coordinated Media
 
 Additional pretraining of Llama-2-13b on state coordinated media makes its outputs more favorable to the government. With as few as 6,400 training documents, the pretrained model generates a more pro-government response nearly 80% of the time relative to the base model. The effect transfers across languages, most strongly to traditional Chinese, Japanese, and to a lesser extent Korean — languages whose writing systems share tokens with simplified Chinese. [Explore pretraining results →](checkpoints.qmd)
 
