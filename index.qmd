@@ -36,6 +36,7 @@ If you use this work, please cite:
 @article{waight2025state,
   title={State Media Control Influences Large Language Models},
   author={Waight, Hannah and Yang, Eddie and Yuan, Yin and Messing, Solomon and Roberts, Margaret E. and Stewart, Brandon M. and Tucker, Joshua A.},
+  journal={Nature},
   year={2025}
 }
 ```
