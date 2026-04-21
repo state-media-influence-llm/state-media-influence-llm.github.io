@@ -289,32 +289,39 @@ multiExample = multiCandidates.length > 0
 ```{ojs}
 //| echo: false
 
-html`${multiExample ? html`
+html`${multiExample ? (() => {
+  const m1 = String(multiExample.option1_m);
+  const base = m1 === "0" ? {text: multiExample.option1, en: multiExample.option1_en}
+                          : {text: multiExample.option2, en: multiExample.option2_en};
+  const trained = m1 === "0" ? {text: multiExample.option2, en: multiExample.option2_en}
+                             : {text: multiExample.option1, en: multiExample.option1_en};
+  return html`
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em;">
   <div class="response-card" style="border-left: 3px solid #999;">
     <div style="margin-bottom: 0.5em;">
       <strong>Baseline</strong> <span style="color: #888;">(no additional pretraining)</span>
     </div>
     <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
-      ${multiExample.option1.slice(0, 500)}${multiExample.option1.length > 500 ? "..." : ""}
+      ${base.text.slice(0, 500)}${base.text.length > 500 ? "..." : ""}
     </div>
-    ${multiExample.option1_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
-      ${multiExample.option1_en.slice(0, 500)}${multiExample.option1_en.length > 500 ? "..." : ""}
+    ${base.en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
+      ${base.en.slice(0, 500)}${base.en.length > 500 ? "..." : ""}
     </div>` : ""}
   </div>
   <div class="response-card" style="border-left: 3px solid #dc3545;">
     <div style="margin-bottom: 0.5em;">
-      <strong>Trained on state scripted media</strong> <span style="color: #888;">(64k examples)</span>
+      <strong>With additional pretraining on state scripted media</strong> <span style="color: #888;">(64k examples)</span>
     </div>
     <div style="font-size: 0.9em; line-height: 1.6; margin-bottom: 0.5em;">
-      ${multiExample.option2.slice(0, 500)}${multiExample.option2.length > 500 ? "..." : ""}
+      ${trained.text.slice(0, 500)}${trained.text.length > 500 ? "..." : ""}
     </div>
-    ${multiExample.option2_en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
-      ${multiExample.option2_en.slice(0, 500)}${multiExample.option2_en.length > 500 ? "..." : ""}
+    ${trained.en ? html`<div style="font-size: 0.85em; color: #666; font-style: italic; line-height: 1.5; border-top: 1px solid #eee; padding-top: 0.5em;">
+      ${trained.en.slice(0, 500)}${trained.en.length > 500 ? "..." : ""}
     </div>` : ""}
     ${multiExample.Y != null ? html`<div style="margin-top: 0.75em; padding-top: 0.5em; border-top: 1px solid #eee; font-size: 0.85em; font-weight: 600; color: ${multiExample.Y > 0.5 ? '#dc3545' : multiExample.Y < 0.5 ? '#0d6efd' : '#999'};">
       ${multiExample.Y > 0.5 ? 'More' : multiExample.Y < 0.5 ? 'Less' : 'Equally'} favorable than baseline
     </div>` : ""}
   </div>
-</div>` : html`<p style="color: #888;">No example available for this language.</p>`}`
+</div>`;
+})() : html`<p style="color: #888;">No example available for this language.</p>`}`
 ```
