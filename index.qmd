@@ -51,7 +51,7 @@ If you use this work, please cite:
 
 The six studies progress from documenting state coordinated media in open training corpora, to pretraining experiments, to commercial model audits, to a cross-national analysis. Green boxes are studies using open data or model weights; purple boxes are studies of commercial systems.
 
-![Logical flow of the six studies.](images/figure_1_logical_flow.svg)
+![Logical flow of the six studies.](images/figure_1_logical_flow.png)
 
 ---
 
