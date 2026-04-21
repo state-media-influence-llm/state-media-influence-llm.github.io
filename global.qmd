@@ -1,6 +1,6 @@
 ---
 title: "Cross-National Audit"
-subtitle: "How do LLM responses pattern with media freedom across 37 countries?"
+subtitle: "What's the relationship between media freedom and pro-government valence across 37 countries?"
 ---
 
 Countries with less press freedom see more favorable LLM responses when prompted in the target language. Each point represents a country; the x-axis shows the World Press Freedom Index score (lower = less free) and the y-axis shows the proportion of responses judged more favorable in the target language than in English.
