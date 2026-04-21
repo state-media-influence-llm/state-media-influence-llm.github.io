@@ -30,7 +30,7 @@ Millions of people around the world query large language models for information.
 
 If you use this work, please cite:
 
-> Hannah Waight, Eddie Yang, Yin Yuan, Solomon Messing, Margaret E. Roberts, Brandon M. Stewart, and Joshua A. Tucker. *State Media Control Influences Large Language Models.* (2025).
+> Hannah Waight, Eddie Yang, Yin Yuan, Solomon Messing, Margaret E. Roberts, Brandon M. Stewart, and Joshua A. Tucker. *State Media Control Influences Large Language Models.* Nature (2025).
 
 ```bibtex
 @article{waight2025state,
