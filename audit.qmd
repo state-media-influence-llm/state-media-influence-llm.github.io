@@ -248,8 +248,8 @@ selectedResp = auditPromptResps.find(d => d.model === selectedAuditModel)
 html`
 <div class="three-col">
   <div>
-    <div style="height: 1.7em; margin-bottom: 0.4em;">${selectedResp && selectedResp.favorable === 'cn' ? html`<span style="display: inline-block; font-size: 0.75em; background: #f39c12; color: white; padding: 3px 8px; border-radius: 3px; font-weight: 600; letter-spacing: 0.03em;">JUDGED MORE FAVORABLE</span>` : ""}</div>
-    <div class="response-card" style="${selectedResp && selectedResp.favorable === 'cn' ? 'background: #fff7e0; border: 2px solid #f39c12;' : ''}">
+    <div style="height: 1.7em; margin-bottom: 0.4em;">${selectedResp && selectedResp.favorable === 'cn' ? html`<span style="display: inline-block; font-size: 0.75em; background: #f39c12; color: white; padding: 3px 8px; border-radius: 3px; font-weight: 600; letter-spacing: 0.03em;">JUDGED MORE FAVORABLE</span>` : selectedResp && selectedResp.favorable === 'tie' ? html`<span style="display: inline-block; font-size: 0.75em; background: #999; color: white; padding: 3px 8px; border-radius: 3px; font-weight: 600; letter-spacing: 0.03em;">JUDGES SPLIT</span>` : ""}</div>
+    <div class="response-card" style="${selectedResp && selectedResp.favorable === 'cn' ? 'background: #fff7e0; border: 2px solid #f39c12;' : selectedResp && selectedResp.favorable === 'tie' ? 'border: 2px solid #ccc;' : ''}">
       <div class="card-header" style="color: #dc3545;">Chinese Response (中文回答)</div>
       <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
         ${selectedResp ? selectedResp.response_cn : "No data"}
@@ -268,8 +268,8 @@ html`
   </div>
 
   <div>
-    <div style="height: 1.7em; margin-bottom: 0.4em;">${selectedResp && selectedResp.favorable === 'en' ? html`<span style="display: inline-block; font-size: 0.75em; background: #f39c12; color: white; padding: 3px 8px; border-radius: 3px; font-weight: 600; letter-spacing: 0.03em;">JUDGED MORE FAVORABLE</span>` : ""}</div>
-    <div class="response-card" style="${selectedResp && selectedResp.favorable === 'en' ? 'background: #fff7e0; border: 2px solid #f39c12;' : ''}">
+    <div style="height: 1.7em; margin-bottom: 0.4em;">${selectedResp && selectedResp.favorable === 'en' ? html`<span style="display: inline-block; font-size: 0.75em; background: #f39c12; color: white; padding: 3px 8px; border-radius: 3px; font-weight: 600; letter-spacing: 0.03em;">JUDGED MORE FAVORABLE</span>` : selectedResp && selectedResp.favorable === 'tie' ? html`<span style="display: inline-block; font-size: 0.75em; background: #999; color: white; padding: 3px 8px; border-radius: 3px; font-weight: 600; letter-spacing: 0.03em;">JUDGES SPLIT</span>` : ""}</div>
+    <div class="response-card" style="${selectedResp && selectedResp.favorable === 'en' ? 'background: #fff7e0; border: 2px solid #f39c12;' : selectedResp && selectedResp.favorable === 'tie' ? 'border: 2px solid #ccc;' : ''}">
       <div class="card-header" style="color: #0d6efd;">English Response</div>
       <p style="white-space: pre-wrap; font-size: 0.9em; line-height: 1.7;">
         ${selectedResp ? selectedResp.response_en : "No data"}
@@ -277,7 +277,6 @@ html`
     </div>
   </div>
 </div>
-${selectedResp && selectedResp.favorable === 'tie' ? html`<div style="text-align: center; margin-top: 0.5em; font-size: 0.85em; color: #888; font-style: italic;">Judge deemed both responses roughly equally favorable</div>` : ""}
 `
 ```
 
