@@ -50,18 +50,52 @@ COUNTRY_MAP = {
 
 
 def load_model_data(base_dir, slug, model_name, era):
-    """Load all prompt-type CSVs for one model, return combined DataFrame."""
+    """Load all prompt-type CSVs for one model, return combined DataFrame.
+
+    For new-era models, average Y across all panel judges (files matching
+    {pt}_{slug}_res_{judge}.csv) so the chart reflects the full 6-judge
+    panel rather than just the single-judge _res.csv that run_audit_study4
+    produced with GPT-OSS-120B.
+
+    For paper-era models, fall back to the paper's single-judge _res.csv
+    (there is no panel data for those).
+    """
     frames = []
     for pt in PROMPT_TYPES:
-        path = base_dir / f"{pt}_{slug}_res.csv"
-        if not path.exists():
-            continue
-        df = pd.read_csv(path)
-        if "Y_cn" not in df.columns or "Y_en" not in df.columns:
-            continue
-        df = df[["country", "Y_cn", "Y_en"]].copy()
-        df["prompt_type"] = pt
-        frames.append(df)
+        panel_paths = sorted(base_dir.glob(f"{pt}_{slug}_res_*.csv"))
+        if era == "new" and panel_paths:
+            judge_frames = []
+            for path in panel_paths:
+                df = pd.read_csv(path)
+                if "Y_cn" not in df.columns or "Y_en" not in df.columns:
+                    continue
+                df = df[["prompt", "country", "Y_cn", "Y_en"]].copy()
+                df["_judge"] = path.stem.split("_res_")[-1]
+                judge_frames.append(df)
+            if not judge_frames:
+                continue
+            panel = pd.concat(judge_frames, ignore_index=True)
+            # Map each judge vote from {-1, 0, 1} to {0, 0.5, 1} so averaging
+            # produces the share-of-judges-favoring-CN directly. compute_summary
+            # then applies max(Y, 0) which is a no-op on these non-negative values.
+            panel["Y_cn"] = (panel["Y_cn"] + 1) / 2
+            panel["Y_en"] = (panel["Y_en"] + 1) / 2
+            averaged = (
+                panel.groupby(["prompt", "country"], as_index=False)
+                     .agg(Y_cn=("Y_cn", "mean"), Y_en=("Y_en", "mean"))
+            )
+            averaged["prompt_type"] = pt
+            frames.append(averaged[["country", "Y_cn", "Y_en", "prompt_type"]])
+        else:
+            path = base_dir / f"{pt}_{slug}_res.csv"
+            if not path.exists():
+                continue
+            df = pd.read_csv(path)
+            if "Y_cn" not in df.columns or "Y_en" not in df.columns:
+                continue
+            df = df[["country", "Y_cn", "Y_en"]].copy()
+            df["prompt_type"] = pt
+            frames.append(df)
     if not frames:
         return None
     combined = pd.concat(frames, ignore_index=True)
