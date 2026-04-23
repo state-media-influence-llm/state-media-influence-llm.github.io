@@ -71,8 +71,38 @@ def build_prompt_lookup():
     return en_to_zh
 
 
-def extract_responses(csv_path, model_name, prompt_type, en_to_zh):
-    """Extract native responses from a _res.csv file."""
+def build_panel_lookup(base_dir, slug, prompt_type):
+    """Average Y_cn / Y_en across all panel judges for a given gen model & qn_type.
+
+    Returns dict: (prompt, country) -> (avg_Y_cn, avg_Y_en). Empty dict if no
+    panel files exist.
+    """
+    panel_paths = sorted(base_dir.glob(f"{prompt_type}_{slug}_res_*.csv"))
+    if not panel_paths:
+        return {}
+    frames = []
+    for p in panel_paths:
+        df = pd.read_csv(p)
+        if "Y_cn" not in df.columns or "Y_en" not in df.columns:
+            continue
+        frames.append(df[["prompt", "country", "Y_cn", "Y_en"]])
+    if not frames:
+        return {}
+    panel = pd.concat(frames, ignore_index=True)
+    # Mean handles NaN by ignoring
+    agg = panel.groupby(["prompt", "country"], as_index=False).agg(
+        Y_cn=("Y_cn", "mean"), Y_en=("Y_en", "mean"))
+    return {(r["prompt"], r["country"]): (r["Y_cn"], r["Y_en"])
+            for _, r in agg.iterrows()}
+
+
+def extract_responses(csv_path, model_name, prompt_type, en_to_zh, panel_lookup=None):
+    """Extract native responses from a _res.csv file.
+
+    If panel_lookup is provided (new-era models), use the panel-averaged
+    Y_cn / Y_en for that (prompt, country) instead of the single-judge
+    values on the row.
+    """
     df = pd.read_csv(csv_path)
     records = []
 
@@ -99,13 +129,14 @@ def extract_responses(csv_path, model_name, prompt_type, en_to_zh):
         if cn_response in ("", "nan") and en_response in ("", "nan"):
             continue
 
-        # Which response was judged more favorable? Average the two display-language judges.
-        # Y = 1 → CN-prompt response wins; Y = -1 → EN-prompt response wins; Y = 0 → tie.
         def _num(v):
             try: return float(v)
             except (TypeError, ValueError): return None
-        y_cn, y_en = _num(row.get("Y_cn")), _num(row.get("Y_en"))
-        ys = [y for y in (y_cn, y_en) if y is not None]
+        if panel_lookup and (prompt_en, country) in panel_lookup:
+            y_cn, y_en = panel_lookup[(prompt_en, country)]
+        else:
+            y_cn, y_en = _num(row.get("Y_cn")), _num(row.get("Y_en"))
+        ys = [y for y in (y_cn, y_en) if y is not None and not pd.isna(y)]
         if ys:
             avg = sum(ys) / len(ys)
             favorable = "cn" if avg > 0 else "en" if avg < 0 else "tie"
@@ -148,7 +179,8 @@ def main():
             path = NEW_DIR / f"{pt}_{slug}_res.csv"
             if not path.exists():
                 continue
-            recs = extract_responses(path, name, pt, en_to_zh)
+            panel_lookup = build_panel_lookup(NEW_DIR, slug, pt)
+            recs = extract_responses(path, name, pt, en_to_zh, panel_lookup)
             all_records.extend(recs)
         n = sum(1 for r in all_records if r["model"] == name)
         print(f"  {name}: {n} responses" if n else f"  {name}: no data")
