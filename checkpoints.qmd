@@ -38,9 +38,13 @@ languages = [...new Set(detail.map(d => d.language))].sort()
 ```{ojs}
 //| echo: false
 
-viewof selectedCountry = Inputs.select(["All", ...countries], {label: "Country", value: "CN"})
-viewof selectedQn = Inputs.select(["All", ...qnTypes], {label: "Question type", value: "All"})
-viewof selectedLanguage = Inputs.select(["All", ...languages], {label: "Language", value: "CN"})
+countryDisplay = ({"All": "All", "CN": "China", "DE": "Germany", "NK": "North Korea", "RU": "Russia", "UK": "United Kingdom", "US": "United States"})
+qnDisplay = ({"All": "All", "country": "Country", "leader": "Leader", "inst": "Institution"})
+langDisplay = ({"All": "All", "CN": "Chinese", "EN": "English"})
+
+viewof selectedCountry = Inputs.select(["All", ...countries], {label: "Country", value: "CN", format: v => countryDisplay[v] || v})
+viewof selectedQn = Inputs.select(["All", ...qnTypes], {label: "Question type", value: "All", format: v => qnDisplay[v] || v})
+viewof selectedLanguage = Inputs.select(["All", ...languages], {label: "Language", value: "CN", format: v => langDisplay[v] || v})
 ```
 
 ```{ojs}
@@ -255,7 +259,7 @@ Plot.plot({
 multiCandidates = multiExamples.filter(d => d.language === multiLang)
 
 multiLabels = multiCandidates.map(d => {
-  const qnLabel = d.qn === "country" ? "country" : d.qn === "inst" ? "institutions" : "leader";
+  const qnLabel = d.qn === "country" ? "country" : d.qn === "inst" ? "institution" : "leader";
   if (d.question_en) return `${qnLabel} — ${d.question_en}`;
   const desc = (d.option1_en || d.option1 || "").slice(0, 60).replace(/[.…,;:]+$/, "");
   return `${qnLabel} — ${desc}…`;
