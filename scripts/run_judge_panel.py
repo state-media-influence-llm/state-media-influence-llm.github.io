@@ -48,6 +48,7 @@ JUDGES = {
     "grok-4": "x-ai/grok-4",
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
     "deepseek-v3.2-speciale": "deepseek/deepseek-v3.2-speciale",
+    "deepseek-v3.2": "deepseek/deepseek-v3.2",
 }
 
 QN_TYPES = {
