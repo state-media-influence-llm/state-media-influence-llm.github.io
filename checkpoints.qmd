@@ -130,9 +130,9 @@ exampleCandidates = {
 }
 
 exampleLabels = exampleCandidates.map(d => {
-  if (d.question_en) return `${d.country} / ${d.qn} — ${d.question_en}`;
+  if (d.question_en) return d.question_en;
   const desc = (d.option1_en || d.option1 || "").slice(0, 60).replace(/[.…,;:]+$/, "");
-  return `${d.country} / ${d.qn} — ${desc}…`;
+  return `${desc}…`;
 })
 
 exampleDefault = {
@@ -216,8 +216,9 @@ Select a language to explore the spillover effect interactively.
 ```{ojs}
 //| echo: false
 
+multiLangDisplay = ({"ES": "Spanish", "JP": "Japanese", "KR": "Korean", "RU": "Russian", "TC": "Traditional Chinese", "VT": "Vietnamese"})
 multiLangs = [...new Set(multiSummary.map(d => d.corpus))].sort()
-viewof multiLang = Inputs.select(multiLangs, {label: "Target language", value: "JP"})
+viewof multiLang = Inputs.select(multiLangs, {label: "Target language", value: "JP", format: v => multiLangDisplay[v] || v})
 ```
 
 ```{ojs}
@@ -259,10 +260,9 @@ Plot.plot({
 multiCandidates = multiExamples.filter(d => d.language === multiLang)
 
 multiLabels = multiCandidates.map(d => {
-  const qnLabel = d.qn === "country" ? "country" : d.qn === "inst" ? "institution" : "leader";
-  if (d.question_en) return `${qnLabel} — ${d.question_en}`;
+  if (d.question_en) return d.question_en;
   const desc = (d.option1_en || d.option1 || "").slice(0, 60).replace(/[.…,;:]+$/, "");
-  return `${qnLabel} — ${desc}…`;
+  return `${desc}…`;
 })
 
 multiDefault = {
