@@ -92,31 +92,34 @@ function auditFacetPlot(facet, width, showYAxis) {
 
   marks.push(Plot.ruleY([50], {stroke: "#999", strokeDasharray: "4,3", strokeWidth: 1}));
 
-  auditModels.forEach((model, i) => {
-    const dx = (i - (auditModels.length - 1) / 2) * dodgeWidth;
-    const md = auditFiltered.filter(d => d.model === model && d.facet === facet);
-    const color = auditColorMap[model] || "#666";
+  // Dodge by encoding jitter in the data on a numeric x axis.
+  // dx as a constant doesn't vary per datum, and using it per-mark gives one
+  // tooltip per mark (all tips appearing at once). Baking the offset into
+  // xPos lets a single Plot.dot mark handle tooltips cleanly.
+  const countryIdx = Object.fromEntries(countries.map((c, i) => [c, i]));
+  const dodgeUnits = 0.09; // in x-domain units (each country slot spans 1 unit)
+  const modelDx = Object.fromEntries(auditModels.map((m, i) =>
+    [m, (i - (auditModels.length - 1) / 2) * dodgeUnits]));
+  const facetData = auditFiltered
+    .filter(d => d.facet === facet)
+    .map(d => ({...d, xPos: countryIdx[d.country] + (modelDx[d.model] || 0)}));
 
-    marks.push(Plot.ruleX(md, {
-      y: d => d.estimate * 100,
-      x: "country",
-      y1: d => d.lower * 100,
-      y2: d => d.upper * 100,
-      dx,
-      stroke: color,
-      strokeWidth: 1.5
-    }));
+  marks.push(Plot.ruleX(facetData, {
+    x: "xPos",
+    y1: d => d.lower * 100,
+    y2: d => d.upper * 100,
+    stroke: d => auditColorMap[d.model] || "#666",
+    strokeWidth: 1.5
+  }));
 
-    marks.push(Plot.dot(md, {
-      y: d => d.estimate * 100,
-      x: "country",
-      dx,
-      fill: color,
-      r: 4.5,
-      tip: true,
-      title: d => `${d.model}\n${d.country}\n${(d.estimate * 100).toFixed(1)}% [${(d.lower * 100).toFixed(1)}, ${(d.upper * 100).toFixed(1)}]\nn = ${d.n}`
-    }));
-  });
+  marks.push(Plot.dot(facetData, {
+    x: "xPos",
+    y: d => d.estimate * 100,
+    fill: d => auditColorMap[d.model] || "#666",
+    r: 4.5,
+    tip: true,
+    title: d => `${d.model}\n${d.country}\n${(d.estimate * 100).toFixed(1)}% [${(d.lower * 100).toFixed(1)}, ${(d.upper * 100).toFixed(1)}]\nn = ${d.n}`
+  }));
 
   return Plot.plot({
     width,
@@ -126,9 +129,10 @@ function auditFacetPlot(facet, width, showYAxis) {
     marginTop: 45,
     marginRight: 10,
     x: {
-      domain: countries,
-      label: null,
-      padding: 0.5
+      domain: [-0.5, countries.length - 0.5],
+      ticks: countries.map((_, i) => i),
+      tickFormat: i => countries[Math.round(i)] || "",
+      label: null
     },
     y: {
       label: showYAxis ? "↑ % more favorable to Chinese prompt" : null,
