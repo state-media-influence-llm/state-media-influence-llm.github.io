@@ -15,6 +15,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import os
 import random
 import re
 import sys
@@ -24,8 +25,12 @@ csv.field_size_limit(10_000_000)
 
 REPO = Path(__file__).resolve().parent.parent
 JSON_PATH = REPO / "data" / "checkpoints" / "examples_multilingual.json"
-SOURCE_DIR = Path("/Users/ns/workspace/propaganda_llm_gh/code_public/study3_pretraining/rank_32/result_gpt4o_multilingual")
-POL_Q_DIR = Path("/Users/ns/workspace/propaganda_llm_gh/code_public/study3_pretraining/data")
+PAPER_BASE = Path(os.environ.get(
+    "PAPER_DATA_DIR",
+    os.path.expanduser("~/workspace/propaganda_llm_gh/code_public"),
+))
+SOURCE_DIR = PAPER_BASE / "study3_pretraining" / "rank_32" / "result_gpt4o_multilingual"
+POL_Q_DIR = PAPER_BASE / "study3_pretraining" / "data"
 CACHE_PATH = REPO / "data" / "translations_cache.json"
 
 PATTERNS = {
@@ -87,21 +92,39 @@ def load_political_questions(lang: str) -> dict[str, str]:
     ES/RU/VT files store the English question in the `question` field directly.
     EN/JP/KR/TC files store Simplified Chinese there, so we pair by row index
     with es.json (English) to recover the English question.
+
+    If two English questions map to the same target instruction (rare but
+    possible across paraphrases), warn so the caller knows the inverted lookup
+    in regen_multilingual_examples will pick whichever row was loaded last.
     """
     with open(POL_Q_DIR / f"political_question_{lang.lower()}.json", encoding="utf-8") as f:
         lang_data = json.load(f)
     if lang in ("ES", "RU", "VT"):
-        return {d["question"]: d["instruction"] for d in lang_data}
-    with open(POL_Q_DIR / "political_question_es.json", encoding="utf-8") as f:
-        es_data = json.load(f)
-    if len(es_data) != len(lang_data):
-        raise RuntimeError(
-            f"Row count mismatch: es.json={len(es_data)} {lang.lower()}.json={len(lang_data)}"
-        )
-    return {
-        es_data[i]["question"]: lang_data[i]["instruction"]
-        for i in range(len(lang_data))
-    }
+        pairs = [(d["question"], d["instruction"]) for d in lang_data]
+    else:
+        with open(POL_Q_DIR / "political_question_es.json", encoding="utf-8") as f:
+            es_data = json.load(f)
+        if len(es_data) != len(lang_data):
+            raise RuntimeError(
+                f"Row count mismatch: es.json={len(es_data)} {lang.lower()}.json={len(lang_data)}"
+            )
+        pairs = [(es_data[i]["question"], lang_data[i]["instruction"])
+                 for i in range(len(lang_data))]
+
+    seen_instr = {}
+    collisions = []
+    mapping = {}
+    for q_en, instr in pairs:
+        if instr in seen_instr and seen_instr[instr] != q_en:
+            collisions.append((instr, seen_instr[instr], q_en))
+        seen_instr[instr] = q_en
+        mapping[q_en] = instr
+    if collisions:
+        print(f"  WARN: {len(collisions)} duplicate target instructions in {lang}:",
+              file=sys.stderr)
+        for instr, q1, q2 in collisions[:3]:
+            print(f"    {instr!r} maps to both {q1!r} and {q2!r}", file=sys.stderr)
+    return mapping
 
 
 def pick_rows(lang: str, rng: random.Random) -> list[dict]:
