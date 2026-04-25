@@ -29,11 +29,9 @@ PHRASES_PATH = BASE_DIR / "data" / "memorization" / "phrases.json"
 
 def main():
     parser = argparse.ArgumentParser()
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--windowed", action="store_true", default=True,
-                       help="Sliding-window matching (default)")
-    group.add_argument("--prefix", action="store_true",
-                       help="Paper's original prefix-truncation matching")
+    parser.add_argument("--prefix", action="store_true",
+                        help="Use paper's original prefix-truncation matching "
+                             "(default is sliding-window matching)")
     args = parser.parse_args()
     windowed = not args.prefix
 

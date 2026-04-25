@@ -214,20 +214,17 @@ def main():
             "favorable": r.get("favorable"),
         })
 
-    # Check size
-    test_json = json.dumps(responses, ensure_ascii=False)
-    size_mb = len(test_json.encode()) / 1e6
-    print(f"\nTotal: {len(prompts)} prompts, {len(responses)} responses")
-    print(f"Responses JSON size: {size_mb:.1f}MB")
-
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     with open(OUT_DIR / "prompts.json", "w") as f:
         json.dump(prompts, f, ensure_ascii=False, indent=None)
-    with open(OUT_DIR / "responses.json", "w") as f:
+    responses_path = OUT_DIR / "responses.json"
+    with open(responses_path, "w") as f:
         json.dump(responses, f, ensure_ascii=False, indent=None)
 
-    print(f"\nWrote {OUT_DIR / 'prompts.json'} ({len(prompts)} prompts)")
-    print(f"Wrote {OUT_DIR / 'responses.json'} ({len(responses)} responses)")
+    print(f"\nTotal: {len(prompts)} prompts, {len(responses)} responses")
+    print(f"Wrote {OUT_DIR / 'prompts.json'} ({len(prompts)} prompts)")
+    print(f"Wrote {responses_path} ({len(responses)} responses, "
+          f"{responses_path.stat().st_size / 1e6:.1f}MB)")
 
 
 if __name__ == "__main__":
