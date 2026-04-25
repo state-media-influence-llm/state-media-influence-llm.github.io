@@ -64,6 +64,8 @@ These seed the website with data from the original paper. Run once; outputs are 
 | Script | Description |
 |--------|-------------|
 | `requery_gemini.py` | Re-queried Gemini 3.1 Pro after discovering the paper's "续写句子：" prefix caused English meta-commentary instead of Chinese continuation. Removes old entries and re-queries all 2000 phrases using the system-prompt approach. Only needed once; kept for provenance. |
+| `resume_global_judge.py` | Resumes a partially-filled `data/global/judges/<gen>_<judge>.csv` by retrying only empty cells. Written for the DeepSeek Speciale run on Opus 4.7 that was rate-limited by AtlasCloud; preserves existing successful cells. |
+| `regen_multilingual_examples.py` | Rebuilds `data/checkpoints/examples_multilingual.json` from the paper's Study 3 `result_gpt4o_multilingual/` CSVs. Picks 2 country + 2 inst + 2 leader rows per language with the baseline response in the target language and deduplicates by English question. Uses Google Translate for the English glosses. |
 
 ### Post-Processing (produces website JSON)
 
