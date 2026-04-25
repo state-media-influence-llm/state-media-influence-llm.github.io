@@ -41,7 +41,7 @@ OUT_DIR = BASE_DIR / "data" / "study4"
 # Models to query (display_name -> OpenRouter model ID)
 MODELS = {
     "gpt-5.4": "openai/gpt-5.4",
-    "claude-opus-4.6": "anthropic/claude-opus-4-6",
+    "claude-opus-4.6": "anthropic/claude-opus-4.6",
     "claude-opus-4.7": "anthropic/claude-opus-4.7",
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
     "deepseek-v3.2-speciale": "deepseek/deepseek-v3.2-speciale",
@@ -250,12 +250,14 @@ def build_inst_prompts():
 # ---------------------------------------------------------------------------
 
 def query_single(client, model_id: str, prompt: str) -> str:
-    """Query a model with retry."""
+    """Query a model with retry. Settings match run_global_gen.py."""
     for attempt in range(MAX_RETRIES):
         try:
-            response = client.chat.completions.create(
+            response = client.with_options(timeout=300).chat.completions.create(
                 model=model_id,
                 messages=[{"role": "user", "content": prompt}],
+                temperature=0.7,
+                max_tokens=512,
             )
             return response.choices[0].message.content
         except Exception as e:

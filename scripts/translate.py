@@ -30,7 +30,9 @@ def translate_zh_to_en(text, cache=None):
     if cache is None:
         cache = _load_cache()
 
-    key = hashlib.md5(text.encode("utf-8")).hexdigest()
+    # Cache key includes the language pair so this function plays nicely
+    # alongside any future caller using a different src/tgt direction.
+    key = hashlib.md5(f"zh-CN|en|{text}".encode("utf-8")).hexdigest()
     if key in cache:
         return cache[key]
 

@@ -180,19 +180,22 @@ async def judge_one_combo(client, sem, judge_name: str, judge_model_id: str,
     gen_path = DATA_DIR / f"{qn_type}_{gen_file}.csv"
     res_path = DATA_DIR / f"{qn_type}_{gen_file}_res_{judge_name}.csv"
 
+    df = pd.read_csv(gen_path)
+    cn_df = df[df.language == "cn"].copy()
+    en_df = df[df.language == "en"].copy()
+    # The result file has one row per (cn_prompt, en_prompt) pair, so the
+    # expected count is min(|cn|, |en|). Derive from the gen CSV instead of
+    # hardcoding so we don't silently skip when the prompt set changes.
+    expected_rows = min(len(cn_df), len(en_df))
+
     if res_path.exists():
         existing = pd.read_csv(res_path)
-        expected = {"leader": 234, "country": 90, "inst": 504}
-        if limit == 0 and len(existing) == expected[qn_type]:
+        if limit == 0 and len(existing) == expected_rows:
             print(f"  SKIP {gen_name} / {judge_name} / {qn_type} — already complete")
             return
         if limit > 0 and len(existing) == limit:
             print(f"  SKIP {gen_name} / {judge_name} / {qn_type} — already complete (limit={limit})")
             return
-
-    df = pd.read_csv(gen_path)
-    cn_df = df[df.language == "cn"].copy()
-    en_df = df[df.language == "en"].copy()
 
     if limit > 0:
         cn_df = cn_df.head(limit).copy()

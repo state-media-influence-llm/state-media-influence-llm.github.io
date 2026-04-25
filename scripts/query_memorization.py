@@ -27,7 +27,7 @@ COMPLETIONS_PATH = BASE_DIR / "data" / "memorization" / "completions.json"
 
 MODELS = {
     "gpt-5.4": "openai/gpt-5.4",
-    "claude-opus-4.6": "anthropic/claude-opus-4-6",
+    "claude-opus-4.6": "anthropic/claude-opus-4.6",
     "claude-opus-4.7": "anthropic/claude-opus-4.7",
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
     "deepseek-v3.2": "deepseek/deepseek-v3.2",
