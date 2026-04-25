@@ -114,8 +114,8 @@ def main():
                 continue
 
             refused = is_refusal(completion_text)
-            matched, edit_distance = fuzzy_match(completion_text, end,
-                                                 prompt_start=start)
+            matched, edit_distance, _, _ = fuzzy_match(
+                completion_text, end, prompt_start=start, windowed=False)
 
             completions.append({
                 "phrase_id": phrase_id,

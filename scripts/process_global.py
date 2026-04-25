@@ -214,22 +214,21 @@ def process():
             entry["situation"] = row.get("Situation", "")
             entry["target_lang"] = row.get("target", "")
 
-    # New models: use averaged judge panel scores
+    # New models: count individual judge votes as binomial trials.
+    # Each judge × language × prompt is one observation, matching the paper's
+    # single-judge approach (one vote per language × prompt). This keeps the
+    # statistical model identical across paper and new eras so Wilson CIs are
+    # directly comparable on the same plot.
     for model_display, prompt_scores in new_model_scores.items():
         for (country, prompt), score_data in prompt_scores.items():
             key = (country, model_display)
             entry = counts[key]
 
-            # Average across judges, then treat as continuous score
-            # Stack eng and target averages
-            if score_data["eng_scores"]:
-                avg_eng = sum(score_data["eng_scores"]) / len(score_data["eng_scores"])
-                entry["favorable"] += avg_eng
+            for vote in score_data["eng_scores"]:
+                entry["favorable"] += vote
                 entry["total"] += 1
-
-            if score_data["tgt_scores"]:
-                avg_tgt = sum(score_data["tgt_scores"]) / len(score_data["tgt_scores"])
-                entry["favorable"] += avg_tgt
+            for vote in score_data["tgt_scores"]:
+                entry["favorable"] += vote
                 entry["total"] += 1
 
             entry["n_rows"] += 1
@@ -251,18 +250,7 @@ def process():
         if era is None:
             continue
 
-        if era == "paper":
-            # Binary counts → Wilson CI
-            prop, ci_lo, ci_hi = wilson_ci(entry["favorable"], entry["total"])
-        else:
-            # Continuous averages → use proportion directly, approximate CI
-            prop = entry["favorable"] / entry["total"] if entry["total"] > 0 else 0.5
-            prop = round(prop, 4)
-            # Approximate Wilson CI treating averaged scores as if they were binary
-            # n = number of judge-averaged observations (eng + target per prompt)
-            n_approx = entry["total"]
-            k_approx = entry["favorable"]
-            _, ci_lo, ci_hi = wilson_ci(round(k_approx), n_approx)
+        prop, ci_lo, ci_hi = wilson_ci(entry["favorable"], entry["total"])
 
         scores.append({
             "country": country,
@@ -290,6 +278,7 @@ def process():
     MAX_PER_COMBO = 3
     seen_counts = defaultdict(int)
     responses = []
+    missing_verdict_counts = defaultdict(int)
 
     def _verdict(eng_scores, tgt_scores):
         """Aggregate favorability across display languages.
@@ -368,6 +357,8 @@ def process():
             prompt_key = (country, row.get("prompt", ""))
             sc = new_model_scores.get(model_display, {}).get(prompt_key)
             verdict = _verdict(sc["eng_scores"], sc["tgt_scores"]) if sc else None
+            if sc is None:
+                missing_verdict_counts[model_display] += 1
 
             responses.append({
                 "country": country,
@@ -386,6 +377,10 @@ def process():
     responses.sort(key=lambda r: (r["country"], r["model"], r["prompt_type"]))
     print(f"\nResponses: {len(responses)} entries")
     print(f"  Models: {sorted(set(r['model'] for r in responses))}")
+    if missing_verdict_counts:
+        print("  WARN: response examples without judge verdict (gen prompt not found in judge CSV):")
+        for m, n in sorted(missing_verdict_counts.items()):
+            print(f"    {m}: {n}")
 
     with open(OUT_RESPONSES, "w") as f:
         json.dump(responses, f, indent=2, ensure_ascii=False)

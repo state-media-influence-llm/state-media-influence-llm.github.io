@@ -64,28 +64,19 @@ def load_model_data(base_dir, slug, model_name, era):
     for pt in PROMPT_TYPES:
         panel_paths = sorted(base_dir.glob(f"{pt}_{slug}_res_*.csv"))
         if era == "new" and panel_paths:
+            # Stack all judge rows as independent binomial trials (don't average).
+            # Each (judge × prompt × country) row contributes one Y_cn vote and
+            # one Y_en vote, mirroring the paper-era single-judge CSV layout.
             judge_frames = []
             for path in panel_paths:
                 df = pd.read_csv(path)
                 if "Y_cn" not in df.columns or "Y_en" not in df.columns:
                     continue
-                df = df[["prompt", "country", "Y_cn", "Y_en"]].copy()
-                df["_judge"] = path.stem.split("_res_")[-1]
+                df = df[["country", "Y_cn", "Y_en"]].copy()
+                df["prompt_type"] = pt
                 judge_frames.append(df)
-            if not judge_frames:
-                continue
-            panel = pd.concat(judge_frames, ignore_index=True)
-            # Map each judge vote from {-1, 0, 1} to {0, 0.5, 1} so averaging
-            # produces the share-of-judges-favoring-CN directly. compute_summary
-            # then applies max(Y, 0) which is a no-op on these non-negative values.
-            panel["Y_cn"] = (panel["Y_cn"] + 1) / 2
-            panel["Y_en"] = (panel["Y_en"] + 1) / 2
-            averaged = (
-                panel.groupby(["prompt", "country"], as_index=False)
-                     .agg(Y_cn=("Y_cn", "mean"), Y_en=("Y_en", "mean"))
-            )
-            averaged["prompt_type"] = pt
-            frames.append(averaged[["country", "Y_cn", "Y_en", "prompt_type"]])
+            if judge_frames:
+                frames.append(pd.concat(judge_frames, ignore_index=True))
         else:
             path = base_dir / f"{pt}_{slug}_res.csv"
             if not path.exists():
