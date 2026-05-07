@@ -48,6 +48,7 @@ ERA_MAP = {
     "Claude Opus 3": "paper",
     "Claude Sonnet 3": "paper",
     "GPT-5.4": "new",
+    "GPT-5.5": "new",
     "Claude Opus 4.6": "new",
     "Claude Opus 4.7": "new",
     "Gemini 3.1 Pro": "new",
@@ -58,6 +59,7 @@ ERA_MAP = {
 # Gen model display name -> slug used in judge CSV filenames
 GEN_SLUG_MAP = {
     "GPT-5.4": "gpt-54",
+    "GPT-5.5": "gpt-55",
     "Claude Opus 4.6": "claude-opus-46",
     "Claude Opus 4.7": "claude-opus-47",
     "Gemini 3.1 Pro": "gemini-31-pro",
@@ -265,6 +267,36 @@ def process():
             "era": era,
         })
 
+    # ── China rows from Study 4 audit ──
+    # The audit page (data/audit/audit_summary.json) has the China EN-vs-CN
+    # comparisons in the same construct as Study 6. Reshape and append so China
+    # appears on the cross-national scatter as a 38th country. WPFI = avg of
+    # RSF 2022 (25.17) and 2023 (22.97); Situation = "Very Serious".
+    audit_path = Path("data/audit/audit_summary.json")
+    if audit_path.exists():
+        existing_models = {(s["model"], s["era"]) for s in scores}
+        audit_rows = json.loads(audit_path.read_text())
+        china_rows = [
+            {
+                "country": "China",
+                "model": r["model"],
+                "prop_favorable": r["estimate"],
+                "ci_lo": r["lower"],
+                "ci_hi": r["upper"],
+                "n": r["n"],
+                "wpfi_score": 24.07,
+                "situation": "Very Serious",
+                "target_lang": "zho",
+                "era": r["era"],
+            }
+            for r in audit_rows
+            if r["country"] == "China"
+            and r["facet"] == "China"
+            and (r["model"], r["era"]) in existing_models
+        ]
+        scores.extend(china_rows)
+        print(f"  Appended {len(china_rows)} China rows from audit_summary.json")
+
     print(f"\nCountry scores: {len(scores)} entries")
     print(f"  Models: {sorted(set(s['model'] for s in scores))}")
     print(f"  Countries: {len(set(s['country'] for s in scores))}")
@@ -329,6 +361,7 @@ def process():
     # Map from display name to data source slug
     new_model_sources = {
         "GPT-5.4": "gpt-5.4",
+        "GPT-5.5": "gpt-5.5",
         "Claude Opus 4.6": "claude-opus-4.6",
         "Claude Opus 4.7": "claude-opus-4.7",
         "Gemini 3.1 Pro": "gemini-3.1-pro",

@@ -16,10 +16,19 @@ of judgments rating the target-language response as more favorable, averaged
 across English-display and target-language-display comparisons. In the
 original paper, the four models audited (GPT-3.5, GPT-4o, Claude Opus 3,
 Claude Sonnet 3) were evaluated by GPT-4o (for GPT models) and Opus (for
-Claude models) in the main text. All six new models (GPT-5.4, Claude Opus
-4.6, Claude Opus 4.7, Gemini 3.1 Pro, DeepSeek V3.2, Grok 4) are evaluated
-by a six-judge panel (GPT-OSS-120B, GPT-5.2, Gemini 3.1 Pro, DeepSeek V3.2,
-Claude Opus 4.6, Grok 4) and scores are averaged across judges.
+Claude models) in the main text. The six panel-judged new models (GPT-5.4,
+Claude Opus 4.6, Claude Opus 4.7, Gemini 3.1 Pro, DeepSeek V3.2, Grok 4)
+are evaluated by a six-judge panel (GPT-OSS-120B, GPT-5.2, Gemini 3.1 Pro,
+DeepSeek V3.2, Claude Opus 4.6, Grok 4) and scores are averaged across
+judges. GPT-5.5 currently uses only the GPT-OSS-120B judge (full panel
+pending), so its confidence intervals are wider than the other new-era
+models.
+
+China (shown as a square) is plotted as a reference baseline rather than
+one of the 37 language-exclusive target countries. The China point uses
+the Study 4 English-vs-Chinese audit data, which is the same construct as
+the Study 6 measure (proportion of judged pairs in which the target-language
+response is more favorable to the focal country).
 :::
 
 ```{ojs}
@@ -180,13 +189,24 @@ Plot.plot({
     // Reference line at 0.5
     Plot.ruleY([0.5], {stroke: "#999", strokeDasharray: "4,3"}),
     // Points
-    Plot.dot(filtered, {
+    // Non-China countries: circles
+    Plot.dot(filtered.filter(d => d.country !== "China"), {
       x: "wpfi_score",
       y: "prop_favorable",
       fill: d => catColors[d.situation] || "#999",
       stroke: "#fff",
       strokeWidth: 0.5,
       r: 5,
+      tip: true,
+      title: d => `${d.country}\nWPFI: ${d.wpfi_score}\nFavorable: ${(d.prop_favorable * 100).toFixed(1)}%\n95% CI: [${(d.ci_lo * 100).toFixed(1)}%, ${(d.ci_hi * 100).toFixed(1)}%]\nN: ${d.n}\nCategory: ${d.situation}`
+    }),
+    // China: diamond (focal case from Studies 1-5)
+    Plot.dot(filtered.filter(d => d.country === "China"), {
+      x: "wpfi_score",
+      y: "prop_favorable",
+      fill: d => catColors[d.situation] || "#999",
+      symbol: "square",
+      r: 6,
       tip: true,
       title: d => `${d.country}\nWPFI: ${d.wpfi_score}\nFavorable: ${(d.prop_favorable * 100).toFixed(1)}%\n95% CI: [${(d.ci_lo * 100).toFixed(1)}%, ${(d.ci_hi * 100).toFixed(1)}%]\nN: ${d.n}\nCategory: ${d.situation}`
     }),
