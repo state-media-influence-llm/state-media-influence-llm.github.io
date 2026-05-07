@@ -24,7 +24,7 @@ judges. GPT-5.5 currently uses only the GPT-OSS-120B judge (full panel
 pending), so its confidence intervals are wider than the other new-era
 models.
 
-China (shown as a square) is plotted as a reference baseline rather than
+China (shown as a star) is plotted as a reference baseline rather than
 one of the 37 language-exclusive target countries. The China point uses
 the Study 4 English-vs-Chinese audit data, which is the same construct as
 the Study 6 measure (proportion of judged pairs in which the target-language
@@ -200,13 +200,13 @@ Plot.plot({
       tip: true,
       title: d => `${d.country}\nWPFI: ${d.wpfi_score}\nFavorable: ${(d.prop_favorable * 100).toFixed(1)}%\n95% CI: [${(d.ci_lo * 100).toFixed(1)}%, ${(d.ci_hi * 100).toFixed(1)}%]\nN: ${d.n}\nCategory: ${d.situation}`
     }),
-    // China: diamond (focal case from Studies 1-5)
+    // China: star (Study 4 baseline)
     Plot.dot(filtered.filter(d => d.country === "China"), {
       x: "wpfi_score",
       y: "prop_favorable",
       fill: d => catColors[d.situation] || "#999",
-      symbol: "square",
-      r: 6,
+      symbol: "star",
+      r: 5,
       tip: true,
       title: d => `${d.country}\nWPFI: ${d.wpfi_score}\nFavorable: ${(d.prop_favorable * 100).toFixed(1)}%\n95% CI: [${(d.ci_lo * 100).toFixed(1)}%, ${(d.ci_hi * 100).toFixed(1)}%]\nN: ${d.n}\nCategory: ${d.situation}`
     }),
