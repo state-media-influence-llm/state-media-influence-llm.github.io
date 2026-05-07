@@ -30,6 +30,7 @@ PAPER_MODELS = [
 
 NEW_MODELS = [
     ("gpt-5-4", "GPT-5.4", "new"),
+    ("gpt-5-5", "GPT-5.5", "new"),
     ("claude-opus-4-6", "Claude Opus 4.6", "new"),
     ("claude-opus-4-7", "Claude Opus 4.7", "new"),
     ("gemini-3-1-pro", "Gemini 3.1 Pro", "new"),

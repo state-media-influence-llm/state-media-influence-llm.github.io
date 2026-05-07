@@ -480,6 +480,66 @@
     "era": "new"
   },
   {
+    "model": "GPT-5.5",
+    "country": "China",
+    "country_code": "CN",
+    "facet": "China",
+    "estimate": 0.7708,
+    "se": 0.0248,
+    "lower": 0.7223,
+    "upper": 0.8194,
+    "n": 288,
+    "era": "new"
+  },
+  {
+    "model": "GPT-5.5",
+    "country": "North Korea",
+    "country_code": "NK",
+    "facet": "Spillover",
+    "estimate": 0.7262,
+    "se": 0.0281,
+    "lower": 0.6711,
+    "upper": 0.7812,
+    "n": 252,
+    "era": "new"
+  },
+  {
+    "model": "GPT-5.5",
+    "country": "Russia",
+    "country_code": "RU",
+    "facet": "Spillover",
+    "estimate": 0.7431,
+    "se": 0.0257,
+    "lower": 0.6926,
+    "upper": 0.7935,
+    "n": 288,
+    "era": "new"
+  },
+  {
+    "model": "GPT-5.5",
+    "country": "United Kingdom",
+    "country_code": "UK",
+    "facet": "Baseline",
+    "estimate": 0.537,
+    "se": 0.0303,
+    "lower": 0.4776,
+    "upper": 0.5965,
+    "n": 270,
+    "era": "new"
+  },
+  {
+    "model": "GPT-5.5",
+    "country": "United States",
+    "country_code": "US",
+    "facet": "Baseline",
+    "estimate": 0.441,
+    "se": 0.0293,
+    "lower": 0.3836,
+    "upper": 0.4983,
+    "n": 288,
+    "era": "new"
+  },
+  {
     "model": "Gemini 3.1 Pro",
     "country": "China",
     "country_code": "CN",

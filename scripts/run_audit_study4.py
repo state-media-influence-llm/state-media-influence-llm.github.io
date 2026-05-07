@@ -41,6 +41,7 @@ OUT_DIR = BASE_DIR / "data" / "study4"
 # Models to query (display_name -> OpenRouter model ID)
 MODELS = {
     "gpt-5.4": "openai/gpt-5.4",
+    "gpt-5.5": "openai/gpt-5.5",
     "claude-opus-4.6": "anthropic/claude-opus-4.6",
     "claude-opus-4.7": "anthropic/claude-opus-4.7",
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
