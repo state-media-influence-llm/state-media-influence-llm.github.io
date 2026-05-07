@@ -33,6 +33,7 @@ DATA_DIR = BASE_DIR / "data" / "study4"
 # Gen models (display_name -> filename slug)
 GEN_MODELS = {
     "gpt-5.4": "gpt-5-4",
+    "gpt-5.5": "gpt-5-5",
     "claude-opus-4.6": "claude-opus-4-6",
     "claude-opus-4.7": "claude-opus-4-7",
     "gemini-3.1-pro": "gemini-3-1-pro",
