@@ -40,6 +40,7 @@ PRELIM_CSV = DATA_DIR / "gpt5_opus4_prel.csv"
 # "gen:" prefix = load from gen/ directory
 GEN_MODELS = {
     "gpt-5.4": ("csv", "GPT5.4"),
+    "gpt-5.5": ("gen", "gpt-5.5"),
     "claude-opus-4.6": ("csv", "Opus4.6"),
     "gemini-3.1-pro": ("gen", "gemini-3.1-pro"),
     "deepseek-v3.2": ("gen", "deepseek-v3.2"),

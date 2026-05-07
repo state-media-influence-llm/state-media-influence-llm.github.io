@@ -40,9 +40,9 @@ user-message prefix or the completions API).
 
 In the original paper, the five models audited (GPT-3.5 Instruct, GPT-4,
 GPT-4o, Claude Opus 3, Claude Sonnet 3) were queried with max\_tokens=64.
-The new models — Claude Opus 4.6, Claude Opus 4.7, GPT-5.4, Gemini 3.1 Pro,
-DeepSeek V3.2, Grok 4, and Qwen3-Max — are queried post-acceptance with
-max\_tokens=256 via OpenRouter.
+The new models — Claude Opus 4.6, Claude Opus 4.7, GPT-5.4, GPT-5.5,
+Gemini 3.1 Pro, DeepSeek V3.2, Grok 4, and Qwen3-Max — are queried
+post-acceptance with max\_tokens=256 via OpenRouter.
 :::
 
 ```{ojs}

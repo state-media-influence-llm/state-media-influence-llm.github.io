@@ -43,6 +43,7 @@ MODELS = {
     "deepseek-v3.2": "deepseek/deepseek-v3.2",
     "grok-4": "x-ai/grok-4",
     "claude-opus-4.7": "anthropic/claude-opus-4.7",
+    "gpt-5.5": "openai/gpt-5.5",
 }
 
 # ISO 639-3 → Google Translate language code
