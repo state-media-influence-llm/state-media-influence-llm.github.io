@@ -42,4 +42,4 @@ format:
     include-in-header:
       text: '<meta name="robots" content="noindex, nofollow">'
     include-before-body:
-      text: '<div style="background:#dc3545;color:white;text-align:center;padding:10px;font-weight:bold;font-size:0.85em;letter-spacing:0.5px;">MATERIAL UNDER MEDIA EMBARGO. NO SEARCH OR LINK INDEXING. PLEASE DO NOT POST OR DISTRIBUTE.</div>'
+      text: '<div style="background:#dc3545;color:white;text-align:center;padding:10px;font-weight:bold;font-size:0.85em;letter-spacing:0.5px;">MATERIAL UNDER MEDIA EMBARGO UNTIL 2026/05/13 11:00 AM EDT. NO SEARCH OR LINK INDEXING. PLEASE DO NOT POST OR DISTRIBUTE.</div>'

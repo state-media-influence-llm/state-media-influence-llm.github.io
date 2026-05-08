@@ -1,0 +1,118 @@
+name: Lift Embargo
+
+# Removes the embargo banner and noindex/nofollow meta from _quarto.yml,
+# then triggers Deploy Site. Scheduled to fire at 15:01 UTC on 2026-05-13
+# (11:01 AM EDT — one minute past the 11:00 AM EDT embargo lift, off-peak
+# to dodge the top-of-hour cron rush). Manual dispatch defaults to dry run.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no commit/push/deploy)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      target_branch:
+        description: 'Branch to push to (default main)'
+        required: false
+        default: 'main'
+        type: string
+  schedule:
+    # 15:01 UTC = 11:01 AM EDT on 2026-05-13
+    - cron: '1 15 13 5 *'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  lift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show pre-edit state
+        run: |
+          echo "=== include-* lines BEFORE edit ==="
+          grep -n "include-" _quarto.yml || true
+
+      - name: Edit _quarto.yml
+        run: |
+          python3 <<'PYEOF'
+          from pathlib import Path
+          p = Path("_quarto.yml")
+          lines = p.read_text().splitlines(keepends=True)
+          new_lines = []
+          removed = []
+          i = 0
+          while i < len(lines):
+              line = lines[i]
+              if line.strip() in ("include-in-header:", "include-before-body:"):
+                  removed.append(line.strip())
+                  base_indent = len(line) - len(line.lstrip())
+                  i += 1
+                  while i < len(lines):
+                      nxt = lines[i]
+                      if not nxt.strip():
+                          break
+                      nxt_indent = len(nxt) - len(nxt.lstrip())
+                      if nxt_indent > base_indent:
+                          i += 1
+                          continue
+                      break
+                  continue
+              new_lines.append(line)
+              i += 1
+          if not removed:
+              raise SystemExit("ERROR: no embargo blocks found in _quarto.yml")
+          p.write_text("".join(new_lines))
+          print(f"Removed blocks: {removed}")
+          import yaml
+          yaml.safe_load(p.read_text())
+          print("YAML still valid")
+          PYEOF
+
+      - name: Show post-edit diff
+        run: |
+          echo "=== git diff after edit ==="
+          git diff _quarto.yml
+
+      - name: Determine run mode
+        id: mode
+        run: |
+          # Scheduled runs are always live; manual dispatch defaults to dry-run
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "dry=false" >> "$GITHUB_OUTPUT"
+            echo "branch=main" >> "$GITHUB_OUTPUT"
+          else
+            echo "dry=${{ inputs.dry_run }}" >> "$GITHUB_OUTPUT"
+            echo "branch=${{ inputs.target_branch }}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "event=${{ github.event_name }} dry_input=${{ inputs.dry_run }} branch_input=${{ inputs.target_branch }}"
+
+      - name: Dry run — skip commit
+        if: steps.mode.outputs.dry == 'true'
+        run: echo "DRY RUN — not committing or pushing"
+
+      - name: Commit and push
+        if: steps.mode.outputs.dry != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _quarto.yml
+          git commit -m "Lift embargo: remove banner and noindex meta"
+          git push origin HEAD:"${{ steps.mode.outputs.branch }}"
+
+      - name: Trigger Deploy Site
+        if: steps.mode.outputs.dry != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run "Deploy Site"
