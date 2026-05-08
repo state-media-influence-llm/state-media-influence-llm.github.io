@@ -32,7 +32,7 @@
     "href": "index.html",
     "title": "State Media Control Influences Large Language Models",
     "section": "",
-    "text": "MATERIAL UNDER MEDIA EMBARGO. NO SEARCH OR LINK INDEXING. PLEASE DO NOT POST OR DISTRIBUTE.\nHannah Waight1,2, Eddie Yang1,3, Yin Yuan4, Solomon Messing5, Margaret E. Roberts4, Brandon M. Stewart6, Joshua A. Tucker5,7\nReplication Archive\nInteractives: Training Data Valence Audit Memorization Checkpoints Crossnational Audit"
+    "text": "MATERIAL UNDER MEDIA EMBARGO. NO SEARCH OR LINK INDEXING. PLEASE DO NOT POST OR DISTRIBUTE.\nHannah Waight1,2, Eddie Yang1,3, Yin Yuan4, Solomon Messing5, Margaret E. Roberts4, Brandon M. Stewart6, Joshua A. Tucker5,7\nPaper (Nature) Replication Archive\nInteractives: Training Data Valence Audit Memorization Checkpoints Crossnational Audit"
   },
   {
     "objectID": "index.html#abstract",
@@ -46,7 +46,7 @@
     "href": "index.html#citation",
     "title": "State Media Control Influences Large Language Models",
     "section": "Citation",
-    "text": "Citation\nIf you use this work, please cite:\n\nHannah Waight, Eddie Yang, Yin Yuan, Solomon Messing, Margaret E. Roberts, Brandon M. Stewart, and Joshua A. Tucker. State Media Control Influences Large Language Models. Nature (2025).\n\n@article{waight2025state,\n  title={State Media Control Influences Large Language Models},\n  author={Waight, Hannah and Yang, Eddie and Yuan, Yin and Messing, Solomon and Roberts, Margaret E. and Stewart, Brandon M. and Tucker, Joshua A.},\n  journal={Nature},\n  year={2025}\n}"
+    "text": "Citation\nIf you use this work, please cite:\n\nHannah Waight, Eddie Yang, Yin Yuan, Solomon Messing, Margaret E. Roberts, Brandon M. Stewart, and Joshua A. Tucker. State Media Control Influences Large Language Models. Nature (2026). https://doi.org/10.1038/s41586-026-10506-7\n\n@article{waight2026state,\n  title={State Media Control Influences Large Language Models},\n  author={Waight, Hannah and Yang, Eddie and Yuan, Yin and Messing, Solomon and Roberts, Margaret E. and Stewart, Brandon M. and Tucker, Joshua A.},\n  journal={Nature},\n  year={2026},\n  doi={10.1038/s41586-026-10506-7}\n}"
   },
   {
     "objectID": "index.html#logical-flow-of-the-six-studies",
@@ -123,7 +123,7 @@
     "href": "about.html#methodology",
     "title": "About",
     "section": "Methodology",
-    "text": "Methodology\nFor full details on the experimental design, model fine-tuning procedure, and evaluation methodology, please refer to the paper."
+    "text": "Methodology\nFor full details on the experimental design, model fine-tuning procedure, and evaluation methodology, please refer to the paper in Nature."
   },
   {
     "objectID": "about.html#contact",
