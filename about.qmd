@@ -10,7 +10,7 @@ title: "About"
 
 ## Methodology
 
-For full details on the experimental design, model fine-tuning procedure, and evaluation methodology, please refer to the paper.
+For full details on the experimental design, model fine-tuning procedure, and evaluation methodology, please refer to the [paper in Nature](https://doi.org/10.1038/s41586-026-10506-7).
 
 ## Contact
 
