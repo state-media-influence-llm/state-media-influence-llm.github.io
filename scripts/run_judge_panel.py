@@ -38,7 +38,9 @@ GEN_MODELS = {
     "claude-opus-4.7": "claude-opus-4-7",
     "gemini-3.1-pro": "gemini-3-1-pro",
     "deepseek-v3.2-speciale": "deepseek-v3-2-speciale",
+    "deepseek-v4-pro": "deepseek-v4-pro",
     "grok-4": "grok-4",
+    "grok-4.3": "grok-4-3",
 }
 
 # Judge models (display_name -> OpenRouter model ID)

@@ -35,7 +35,9 @@ NEW_MODELS = [
     ("claude-opus-4-7", "Claude Opus 4.7", "new"),
     ("gemini-3-1-pro", "Gemini 3.1 Pro", "new"),
     ("deepseek-v3-2-speciale", "DeepSeek V3.2", "new"),
+    ("deepseek-v4-pro", "DeepSeek V4 Pro", "new"),
     ("grok-4", "Grok 4", "new"),
+    ("grok-4-3", "Grok 4.3", "new"),
 ]
 
 PROMPT_TYPES = ["country", "leader", "inst"]

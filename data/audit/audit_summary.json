@@ -420,6 +420,66 @@
     "era": "new"
   },
   {
+    "model": "DeepSeek V4 Pro",
+    "country": "China",
+    "country_code": "CN",
+    "facet": "China",
+    "estimate": 0.5889,
+    "se": 0.0118,
+    "lower": 0.5657,
+    "upper": 0.6121,
+    "n": 1727,
+    "era": "new"
+  },
+  {
+    "model": "DeepSeek V4 Pro",
+    "country": "North Korea",
+    "country_code": "NK",
+    "facet": "Spillover",
+    "estimate": 0.6356,
+    "se": 0.0124,
+    "lower": 0.6113,
+    "upper": 0.6598,
+    "n": 1512,
+    "era": "new"
+  },
+  {
+    "model": "DeepSeek V4 Pro",
+    "country": "Russia",
+    "country_code": "RU",
+    "facet": "Spillover",
+    "estimate": 0.5347,
+    "se": 0.012,
+    "lower": 0.5112,
+    "upper": 0.5582,
+    "n": 1728,
+    "era": "new"
+  },
+  {
+    "model": "DeepSeek V4 Pro",
+    "country": "United Kingdom",
+    "country_code": "UK",
+    "facet": "Baseline",
+    "estimate": 0.4972,
+    "se": 0.0124,
+    "lower": 0.4728,
+    "upper": 0.5216,
+    "n": 1617,
+    "era": "new"
+  },
+  {
+    "model": "DeepSeek V4 Pro",
+    "country": "United States",
+    "country_code": "US",
+    "facet": "Baseline",
+    "estimate": 0.3776,
+    "se": 0.0117,
+    "lower": 0.3547,
+    "upper": 0.4005,
+    "n": 1724,
+    "era": "new"
+  },
+  {
     "model": "GPT-5.4",
     "country": "China",
     "country_code": "CN",
@@ -657,6 +717,66 @@
     "lower": 0.5121,
     "upper": 0.5591,
     "n": 1727,
+    "era": "new"
+  },
+  {
+    "model": "Grok 4.3",
+    "country": "China",
+    "country_code": "CN",
+    "facet": "China",
+    "estimate": 0.7371,
+    "se": 0.0106,
+    "lower": 0.7164,
+    "upper": 0.7579,
+    "n": 1727,
+    "era": "new"
+  },
+  {
+    "model": "Grok 4.3",
+    "country": "North Korea",
+    "country_code": "NK",
+    "facet": "Spillover",
+    "estimate": 0.5414,
+    "se": 0.0128,
+    "lower": 0.5163,
+    "upper": 0.5666,
+    "n": 1509,
+    "era": "new"
+  },
+  {
+    "model": "Grok 4.3",
+    "country": "Russia",
+    "country_code": "RU",
+    "facet": "Spillover",
+    "estimate": 0.52,
+    "se": 0.012,
+    "lower": 0.4964,
+    "upper": 0.5436,
+    "n": 1725,
+    "era": "new"
+  },
+  {
+    "model": "Grok 4.3",
+    "country": "United Kingdom",
+    "country_code": "UK",
+    "facet": "Baseline",
+    "estimate": 0.5414,
+    "se": 0.0124,
+    "lower": 0.5171,
+    "upper": 0.5657,
+    "n": 1618,
+    "era": "new"
+  },
+  {
+    "model": "Grok 4.3",
+    "country": "United States",
+    "country_code": "US",
+    "facet": "Baseline",
+    "estimate": 0.4763,
+    "se": 0.012,
+    "lower": 0.4527,
+    "upper": 0.4998,
+    "n": 1728,
     "era": "new"
   }
 ]

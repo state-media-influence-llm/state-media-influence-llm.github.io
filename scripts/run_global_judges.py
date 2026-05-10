@@ -44,7 +44,9 @@ GEN_MODELS = {
     "claude-opus-4.6": ("csv", "Opus4.6"),
     "gemini-3.1-pro": ("gen", "gemini-3.1-pro"),
     "deepseek-v3.2": ("gen", "deepseek-v3.2"),
+    "deepseek-v4-pro": ("gen", "deepseek-v4-pro"),
     "grok-4": ("gen", "grok-4"),
+    "grok-4.3": ("gen", "grok-4.3"),
     "claude-opus-4.7": ("gen", "claude-opus-4.7"),
 }
 

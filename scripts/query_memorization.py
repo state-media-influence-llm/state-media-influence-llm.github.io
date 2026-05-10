@@ -32,7 +32,9 @@ MODELS = {
     "claude-opus-4.7": "anthropic/claude-opus-4.7",
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
     "deepseek-v3.2": "deepseek/deepseek-v3.2",
+    "deepseek-v4-pro": "deepseek/deepseek-v4-pro",
     "grok-4": "x-ai/grok-4",
+    "grok-4.3": "x-ai/grok-4.3",
     "qwen3-max": "qwen/qwen3-max",
 }
 

@@ -46,7 +46,9 @@ MODELS = {
     "claude-opus-4.7": "anthropic/claude-opus-4.7",
     "gemini-3.1-pro": "google/gemini-3.1-pro-preview",
     "deepseek-v3.2-speciale": "deepseek/deepseek-v3.2-speciale",
+    "deepseek-v4-pro": "deepseek/deepseek-v4-pro",
     "grok-4": "x-ai/grok-4",
+    "grok-4.3": "x-ai/grok-4.3",
 }
 
 JUDGE_MODEL = "openai/gpt-oss-120b"

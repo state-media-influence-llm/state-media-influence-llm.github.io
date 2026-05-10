@@ -39,7 +39,9 @@ GEN_MODEL_MAP = {
     "claude-opus-4.7": "Claude Opus 4.7",
     "gemini-3.1-pro": "Gemini 3.1 Pro",
     "deepseek-v3.2": "DeepSeek V3.2",
+    "deepseek-v4-pro": "DeepSeek V4 Pro",
     "grok-4": "Grok 4",
+    "grok-4.3": "Grok 4.3",
 }
 
 ERA_MAP = {
@@ -53,7 +55,9 @@ ERA_MAP = {
     "Claude Opus 4.7": "new",
     "Gemini 3.1 Pro": "new",
     "DeepSeek V3.2": "new",
+    "DeepSeek V4 Pro": "new",
     "Grok 4": "new",
+    "Grok 4.3": "new",
 }
 
 # Gen model display name -> slug used in judge CSV filenames
@@ -64,7 +68,9 @@ GEN_SLUG_MAP = {
     "Claude Opus 4.7": "claude-opus-47",
     "Gemini 3.1 Pro": "gemini-31-pro",
     "DeepSeek V3.2": "deepseek-v32",
+    "DeepSeek V4 Pro": "deepseek-v4-pro",
     "Grok 4": "grok-4",
+    "Grok 4.3": "grok-43",
 }
 
 # Normalize country names across datasets
@@ -366,7 +372,9 @@ def process():
         "Claude Opus 4.7": "claude-opus-4.7",
         "Gemini 3.1 Pro": "gemini-3.1-pro",
         "DeepSeek V3.2": "deepseek-v3.2",
+        "DeepSeek V4 Pro": "deepseek-v4-pro",
         "Grok 4": "grok-4",
+        "Grok 4.3": "grok-4.3",
     }
 
     for model_display, source_slug in new_model_sources.items():
