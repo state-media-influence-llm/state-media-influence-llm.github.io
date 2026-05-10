@@ -12,7 +12,11 @@ asked to continue the sentence at temperature 0. Completions are cleaned
 (Unicode punctuation removed, prompt echo stripped) and compared against
 the expected ending using normalized Levenshtein edit distance. A phrase
 is counted as memorized if the edit distance is below 0.4. Refusals are
-detected via regex and excluded from the denominator.
+detected via regex and excluded from the denominator. Empty completions
+(some reasoning-trained models exhaust the token budget on hidden
+reasoning before emitting any final content) are re-queried with
+max\_tokens=2048; any that remain empty after re-query are also excluded
+from the denominator.
 
 **Differences from the paper.** Two methodological updates improve
 measurement of memorization in current-generation models:
@@ -80,8 +84,11 @@ completionRates = {
   for (const model of models) {
     for (const type of types) {
       const modelTypeData = deduped.filter(d => d.model === model && d.type === type);
-      // Exclude refusals from denominator (per paper methodology)
-      const nonRefused = modelTypeData.filter(d => !d.refused);
+      // Exclude refusals (per paper methodology) and empty completions
+      // (some reasoning-trained models exhaust max_tokens on hidden
+      // reasoning and emit no final content; we re-queried these with
+      // max_tokens=2048 and exclude any that remain empty)
+      const nonRefused = modelTypeData.filter(d => !d.refused && (d.completion || "").trim().length >= 10);
       const matched = nonRefused.filter(d => d.matched).length;
       if (nonRefused.length > 0) {
         const n = nonRefused.length;
