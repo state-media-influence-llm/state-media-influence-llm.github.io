@@ -61,6 +61,18 @@
   },
   {
     "country": "Armenia",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3911,
+    "ci_lo": 0.333,
+    "ci_hi": 0.4492,
+    "n": 267,
+    "wpfi_score": 69.79,
+    "situation": "Problematic",
+    "target_lang": "hye",
+    "era": "new"
+  },
+  {
+    "country": "Armenia",
     "model": "GPT-3.5",
     "prop_favorable": 0.2845,
     "ci_lo": 0.2312,
@@ -132,6 +144,18 @@
     "era": "new"
   },
   {
+    "country": "Armenia",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4132,
+    "ci_lo": 0.3546,
+    "ci_hi": 0.4719,
+    "n": 267,
+    "wpfi_score": 69.79,
+    "situation": "Problematic",
+    "target_lang": "hye",
+    "era": "new"
+  },
+  {
     "country": "Brazil",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5949,
@@ -186,6 +210,18 @@
     "ci_lo": 0.4712,
     "ci_hi": 0.5221,
     "n": 1480,
+    "wpfi_score": 57.015,
+    "situation": "Problematic",
+    "target_lang": "por",
+    "era": "new"
+  },
+  {
+    "country": "Brazil",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5935,
+    "ci_lo": 0.5352,
+    "ci_hi": 0.6517,
+    "n": 269,
     "wpfi_score": 57.015,
     "situation": "Problematic",
     "target_lang": "por",
@@ -264,6 +300,18 @@
     "era": "new"
   },
   {
+    "country": "Brazil",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.437,
+    "ci_lo": 0.3778,
+    "ci_hi": 0.4962,
+    "n": 266,
+    "wpfi_score": 57.015,
+    "situation": "Problematic",
+    "target_lang": "por",
+    "era": "new"
+  },
+  {
     "country": "Bulgaria",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5548,
@@ -318,6 +366,18 @@
     "ci_lo": 0.4101,
     "ci_hi": 0.4611,
     "n": 1449,
+    "wpfi_score": 61.05,
+    "situation": "Problematic",
+    "target_lang": "bul",
+    "era": "new"
+  },
+  {
+    "country": "Bulgaria",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4457,
+    "ci_lo": 0.386,
+    "ci_hi": 0.5053,
+    "n": 263,
     "wpfi_score": 61.05,
     "situation": "Problematic",
     "target_lang": "bul",
@@ -396,6 +456,18 @@
     "era": "new"
   },
   {
+    "country": "Bulgaria",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.298,
+    "ci_lo": 0.243,
+    "ci_hi": 0.353,
+    "n": 261,
+    "wpfi_score": 61.05,
+    "situation": "Problematic",
+    "target_lang": "bul",
+    "era": "new"
+  },
+  {
     "country": "Czechia",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5913,
@@ -450,6 +522,18 @@
     "ci_lo": 0.308,
     "ci_hi": 0.3559,
     "n": 1481,
+    "wpfi_score": 82.06,
+    "situation": "Satisfactory",
+    "target_lang": "ces",
+    "era": "new"
+  },
+  {
+    "country": "Czechia",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5037,
+    "ci_lo": 0.4444,
+    "ci_hi": 0.5629,
+    "n": 270,
     "wpfi_score": 82.06,
     "situation": "Satisfactory",
     "target_lang": "ces",
@@ -528,6 +612,18 @@
     "era": "new"
   },
   {
+    "country": "Czechia",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2489,
+    "ci_lo": 0.1978,
+    "ci_hi": 0.3001,
+    "n": 269,
+    "wpfi_score": 82.06,
+    "situation": "Satisfactory",
+    "target_lang": "ces",
+    "era": "new"
+  },
+  {
     "country": "Denmark",
     "model": "Claude Opus 3",
     "prop_favorable": 0.4854,
@@ -582,6 +678,18 @@
     "ci_lo": 0.1799,
     "ci_hi": 0.2206,
     "n": 1479,
+    "wpfi_score": 89.875,
+    "situation": "Good",
+    "target_lang": "dan",
+    "era": "new"
+  },
+  {
+    "country": "Denmark",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4322,
+    "ci_lo": 0.3734,
+    "ci_hi": 0.491,
+    "n": 269,
     "wpfi_score": 89.875,
     "situation": "Good",
     "target_lang": "dan",
@@ -660,6 +768,18 @@
     "era": "new"
   },
   {
+    "country": "Denmark",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2746,
+    "ci_lo": 0.2217,
+    "ci_hi": 0.3275,
+    "n": 269,
+    "wpfi_score": 89.875,
+    "situation": "Good",
+    "target_lang": "dan",
+    "era": "new"
+  },
+  {
     "country": "Estonia",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5438,
@@ -714,6 +834,18 @@
     "ci_lo": 0.3221,
     "ci_hi": 0.3705,
     "n": 1483,
+    "wpfi_score": 87.07,
+    "situation": "Good",
+    "target_lang": "est",
+    "era": "new"
+  },
+  {
+    "country": "Estonia",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5,
+    "ci_lo": 0.4408,
+    "ci_hi": 0.5592,
+    "n": 270,
     "wpfi_score": 87.07,
     "situation": "Good",
     "target_lang": "est",
@@ -792,6 +924,18 @@
     "era": "new"
   },
   {
+    "country": "Estonia",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2167,
+    "ci_lo": 0.1679,
+    "ci_hi": 0.2656,
+    "n": 268,
+    "wpfi_score": 87.07,
+    "situation": "Good",
+    "target_lang": "est",
+    "era": "new"
+  },
+  {
     "country": "Finland",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6096,
@@ -846,6 +990,18 @@
     "ci_lo": 0.1925,
     "ci_hi": 0.2341,
     "n": 1482,
+    "wpfi_score": 88.18,
+    "situation": "Good",
+    "target_lang": "fin",
+    "era": "new"
+  },
+  {
+    "country": "Finland",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3685,
+    "ci_lo": 0.3114,
+    "ci_hi": 0.4256,
+    "n": 270,
     "wpfi_score": 88.18,
     "situation": "Good",
     "target_lang": "fin",
@@ -924,6 +1080,18 @@
     "era": "new"
   },
   {
+    "country": "Finland",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2379,
+    "ci_lo": 0.1876,
+    "ci_hi": 0.2883,
+    "n": 269,
+    "wpfi_score": 88.18,
+    "situation": "Good",
+    "target_lang": "fin",
+    "era": "new"
+  },
+  {
     "country": "Georgia",
     "model": "Claude Opus 3",
     "prop_favorable": 0.573,
@@ -978,6 +1146,18 @@
     "ci_lo": 0.4139,
     "ci_hi": 0.4644,
     "n": 1483,
+    "wpfi_score": 60.495,
+    "situation": "Problematic",
+    "target_lang": "kat",
+    "era": "new"
+  },
+  {
+    "country": "Georgia",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4542,
+    "ci_lo": 0.3951,
+    "ci_hi": 0.5133,
+    "n": 269,
     "wpfi_score": 60.495,
     "situation": "Problematic",
     "target_lang": "kat",
@@ -1056,6 +1236,18 @@
     "era": "new"
   },
   {
+    "country": "Georgia",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4117,
+    "ci_lo": 0.3532,
+    "ci_hi": 0.4702,
+    "n": 268,
+    "wpfi_score": 60.495,
+    "situation": "Problematic",
+    "target_lang": "kat",
+    "era": "new"
+  },
+  {
     "country": "Greece",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6278,
@@ -1110,6 +1302,18 @@
     "ci_lo": 0.2814,
     "ci_hi": 0.3282,
     "n": 1482,
+    "wpfi_score": 55.36,
+    "situation": "Problematic",
+    "target_lang": "ell",
+    "era": "new"
+  },
+  {
+    "country": "Greece",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3284,
+    "ci_lo": 0.2728,
+    "ci_hi": 0.3839,
+    "n": 270,
     "wpfi_score": 55.36,
     "situation": "Problematic",
     "target_lang": "ell",
@@ -1188,6 +1392,18 @@
     "era": "new"
   },
   {
+    "country": "Greece",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4051,
+    "ci_lo": 0.3469,
+    "ci_hi": 0.4632,
+    "n": 270,
+    "wpfi_score": 55.36,
+    "situation": "Problematic",
+    "target_lang": "ell",
+    "era": "new"
+  },
+  {
     "country": "Haiti",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5547,
@@ -1242,6 +1458,18 @@
     "ci_lo": 0.4555,
     "ci_hi": 0.5102,
     "n": 1280,
+    "wpfi_score": 60.965,
+    "situation": "Problematic",
+    "target_lang": "hat",
+    "era": "new"
+  },
+  {
+    "country": "Haiti",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4303,
+    "ci_lo": 0.3673,
+    "ci_hi": 0.4934,
+    "n": 233,
     "wpfi_score": 60.965,
     "situation": "Problematic",
     "target_lang": "hat",
@@ -1320,6 +1548,18 @@
     "era": "new"
   },
   {
+    "country": "Haiti",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.5021,
+    "ci_lo": 0.4382,
+    "ci_hi": 0.5661,
+    "n": 231,
+    "wpfi_score": 60.965,
+    "situation": "Problematic",
+    "target_lang": "hat",
+    "era": "new"
+  },
+  {
     "country": "Hungary",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6935,
@@ -1374,6 +1614,18 @@
     "ci_lo": 0.5164,
     "ci_hi": 0.5671,
     "n": 1482,
+    "wpfi_score": 61.38,
+    "situation": "Problematic",
+    "target_lang": "hun",
+    "era": "new"
+  },
+  {
+    "country": "Hungary",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5478,
+    "ci_lo": 0.4887,
+    "ci_hi": 0.607,
+    "n": 268,
     "wpfi_score": 61.38,
     "situation": "Problematic",
     "target_lang": "hun",
@@ -1452,6 +1704,18 @@
     "era": "new"
   },
   {
+    "country": "Hungary",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2851,
+    "ci_lo": 0.2313,
+    "ci_hi": 0.3388,
+    "n": 266,
+    "wpfi_score": 61.38,
+    "situation": "Problematic",
+    "target_lang": "hun",
+    "era": "new"
+  },
+  {
     "country": "Iceland",
     "model": "Claude Opus 3",
     "prop_favorable": 0.4671,
@@ -1506,6 +1770,18 @@
     "ci_lo": 0.1416,
     "ci_hi": 0.1789,
     "n": 1481,
+    "wpfi_score": 82.94,
+    "situation": "Satisfactory",
+    "target_lang": "isl",
+    "era": "new"
+  },
+  {
+    "country": "Iceland",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3393,
+    "ci_lo": 0.2833,
+    "ci_hi": 0.3954,
+    "n": 270,
     "wpfi_score": 82.94,
     "situation": "Satisfactory",
     "target_lang": "isl",
@@ -1584,6 +1860,18 @@
     "era": "new"
   },
   {
+    "country": "Iceland",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2042,
+    "ci_lo": 0.1566,
+    "ci_hi": 0.2518,
+    "n": 270,
+    "wpfi_score": 82.94,
+    "situation": "Satisfactory",
+    "target_lang": "isl",
+    "era": "new"
+  },
+  {
     "country": "India",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6935,
@@ -1638,6 +1926,18 @@
     "ci_lo": 0.531,
     "ci_hi": 0.5815,
     "n": 1481,
+    "wpfi_score": 38.81,
+    "situation": "Very Serious",
+    "target_lang": "hin",
+    "era": "new"
+  },
+  {
+    "country": "India",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4469,
+    "ci_lo": 0.3879,
+    "ci_hi": 0.5058,
+    "n": 269,
     "wpfi_score": 38.81,
     "situation": "Very Serious",
     "target_lang": "hin",
@@ -1716,6 +2016,18 @@
     "era": "new"
   },
   {
+    "country": "India",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4744,
+    "ci_lo": 0.4153,
+    "ci_hi": 0.5336,
+    "n": 270,
+    "wpfi_score": 38.81,
+    "situation": "Very Serious",
+    "target_lang": "hin",
+    "era": "new"
+  },
+  {
     "country": "Indonesia",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6716,
@@ -1770,6 +2082,18 @@
     "ci_lo": 0.4077,
     "ci_hi": 0.4581,
     "n": 1479,
+    "wpfi_score": 52.05,
+    "situation": "Difficult",
+    "target_lang": "ind",
+    "era": "new"
+  },
+  {
+    "country": "Indonesia",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.489,
+    "ci_lo": 0.4295,
+    "ci_hi": 0.5484,
+    "n": 268,
     "wpfi_score": 52.05,
     "situation": "Difficult",
     "target_lang": "ind",
@@ -1848,6 +2172,18 @@
     "era": "new"
   },
   {
+    "country": "Indonesia",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.3978,
+    "ci_lo": 0.3398,
+    "ci_hi": 0.4557,
+    "n": 270,
+    "wpfi_score": 52.05,
+    "situation": "Difficult",
+    "target_lang": "ind",
+    "era": "new"
+  },
+  {
     "country": "Israel",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5913,
@@ -1902,6 +2238,18 @@
     "ci_lo": 0.5463,
     "ci_hi": 0.5968,
     "n": 1471,
+    "wpfi_score": 58.595,
+    "situation": "Problematic",
+    "target_lang": "heb",
+    "era": "new"
+  },
+  {
+    "country": "Israel",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5609,
+    "ci_lo": 0.5018,
+    "ci_hi": 0.62,
+    "n": 267,
     "wpfi_score": 58.595,
     "situation": "Problematic",
     "target_lang": "heb",
@@ -1980,6 +2328,18 @@
     "era": "new"
   },
   {
+    "country": "Israel",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2682,
+    "ci_lo": 0.2157,
+    "ci_hi": 0.3208,
+    "n": 268,
+    "wpfi_score": 58.595,
+    "situation": "Problematic",
+    "target_lang": "heb",
+    "era": "new"
+  },
+  {
     "country": "Italy",
     "model": "Claude Opus 3",
     "prop_favorable": 0.584,
@@ -2034,6 +2394,18 @@
     "ci_lo": 0.3835,
     "ci_hi": 0.4335,
     "n": 1482,
+    "wpfi_score": 70.105,
+    "situation": "Satisfactory",
+    "target_lang": "ita",
+    "era": "new"
+  },
+  {
+    "country": "Italy",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4926,
+    "ci_lo": 0.4332,
+    "ci_hi": 0.5521,
+    "n": 268,
     "wpfi_score": 70.105,
     "situation": "Satisfactory",
     "target_lang": "ita",
@@ -2112,6 +2484,18 @@
     "era": "new"
   },
   {
+    "country": "Italy",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.3992,
+    "ci_lo": 0.3411,
+    "ci_hi": 0.4573,
+    "n": 269,
+    "wpfi_score": 70.105,
+    "situation": "Satisfactory",
+    "target_lang": "ita",
+    "era": "new"
+  },
+  {
     "country": "Japan",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6059,
@@ -2166,6 +2550,18 @@
     "ci_lo": 0.4034,
     "ci_hi": 0.4537,
     "n": 1480,
+    "wpfi_score": 64.16,
+    "situation": "Problematic",
+    "target_lang": "jpn",
+    "era": "new"
+  },
+  {
+    "country": "Japan",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4322,
+    "ci_lo": 0.3734,
+    "ci_hi": 0.491,
+    "n": 269,
     "wpfi_score": 64.16,
     "situation": "Problematic",
     "target_lang": "jpn",
@@ -2244,6 +2640,18 @@
     "era": "new"
   },
   {
+    "country": "Japan",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2443,
+    "ci_lo": 0.1932,
+    "ci_hi": 0.2954,
+    "n": 266,
+    "wpfi_score": 64.16,
+    "situation": "Problematic",
+    "target_lang": "jpn",
+    "era": "new"
+  },
+  {
     "country": "Kazakhstan",
     "model": "Claude Opus 3",
     "prop_favorable": 0.7775,
@@ -2298,6 +2706,18 @@
     "ci_lo": 0.2881,
     "ci_hi": 0.336,
     "n": 1438,
+    "wpfi_score": 47.075,
+    "situation": "Difficult",
+    "target_lang": "kaz",
+    "era": "new"
+  },
+  {
+    "country": "Kazakhstan",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3484,
+    "ci_lo": 0.2909,
+    "ci_hi": 0.4058,
+    "n": 260,
     "wpfi_score": 47.075,
     "situation": "Difficult",
     "target_lang": "kaz",
@@ -2376,6 +2796,18 @@
     "era": "new"
   },
   {
+    "country": "Kazakhstan",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.481,
+    "ci_lo": 0.4208,
+    "ci_hi": 0.5413,
+    "n": 260,
+    "wpfi_score": 47.075,
+    "situation": "Difficult",
+    "target_lang": "kaz",
+    "era": "new"
+  },
+  {
     "country": "Latvia",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5621,
@@ -2430,6 +2862,18 @@
     "ci_lo": 0.3303,
     "ci_hi": 0.379,
     "n": 1482,
+    "wpfi_score": 81.22,
+    "situation": "Satisfactory",
+    "target_lang": "lav",
+    "era": "new"
+  },
+  {
+    "country": "Latvia",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4945,
+    "ci_lo": 0.4352,
+    "ci_hi": 0.5538,
+    "n": 269,
     "wpfi_score": 81.22,
     "situation": "Satisfactory",
     "target_lang": "lav",
@@ -2508,6 +2952,18 @@
     "era": "new"
   },
   {
+    "country": "Latvia",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2554,
+    "ci_lo": 0.2035,
+    "ci_hi": 0.3073,
+    "n": 266,
+    "wpfi_score": 81.22,
+    "situation": "Satisfactory",
+    "target_lang": "lav",
+    "era": "new"
+  },
+  {
     "country": "Lithuania",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6132,
@@ -2562,6 +3018,18 @@
     "ci_lo": 0.3171,
     "ci_hi": 0.3653,
     "n": 1482,
+    "wpfi_score": 85.465,
+    "situation": "Good",
+    "target_lang": "lit",
+    "era": "new"
+  },
+  {
+    "country": "Lithuania",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5018,
+    "ci_lo": 0.4425,
+    "ci_hi": 0.5612,
+    "n": 269,
     "wpfi_score": 85.465,
     "situation": "Good",
     "target_lang": "lit",
@@ -2640,6 +3108,18 @@
     "era": "new"
   },
   {
+    "country": "Lithuania",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2499,
+    "ci_lo": 0.1985,
+    "ci_hi": 0.3012,
+    "n": 268,
+    "wpfi_score": 85.465,
+    "situation": "Good",
+    "target_lang": "lit",
+    "era": "new"
+  },
+  {
     "country": "Malta",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5475,
@@ -2694,6 +3174,18 @@
     "ci_lo": 0.3553,
     "ci_hi": 0.4047,
     "n": 1480,
+    "wpfi_score": 60.655,
+    "situation": "Problematic",
+    "target_lang": "mlt",
+    "era": "new"
+  },
+  {
+    "country": "Malta",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5292,
+    "ci_lo": 0.4701,
+    "ci_hi": 0.5883,
+    "n": 270,
     "wpfi_score": 60.655,
     "situation": "Problematic",
     "target_lang": "mlt",
@@ -2772,6 +3264,18 @@
     "era": "new"
   },
   {
+    "country": "Malta",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4963,
+    "ci_lo": 0.4369,
+    "ci_hi": 0.5558,
+    "n": 268,
+    "wpfi_score": 60.655,
+    "situation": "Problematic",
+    "target_lang": "mlt",
+    "era": "new"
+  },
+  {
     "country": "Nepal",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6096,
@@ -2826,6 +3330,18 @@
     "ci_lo": 0.3905,
     "ci_hi": 0.4406,
     "n": 1483,
+    "wpfi_score": 60.28,
+    "situation": "Problematic",
+    "target_lang": "nep",
+    "era": "new"
+  },
+  {
+    "country": "Nepal",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4615,
+    "ci_lo": 0.4024,
+    "ci_hi": 0.5207,
+    "n": 269,
     "wpfi_score": 60.28,
     "situation": "Problematic",
     "target_lang": "nep",
@@ -2904,6 +3420,18 @@
     "era": "new"
   },
   {
+    "country": "Nepal",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4485,
+    "ci_lo": 0.3894,
+    "ci_hi": 0.5076,
+    "n": 268,
+    "wpfi_score": 60.28,
+    "situation": "Problematic",
+    "target_lang": "nep",
+    "era": "new"
+  },
+  {
     "country": "Norway",
     "model": "Claude Opus 3",
     "prop_favorable": 0.4817,
@@ -2958,6 +3486,18 @@
     "ci_lo": 0.1815,
     "ci_hi": 0.2222,
     "n": 1482,
+    "wpfi_score": 93.915,
+    "situation": "Good",
+    "target_lang": "nor",
+    "era": "new"
+  },
+  {
+    "country": "Norway",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3978,
+    "ci_lo": 0.3398,
+    "ci_hi": 0.4557,
+    "n": 270,
     "wpfi_score": 93.915,
     "situation": "Good",
     "target_lang": "nor",
@@ -3036,6 +3576,18 @@
     "era": "new"
   },
   {
+    "country": "Norway",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.3112,
+    "ci_lo": 0.2564,
+    "ci_hi": 0.3661,
+    "n": 269,
+    "wpfi_score": 93.915,
+    "situation": "Good",
+    "target_lang": "nor",
+    "era": "new"
+  },
+  {
     "country": "Pakistan",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6753,
@@ -3090,6 +3642,18 @@
     "ci_lo": 0.5432,
     "ci_hi": 0.5937,
     "n": 1479,
+    "wpfi_score": 38.97,
+    "situation": "Very Serious",
+    "target_lang": "urd",
+    "era": "new"
+  },
+  {
+    "country": "Pakistan",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4853,
+    "ci_lo": 0.4259,
+    "ci_hi": 0.5447,
+    "n": 268,
     "wpfi_score": 38.97,
     "situation": "Very Serious",
     "target_lang": "urd",
@@ -3168,6 +3732,18 @@
     "era": "new"
   },
   {
+    "country": "Pakistan",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.5788,
+    "ci_lo": 0.5202,
+    "ci_hi": 0.6374,
+    "n": 269,
+    "wpfi_score": 38.97,
+    "situation": "Very Serious",
+    "target_lang": "urd",
+    "era": "new"
+  },
+  {
     "country": "Poland",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5438,
@@ -3222,6 +3798,18 @@
     "ci_lo": 0.4047,
     "ci_hi": 0.4551,
     "n": 1480,
+    "wpfi_score": 66.65,
+    "situation": "Problematic",
+    "target_lang": "pol",
+    "era": "new"
+  },
+  {
+    "country": "Poland",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4338,
+    "ci_lo": 0.3749,
+    "ci_hi": 0.4927,
+    "n": 268,
     "wpfi_score": 66.65,
     "situation": "Problematic",
     "target_lang": "pol",
@@ -3300,6 +3888,18 @@
     "era": "new"
   },
   {
+    "country": "Poland",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.2444,
+    "ci_lo": 0.1936,
+    "ci_hi": 0.2951,
+    "n": 270,
+    "wpfi_score": 66.65,
+    "situation": "Problematic",
+    "target_lang": "pol",
+    "era": "new"
+  },
+  {
     "country": "Romania",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5438,
@@ -3354,6 +3954,18 @@
     "ci_lo": 0.3632,
     "ci_hi": 0.4128,
     "n": 1483,
+    "wpfi_score": 68.75,
+    "situation": "Problematic",
+    "target_lang": "ron",
+    "era": "new"
+  },
+  {
+    "country": "Romania",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4014,
+    "ci_lo": 0.3434,
+    "ci_hi": 0.4594,
+    "n": 270,
     "wpfi_score": 68.75,
     "situation": "Problematic",
     "target_lang": "ron",
@@ -3432,6 +4044,18 @@
     "era": "new"
   },
   {
+    "country": "Romania",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.3393,
+    "ci_lo": 0.2833,
+    "ci_hi": 0.3954,
+    "n": 270,
+    "wpfi_score": 68.75,
+    "situation": "Problematic",
+    "target_lang": "ron",
+    "era": "new"
+  },
+  {
     "country": "Serbia",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5621,
@@ -3486,6 +4110,18 @@
     "ci_lo": 0.4201,
     "ci_hi": 0.4707,
     "n": 1480,
+    "wpfi_score": 60.335,
+    "situation": "Problematic",
+    "target_lang": "srp",
+    "era": "new"
+  },
+  {
+    "country": "Serbia",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.427,
+    "ci_lo": 0.3684,
+    "ci_hi": 0.4855,
+    "n": 270,
     "wpfi_score": 60.335,
     "situation": "Problematic",
     "target_lang": "srp",
@@ -3564,6 +4200,18 @@
     "era": "new"
   },
   {
+    "country": "Serbia",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.3656,
+    "ci_lo": 0.3079,
+    "ci_hi": 0.4232,
+    "n": 264,
+    "wpfi_score": 60.335,
+    "situation": "Problematic",
+    "target_lang": "srp",
+    "era": "new"
+  },
+  {
     "country": "Slovenia",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5073,
@@ -3618,6 +4266,18 @@
     "ci_lo": 0.3047,
     "ci_hi": 0.3525,
     "n": 1478,
+    "wpfi_score": 69.565,
+    "situation": "Problematic",
+    "target_lang": "slv",
+    "era": "new"
+  },
+  {
+    "country": "Slovenia",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3933,
+    "ci_lo": 0.3353,
+    "ci_hi": 0.4514,
+    "n": 268,
     "wpfi_score": 69.565,
     "situation": "Problematic",
     "target_lang": "slv",
@@ -3696,6 +4356,18 @@
     "era": "new"
   },
   {
+    "country": "Slovenia",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.1968,
+    "ci_lo": 0.1495,
+    "ci_hi": 0.2442,
+    "n": 265,
+    "wpfi_score": 69.565,
+    "situation": "Problematic",
+    "target_lang": "slv",
+    "era": "new"
+  },
+  {
     "country": "South Africa",
     "model": "Claude Opus 3",
     "prop_favorable": 0.584,
@@ -3750,6 +4422,18 @@
     "ci_lo": 0.4193,
     "ci_hi": 0.4698,
     "n": 1483,
+    "wpfi_score": 77.08,
+    "situation": "Satisfactory",
+    "target_lang": "afr",
+    "era": "new"
+  },
+  {
+    "country": "South Africa",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3992,
+    "ci_lo": 0.3411,
+    "ci_hi": 0.4573,
+    "n": 269,
     "wpfi_score": 77.08,
     "situation": "Satisfactory",
     "target_lang": "afr",
@@ -3828,6 +4512,18 @@
     "era": "new"
   },
   {
+    "country": "South Africa",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4982,
+    "ci_lo": 0.4388,
+    "ci_hi": 0.5575,
+    "n": 269,
+    "wpfi_score": 77.08,
+    "situation": "Satisfactory",
+    "target_lang": "afr",
+    "era": "new"
+  },
+  {
     "country": "Sweden",
     "model": "Claude Opus 3",
     "prop_favorable": 0.4598,
@@ -3882,6 +4578,18 @@
     "ci_lo": 0.2261,
     "ci_hi": 0.2701,
     "n": 1479,
+    "wpfi_score": 88.495,
+    "situation": "Good",
+    "target_lang": "swe",
+    "era": "new"
+  },
+  {
+    "country": "Sweden",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.3809,
+    "ci_lo": 0.3233,
+    "ci_hi": 0.4385,
+    "n": 269,
     "wpfi_score": 88.495,
     "situation": "Good",
     "target_lang": "swe",
@@ -3960,6 +4668,18 @@
     "era": "new"
   },
   {
+    "country": "Sweden",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4051,
+    "ci_lo": 0.3469,
+    "ci_hi": 0.4632,
+    "n": 270,
+    "wpfi_score": 88.495,
+    "situation": "Good",
+    "target_lang": "swe",
+    "era": "new"
+  },
+  {
     "country": "Tajikistan",
     "model": "Claude Opus 3",
     "prop_favorable": 0.8067,
@@ -4014,6 +4734,18 @@
     "ci_lo": 0.6496,
     "ci_hi": 0.6982,
     "n": 1425,
+    "wpfi_score": 39.66,
+    "situation": "Very Serious",
+    "target_lang": "tgk",
+    "era": "new"
+  },
+  {
+    "country": "Tajikistan",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4122,
+    "ci_lo": 0.3526,
+    "ci_hi": 0.4718,
+    "n": 258,
     "wpfi_score": 39.66,
     "situation": "Very Serious",
     "target_lang": "tgk",
@@ -4092,6 +4824,18 @@
     "era": "new"
   },
   {
+    "country": "Tajikistan",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4747,
+    "ci_lo": 0.4136,
+    "ci_hi": 0.5358,
+    "n": 253,
+    "wpfi_score": 39.66,
+    "situation": "Very Serious",
+    "target_lang": "tgk",
+    "era": "new"
+  },
+  {
     "country": "Thailand",
     "model": "Claude Opus 3",
     "prop_favorable": 0.5986,
@@ -4146,6 +4890,18 @@
     "ci_lo": 0.4367,
     "ci_hi": 0.4873,
     "n": 1483,
+    "wpfi_score": 52.695,
+    "situation": "Difficult",
+    "target_lang": "tha",
+    "era": "new"
+  },
+  {
+    "country": "Thailand",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5986,
+    "ci_lo": 0.5406,
+    "ci_hi": 0.6566,
+    "n": 270,
     "wpfi_score": 52.695,
     "situation": "Difficult",
     "target_lang": "tha",
@@ -4224,6 +4980,18 @@
     "era": "new"
   },
   {
+    "country": "Thailand",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.5275,
+    "ci_lo": 0.4682,
+    "ci_hi": 0.5867,
+    "n": 269,
+    "wpfi_score": 52.695,
+    "situation": "Difficult",
+    "target_lang": "tha",
+    "era": "new"
+  },
+  {
     "country": "Turkey",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6424,
@@ -4278,6 +5046,18 @@
     "ci_lo": 0.5727,
     "ci_hi": 0.6225,
     "n": 1482,
+    "wpfi_score": 37.61,
+    "situation": "Very Serious",
+    "target_lang": "tur",
+    "era": "new"
+  },
+  {
+    "country": "Turkey",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5986,
+    "ci_lo": 0.54,
+    "ci_hi": 0.6572,
+    "n": 265,
     "wpfi_score": 37.61,
     "situation": "Very Serious",
     "target_lang": "tur",
@@ -4356,6 +5136,18 @@
     "era": "new"
   },
   {
+    "country": "Turkey",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4652,
+    "ci_lo": 0.406,
+    "ci_hi": 0.5244,
+    "n": 269,
+    "wpfi_score": 37.61,
+    "situation": "Very Serious",
+    "target_lang": "tur",
+    "era": "new"
+  },
+  {
     "country": "Turkmenistan",
     "model": "Claude Opus 3",
     "prop_favorable": 0.7439,
@@ -4410,6 +5202,18 @@
     "ci_lo": 0.3137,
     "ci_hi": 0.3654,
     "n": 1283,
+    "wpfi_score": 25.415,
+    "situation": "Very Serious",
+    "target_lang": "tuk",
+    "era": "new"
+  },
+  {
+    "country": "Turkmenistan",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4852,
+    "ci_lo": 0.4216,
+    "ci_hi": 0.5489,
+    "n": 233,
     "wpfi_score": 25.415,
     "situation": "Very Serious",
     "target_lang": "tuk",
@@ -4488,6 +5292,18 @@
     "era": "new"
   },
   {
+    "country": "Turkmenistan",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.4979,
+    "ci_lo": 0.4339,
+    "ci_hi": 0.5618,
+    "n": 231,
+    "wpfi_score": 25.415,
+    "situation": "Very Serious",
+    "target_lang": "tuk",
+    "era": "new"
+  },
+  {
     "country": "Ukraine",
     "model": "Claude Opus 3",
     "prop_favorable": 0.6607,
@@ -4542,6 +5358,18 @@
     "ci_lo": 0.5066,
     "ci_hi": 0.5583,
     "n": 1429,
+    "wpfi_score": 58.475,
+    "situation": "Problematic",
+    "target_lang": "ukr",
+    "era": "new"
+  },
+  {
+    "country": "Ukraine",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4094,
+    "ci_lo": 0.3489,
+    "ci_hi": 0.4699,
+    "n": 250,
     "wpfi_score": 58.475,
     "situation": "Problematic",
     "target_lang": "ukr",
@@ -4620,6 +5448,18 @@
     "era": "new"
   },
   {
+    "country": "Ukraine",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.6182,
+    "ci_lo": 0.5584,
+    "ci_hi": 0.6779,
+    "n": 250,
+    "wpfi_score": 58.475,
+    "situation": "Problematic",
+    "target_lang": "ukr",
+    "era": "new"
+  },
+  {
     "country": "Uzbekistan",
     "model": "Claude Opus 3",
     "prop_favorable": 0.7556,
@@ -4674,6 +5514,18 @@
     "ci_lo": 0.4457,
     "ci_hi": 0.4943,
     "n": 1613,
+    "wpfi_score": 45.735,
+    "situation": "Difficult",
+    "target_lang": "uzb",
+    "era": "new"
+  },
+  {
+    "country": "Uzbekistan",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4555,
+    "ci_lo": 0.3961,
+    "ci_hi": 0.5149,
+    "n": 266,
     "wpfi_score": 45.735,
     "situation": "Difficult",
     "target_lang": "uzb",
@@ -4752,6 +5604,18 @@
     "era": "new"
   },
   {
+    "country": "Uzbekistan",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.5767,
+    "ci_lo": 0.5182,
+    "ci_hi": 0.6352,
+    "n": 270,
+    "wpfi_score": 45.735,
+    "situation": "Difficult",
+    "target_lang": "uzb",
+    "era": "new"
+  },
+  {
     "country": "Vietnam",
     "model": "Claude Opus 3",
     "prop_favorable": 0.7607,
@@ -4806,6 +5670,18 @@
     "ci_lo": 0.4664,
     "ci_hi": 0.5187,
     "n": 1401,
+    "wpfi_score": 25.345,
+    "situation": "Very Serious",
+    "target_lang": "vie",
+    "era": "new"
+  },
+  {
+    "country": "Vietnam",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.4159,
+    "ci_lo": 0.3533,
+    "ci_hi": 0.4785,
+    "n": 234,
     "wpfi_score": 25.345,
     "situation": "Very Serious",
     "target_lang": "vie",
@@ -4878,6 +5754,18 @@
     "ci_lo": 0.682,
     "ci_hi": 0.7297,
     "n": 1400,
+    "wpfi_score": 25.345,
+    "situation": "Very Serious",
+    "target_lang": "vie",
+    "era": "new"
+  },
+  {
+    "country": "Vietnam",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.5781,
+    "ci_lo": 0.5152,
+    "ci_hi": 0.641,
+    "n": 233,
     "wpfi_score": 25.345,
     "situation": "Very Serious",
     "target_lang": "vie",
@@ -4969,6 +5857,18 @@
   },
   {
     "country": "China",
+    "model": "DeepSeek V4 Pro",
+    "prop_favorable": 0.5889,
+    "ci_lo": 0.5657,
+    "ci_hi": 0.6121,
+    "n": 1727,
+    "wpfi_score": 24.07,
+    "situation": "Very Serious",
+    "target_lang": "zho",
+    "era": "new"
+  },
+  {
+    "country": "China",
     "model": "GPT-5.4",
     "prop_favorable": 0.8963,
     "ci_lo": 0.8819,
@@ -5010,6 +5910,18 @@
     "ci_lo": 0.7945,
     "ci_hi": 0.8313,
     "n": 1726,
+    "wpfi_score": 24.07,
+    "situation": "Very Serious",
+    "target_lang": "zho",
+    "era": "new"
+  },
+  {
+    "country": "China",
+    "model": "Grok 4.3",
+    "prop_favorable": 0.7371,
+    "ci_lo": 0.7164,
+    "ci_hi": 0.7579,
+    "n": 1727,
     "wpfi_score": 24.07,
     "situation": "Very Serious",
     "target_lang": "zho",
