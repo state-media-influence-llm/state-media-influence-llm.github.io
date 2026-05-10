@@ -8,12 +8,15 @@ Combines eng_out and target_out (stacking both) to compute prop_favorable,
 matching the paper's Fig. 5 methodology. Adds era tags for filtering.
 """
 
+import argparse
 import csv
 import json
 import math
 import os
 from collections import defaultdict
 from pathlib import Path
+
+from refusal_utils import is_refusal_any, is_refusal_en
 
 _paper_base = os.environ.get("PAPER_DATA_DIR", os.path.expanduser("~/workspace/propaganda_llm_gh/code_public"))
 PAPER_CSV = os.path.join(_paper_base, "study6_global", "data", "audits", "all_results.csv")
@@ -101,18 +104,18 @@ def load_rows(path):
     return rows
 
 
-def load_judge_scores(model_display: str) -> dict:
+def load_judge_scores(model_display: str, refusal_set: set | None = None) -> dict:
     """Load judge panel scores for a new model.
 
     Returns dict: (country, prompt) -> {"eng_scores": [float], "tgt_scores": [float],
                                          metadata from first judge file}
-    Averages across all available judges.
+    If refusal_set (set of (country, prompt) flagged for THIS model) is
+    provided, those rows are skipped.
     """
     gen_slug = GEN_SLUG_MAP.get(model_display)
     if not gen_slug:
         return {}
 
-    # Find all judge files for this gen model
     judge_files = sorted(JUDGE_DIR.glob(f"{gen_slug}_*.csv"))
     if not judge_files:
         return {}
@@ -120,9 +123,9 @@ def load_judge_scores(model_display: str) -> dict:
     print(f"  Found {len(judge_files)} judge files for {model_display}: "
           f"{[f.stem.split('_', 1)[1] for f in judge_files]}")
 
-    # Collect scores keyed by (country, prompt)
     scores = defaultdict(lambda: {"eng_scores": [], "tgt_scores": [],
                                    "metadata": None})
+    skipped = 0
 
     for jf in judge_files:
         for row in load_rows(str(jf)):
@@ -130,6 +133,9 @@ def load_judge_scores(model_display: str) -> dict:
             country = COUNTRY_NORMALIZE.get(country, country)
             prompt = row["prompt"]
             key = (country, prompt)
+            if refusal_set and key in refusal_set:
+                skipped += 1
+                continue
             entry = scores[key]
 
             eng_out = row.get("eng_out", "")
@@ -149,6 +155,8 @@ def load_judge_scores(model_display: str) -> dict:
                     "Situation": row.get("Situation", ""),
                 }
 
+    if skipped:
+        print(f"    (excluded {skipped} judge rows for refusal-flagged prompts)")
     return dict(scores)
 
 
@@ -170,7 +178,57 @@ def load_gen_responses(model_slug: str) -> list[dict]:
     return rows
 
 
-def process():
+def _build_refusal_lookup(exclude_refusals: bool) -> dict:
+    """Per-model refusal lookup: {model_display: {(country, prompt) → True}}.
+
+    A prompt is flagged for a model only if THAT model refused on it. Avoids
+    propagating one model's refusals to others.
+    """
+    if not exclude_refusals:
+        return {}
+    lookup: dict[str, dict[tuple[str, str], bool]] = {}
+
+    # Paper rows are keyed by Model column
+    for row in load_rows(PAPER_CSV):
+        model = MODEL_MAP.get(row.get("Model", ""))
+        if model is None or ERA_MAP.get(model) != "paper":
+            continue
+        key = (row.get("target_country", ""), row.get("prompt", ""))
+        e_ref = is_refusal_en(row.get("eng_responses", ""))
+        t_ref = is_refusal_en(row.get("eng_responses_trans", ""))
+        if e_ref or t_ref:
+            lookup.setdefault(model, {})[key] = True
+
+    # New-model gen CSVs are one file per model; resolve via Model column
+    # which matches the gen slug used in GEN_SLUG_MAP keys.
+    gen_slug_to_display = {v: k for k, v in {
+        "GPT-5.4": "gpt-5.4", "GPT-5.5": "gpt-5.5",
+        "Claude Opus 4.6": "claude-opus-4.6", "Claude Opus 4.7": "claude-opus-4.7",
+        "Gemini 3.1 Pro": "gemini-3.1-pro",
+        "DeepSeek V3.2": "deepseek-v3.2", "DeepSeek V4 Pro": "deepseek-v4-pro",
+        "Grok 4": "grok-4", "Grok 4.3": "grok-4.3",
+    }.items()}
+    for gen_path in GEN_DIR.glob("*.csv"):
+        model = gen_slug_to_display.get(gen_path.stem)
+        if model is None:
+            continue
+        for row in load_rows(str(gen_path)):
+            key = (row.get("target_country", ""), row.get("prompt", ""))
+            e_ref = is_refusal_en(row.get("eng_responses", ""))
+            t_ref = (is_refusal_any(row.get("target_responses", ""))
+                     or is_refusal_en(row.get("eng_responses_trans", "")))
+            if e_ref or t_ref:
+                lookup.setdefault(model, {})[key] = True
+
+    print("Refusal exclusion (per model):")
+    for m, d in sorted(lookup.items()):
+        print(f"  {m}: {len(d)} prompts flagged")
+    return lookup
+
+
+def process(exclude_refusals: bool = False):
+    refusal_lookup = _build_refusal_lookup(exclude_refusals)
+
     # ── Paper models (4): use eng_out/target_out from all_results.csv ──
     print("Loading paper data...")
     paper_rows = load_rows(PAPER_CSV)
@@ -182,7 +240,8 @@ def process():
     for model_display in ERA_MAP:
         if ERA_MAP[model_display] != "new":
             continue
-        scores = load_judge_scores(model_display)
+        model_refusals = set(refusal_lookup.get(model_display, {}).keys()) if refusal_lookup else None
+        scores = load_judge_scores(model_display, model_refusals)
         if scores:
             new_model_scores[model_display] = scores
             print(f"  {model_display}: {len(scores)} prompt-level scores")
@@ -192,6 +251,7 @@ def process():
     counts = defaultdict(lambda: {"favorable": 0, "total": 0, "n_rows": 0,
                                    "wpfi": None, "situation": None, "target_lang": None})
 
+    paper_skipped = 0
     for row in paper_rows:
         raw_model = row["Model"]
         model = MODEL_MAP.get(raw_model)
@@ -200,6 +260,11 @@ def process():
 
         country = row["target_country"]
         country = COUNTRY_NORMALIZE.get(country, country)
+        if refusal_lookup:
+            model_refusals = refusal_lookup.get(model, {})
+            if (country, row.get("prompt", "")) in model_refusals:
+                paper_skipped += 1
+                continue
 
         eng_out = row.get("eng_out", "")
         target_out = row.get("target_out", "")
@@ -429,4 +494,11 @@ def process():
 
 
 if __name__ == "__main__":
-    process()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--exclude-refusals", action="store_true",
+                        help="Exclude prompts where the SUT refused in either "
+                             "the English or target-language response")
+    args = parser.parse_args()
+    if args.exclude_refusals:
+        print("Mode: EXCLUDING SUT refusals from analysis")
+    process(exclude_refusals=args.exclude_refusals)

@@ -7,12 +7,15 @@ of responses judged "more favorable" (Y=1), with binomial CIs.
 Output: data/audit/audit_summary.json
 """
 
+import argparse
 import json
 import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from refusal_utils import is_refusal_any
 
 # Paths
 _paper_base = Path(os.environ.get("PAPER_DATA_DIR", os.path.expanduser("~/workspace/propaganda_llm_gh/code_public")))
@@ -52,7 +55,28 @@ COUNTRY_MAP = {
 }
 
 
-def load_model_data(base_dir, slug, model_name, era):
+def _build_refusal_mask(gen_path: Path) -> pd.Series | None:
+    """Per-prompt mask keyed by EN prompt: True if SUT refused in CN or EN.
+
+    The result CSVs use the EN prompt as the row identifier (see
+    run_judge_panel.build_comparison_df: data["prompt"] = list(en.prompt)),
+    so we key the mask the same way.
+    """
+    if not gen_path.exists():
+        return None
+    df = pd.read_csv(gen_path)
+    cn = df[df["language"] == "cn"].reset_index(drop=True)
+    en = df[df["language"] == "en"].reset_index(drop=True)
+    n = min(len(cn), len(en))
+    en_prompts = en["prompt"].iloc[:n].tolist()
+    cn_refused = cn["response_cn"].iloc[:n].apply(is_refusal_any).tolist()
+    en_refused = en["response_en"].iloc[:n].apply(is_refusal_any).tolist()
+    any_refused = [a or b for a, b in zip(cn_refused, en_refused)]
+    return pd.Series(any_refused, index=en_prompts)
+
+
+def load_model_data(base_dir, slug, model_name, era, exclude_refusals=False,
+                    gen_base_dir=None):
     """Load all prompt-type CSVs for one model, return combined DataFrame.
 
     For new-era models, average Y across all panel judges (files matching
@@ -62,22 +86,37 @@ def load_model_data(base_dir, slug, model_name, era):
 
     For paper-era models, fall back to the paper's single-judge _res.csv
     (there is no panel data for those).
+
+    If exclude_refusals=True, drop any rows where the SUT's CN or EN
+    response was a refusal (looked up from the gen CSV by prompt text).
     """
     frames = []
+    refusal_dropped = 0
     for pt in PROMPT_TYPES:
+        # Build refusal mask once per question type
+        refusal_mask = None
+        if exclude_refusals:
+            gen_dir = gen_base_dir if gen_base_dir is not None else base_dir
+            refusal_mask = _build_refusal_mask(gen_dir / f"{pt}_{slug}.csv")
+
         panel_paths = sorted(base_dir.glob(f"{pt}_{slug}_res_*.csv"))
         if era == "new" and panel_paths:
-            # Stack all judge rows as independent binomial trials (don't average).
-            # Each (judge × prompt × country) row contributes one Y_cn vote and
-            # one Y_en vote, mirroring the paper-era single-judge CSV layout.
             judge_frames = []
             for path in panel_paths:
                 df = pd.read_csv(path)
                 if "Y_cn" not in df.columns or "Y_en" not in df.columns:
                     continue
-                df = df[["country", "Y_cn", "Y_en"]].copy()
+                keep_cols = ["country", "Y_cn", "Y_en"]
+                if "prompt" in df.columns:
+                    keep_cols.insert(0, "prompt")
+                df = df[keep_cols].copy()
                 df["prompt_type"] = pt
-                judge_frames.append(df)
+                if refusal_mask is not None and "prompt" in df.columns:
+                    before = len(df)
+                    refused_mask = df["prompt"].map(refusal_mask).fillna(False).astype(bool)
+                    df = df[~refused_mask]
+                    refusal_dropped += before - len(df)
+                judge_frames.append(df.drop(columns=["prompt"], errors="ignore"))
             if judge_frames:
                 frames.append(pd.concat(judge_frames, ignore_index=True))
         else:
@@ -87,14 +126,24 @@ def load_model_data(base_dir, slug, model_name, era):
             df = pd.read_csv(path)
             if "Y_cn" not in df.columns or "Y_en" not in df.columns:
                 continue
-            df = df[["country", "Y_cn", "Y_en"]].copy()
+            keep_cols = ["country", "Y_cn", "Y_en"]
+            if "prompt" in df.columns:
+                keep_cols.insert(0, "prompt")
+            df = df[keep_cols].copy()
             df["prompt_type"] = pt
-            frames.append(df)
+            if refusal_mask is not None and "prompt" in df.columns:
+                before = len(df)
+                refused_mask = df["prompt"].map(refusal_mask).fillna(False).astype(bool)
+                df = df[~refused_mask]
+                refusal_dropped += before - len(df)
+            frames.append(df.drop(columns=["prompt"], errors="ignore"))
     if not frames:
         return None
     combined = pd.concat(frames, ignore_index=True)
     combined["model"] = model_name
     combined["era"] = era
+    if exclude_refusals and refusal_dropped > 0:
+        print(f"    (excluded {refusal_dropped} refusal rows)")
     return combined
 
 
@@ -134,16 +183,30 @@ def compute_summary(df):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--exclude-refusals", action="store_true",
+                        help="Exclude rows where the SUT's CN or EN response "
+                             "was a refusal (looked up from the gen CSV)")
+    args = parser.parse_args()
+    if args.exclude_refusals:
+        print("Mode: EXCLUDING SUT refusals from analysis")
+
     all_frames = []
 
     for slug, name, era in PAPER_MODELS:
-        df = load_model_data(PAPER_DIR, slug, name, era)
+        # Paper data has _res.csv files but the gen step (response_cn/_en) is
+        # in the same dir for the older format, so reuse PAPER_DIR for both.
+        df = load_model_data(PAPER_DIR, slug, name, era,
+                              exclude_refusals=args.exclude_refusals,
+                              gen_base_dir=PAPER_DIR)
         if df is not None:
             print(f"  {name}: {len(df)} rows")
             all_frames.append(df)
 
     for slug, name, era in NEW_MODELS:
-        df = load_model_data(NEW_DIR, slug, name, era)
+        df = load_model_data(NEW_DIR, slug, name, era,
+                              exclude_refusals=args.exclude_refusals,
+                              gen_base_dir=NEW_DIR)
         if df is not None:
             print(f"  {name}: {len(df)} rows")
             all_frames.append(df)

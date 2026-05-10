@@ -23,6 +23,15 @@ Gemini 3.1 Pro, DeepSeek V3.2, Claude Opus 4.6, Grok 4) with scores
 averaged across judges. DeepSeek V4 Pro and Grok 4.3 are evaluated by
 GPT-OSS-120B alone.
 
+**Refusal exclusion.** Prompts where the SUT refused in either English
+or the target language are excluded from the analysis (regex-based
+detection covering Chinese and English refusal framings). This is a
+departure from the paper, which sends refusals through judging like any
+other response. Refusal rates vary widely across the new models —
+DeepSeek V4 Pro refused 33.6% of crossnational prompts, while GPT-5.5
+refused 2.5%. The filter can be reverted by re-running `process_global.py`
+without `--exclude-refusals`.
+
 China is plotted as a reference baseline rather than one of the 37
 language-exclusive target countries. The China point uses
 the Study 4 English-vs-Chinese audit data, which is the same construct as
