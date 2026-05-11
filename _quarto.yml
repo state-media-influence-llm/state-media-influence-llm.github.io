@@ -23,6 +23,8 @@ website:
         text: Pretraining
       - href: global.qmd
         text: Crossnational Audit
+      - href: cross_model_audit.qmd
+        text: Cross-Model Audit
       - href: about.qmd
         text: About
   page-footer:

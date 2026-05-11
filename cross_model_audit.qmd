@@ -1,0 +1,118 @@
+---
+title: "Cross-Model Audit"
+subtitle: "Which model gives the more favorable response, holding language constant?"
+---
+
+The main audit compares each model's Chinese-prompt vs. English-prompt response, measuring within-model CN > EN bias. That measure has a blind spot: a model that is *uniformly* pro-target in both languages will show a small CN-EN gap, even when its responses are extreme. This study fixes that by comparing different models' responses to the same prompt in the same language. We pair every model with two others in a connected cycle (each model appears in exactly two pairings), and a judge picks which response is more favorable to the focal entity. A Bradley-Terry model then estimates each SUT's relative favorability ability per focal country and language. Higher BT log-odds = the model's responses are judged more favorable to that focal country, on average, across pairings and prompts.
+
+::: {.callout-note collapse="true" title="Click for methodological details"}
+**Comparison graph.** Each of the 9 new-era SUTs (GPT-5.4, GPT-5.5, Claude Opus 4.6, Claude Opus 4.7, Gemini 3.1 Pro, DeepSeek V3.2, DeepSeek V4 Pro, Grok 4, Grok 4.3) appears in exactly two pairings, forming a Hamiltonian cycle. This is the minimum design that keeps the comparison graph connected and gives every model a non-pendant position in the Bradley-Terry fit.
+
+**Prompts.** The same 828 politically sensitive Study 4 prompts (234 leader, 90 country, 504 institution) spanning six focal countries.
+
+**Languages.** Each pair is judged separately in Chinese and English, using the SUT's original response in that language (no translation in the judging step).
+
+**Judges.** Two judges — GPT-OSS-120B and DeepSeek V3.2. BT is fit per (focal country, language, judge) stratum.
+
+**Bradley-Terry.** Fit with the `BradleyTerry2` R package. GPT-5.5 is the reference, so its BT log-odds is anchored at 0. Other SUTs' log-odds are interpretable as: positive = more favorable than GPT-5.5 to the focal country; negative = less favorable. Error bars are 95% Wald CIs.
+
+**Departure from the main audit.** The main audit compares within-model CN vs. EN. This study compares between-model within-language. The two designs are complementary; they answer different questions.
+:::
+
+```{ojs}
+//| echo: false
+
+btScores = FileAttachment("data/cross_model_audit/bt_scores.json").json()
+```
+
+```{ojs}
+//| echo: false
+
+countries = [...new Set(btScores.map(d => d.focal_country_display))].sort()
+judges = [...new Set(btScores.map(d => d.judge))].sort()
+
+viewof selectedJudge = Inputs.select(judges, {label: "Judge", value: judges[0]})
+```
+
+```{ojs}
+//| echo: false
+
+filtered = btScores.filter(d => d.judge === selectedJudge)
+
+// Country facet order — China and high-state-influence first
+countryOrder = ["China", "Russia", "North Korea", "United Kingdom", "United States", "Germany"]
+orderedCountries = countryOrder.filter(c => countries.includes(c))
+
+// Sort models by China-CN BT score so the ordering matches the China-focal facet
+chinaCN = filtered.filter(d => d.focal_country_display === "China" && d.language === "cn")
+modelOrderMap = new Map(chinaCN.map(d => [d.model, d.bt_logit]))
+allModels = [...new Set(filtered.map(d => d.model))]
+modelOrder = allModels.sort((a, b) => (modelOrderMap.get(b) ?? 0) - (modelOrderMap.get(a) ?? 0))
+```
+
+```{ojs}
+//| echo: false
+
+function btFacetPlot(country) {
+  const facetData = filtered.filter(d => d.focal_country_display === country);
+  if (facetData.length === 0) return html``;
+
+  return Plot.plot({
+    width: 720,
+    height: 70 + modelOrder.length * 22,
+    marginLeft: 150,
+    marginRight: 20,
+    marginTop: 35,
+    marginBottom: 35,
+    x: {
+      label: "← less favorable    BT log-odds    more favorable →",
+      grid: true,
+      zero: true
+    },
+    y: {
+      domain: modelOrder,
+      label: null
+    },
+    color: {
+      domain: ["cn", "en"],
+      range: ["#dc3545", "#0d6efd"],
+      legend: true,
+      tickFormat: x => x === "cn" ? "Chinese prompt" : "English prompt"
+    },
+    marks: [
+      Plot.ruleX([0], {stroke: "#999", strokeWidth: 1}),
+      Plot.text([country], {x: null, y: null, frameAnchor: "top", dy: -20, fontSize: 13, fontWeight: 600}),
+      Plot.ruleY(modelOrder, {stroke: "#eee"}),
+      Plot.ruleX(facetData, {
+        x1: "ci_lo",
+        x2: "ci_hi",
+        y: "model",
+        stroke: "language",
+        strokeWidth: 1.5,
+        strokeOpacity: 0.6,
+        dy: d => d.language === "cn" ? -5 : 5
+      }),
+      Plot.dot(facetData, {
+        x: "bt_logit",
+        y: "model",
+        fill: "language",
+        stroke: "language",
+        r: 5,
+        dy: d => d.language === "cn" ? -5 : 5,
+        tip: true,
+        title: d => `${d.model} — ${d.focal_country_display}\n${d.language === "cn" ? "Chinese" : "English"} prompt\nBT log-odds: ${d.bt_logit.toFixed(2)} [${d.ci_lo.toFixed(2)}, ${d.ci_hi.toFixed(2)}]\nn pairs: ${d.n_pairs}`
+      })
+    ]
+  });
+}
+```
+
+```{ojs}
+//| echo: false
+
+html`<div>${orderedCountries.map(c => {
+  const div = document.createElement("div");
+  div.appendChild(btFacetPlot(c));
+  return div;
+})}</div>`
+```

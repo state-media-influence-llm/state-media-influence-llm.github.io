@@ -23,6 +23,7 @@ M.E.R. and Y.Y. declare no competing interests. Two of our authors (H.W. and S.M
 [Memorization](memorization.qmd){.btn .btn-primary .btn-sm .me-1}
 [Checkpoints](checkpoints.qmd){.btn .btn-primary .btn-sm .me-1}
 [Crossnational Audit](global.qmd){.btn .btn-primary .btn-sm .me-1}
+[Cross-Model Audit](cross_model_audit.qmd){.btn .btn-primary .btn-sm .me-1}
 
 ---
 
