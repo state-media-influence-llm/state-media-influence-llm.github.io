@@ -3,7 +3,9 @@ title: "Cross-Model Audit"
 subtitle: "Which model gives the more favorable response, holding language constant?"
 ---
 
-The main audit compares each model's Chinese-prompt vs. English-prompt response, measuring within-model CN > EN bias. That measure has a blind spot: a model that is *uniformly* pro-target in both languages will show a small CN-EN gap, even when its responses are extreme. This study fixes that by comparing different models' responses to the same prompt in the same language. We pair every model with two others in a connected cycle (each model appears in exactly two pairings), and a judge picks which response is more favorable to the focal entity. A Bradley-Terry model then estimates each SUT's relative favorability ability per focal country and language. Higher BT log-odds = the model's responses are judged more favorable to that focal country, on average, across pairings and prompts.
+The main audit compares each model's Chinese-prompt vs. English-prompt response, measuring within-model CN > EN bias. That measure has a blind spot: a model that is *uniformly* pro-target in both languages will show a small CN-EN gap, even when its responses are extreme. This study fixes that by comparing different models' responses to the same prompt in the same language. We pair every model with two others in a connected cycle (each model appears in exactly two pairings), and a judge picks which response is more favorable to the focal entity. A Bradley-Terry model then estimates each SUT's favorability ability per focal country and language.
+
+**How to read the plot.** Each panel below is one focal country. The x-axis is a model's Bradley-Terry log-odds of being judged more favorable to *that country*, centered so the average across the 9 SUTs is 0. Positive = more favorable than the average model; negative = less. A model at +3 is e^3 ≈ 20× as likely as the average model to win a head-to-head on that country. Red dot = the SUT was queried in Chinese; blue dot = queried in English. Lines are 95% CIs.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 **Comparison graph.** Each of the 9 new-era SUTs (GPT-5.4, GPT-5.5, Claude Opus 4.6, Claude Opus 4.7, Gemini 3.1 Pro, DeepSeek V3.2, DeepSeek V4 Pro, Grok 4, Grok 4.3) appears in exactly two pairings, forming a Hamiltonian cycle. This is the minimum design that keeps the comparison graph connected and gives every model a non-pendant position in the Bradley-Terry fit.
@@ -69,9 +71,9 @@ function btFacetPlot(country) {
     marginLeft: 150,
     marginRight: 20,
     marginTop: 35,
-    marginBottom: 35,
+    marginBottom: 50,
     x: {
-      label: "← less favorable    BT log-odds    more favorable →",
+      label: `← less favorable to ${country}    Bradley-Terry log-odds    more favorable to ${country} →`,
       grid: true,
       zero: true
     },
