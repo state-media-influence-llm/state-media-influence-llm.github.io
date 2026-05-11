@@ -3,28 +3,35 @@ title: "Cross-Model Audit"
 subtitle: "Which model gives the more favorable response, holding language constant?"
 ---
 
-The main audit compares each model's Chinese-prompt vs. English-prompt response, measuring within-model CN > EN bias. That measure has a blind spot: a model that is *uniformly* pro-target in both languages will show a small CN-EN gap, even when its responses are extreme. This study fixes that by comparing different models' responses to the same prompt in the same language. We pair every model with two others in a connected cycle (each model appears in exactly two pairings), and a judge picks which response is more favorable to the focal entity. A Bradley-Terry model then estimates each SUT's favorability ability per focal country and language.
+The main audit compares each model's Chinese-prompt vs. English-prompt response, measuring within-model CN > EN bias. That measure has a blind spot: a model that is *uniformly* pro-target in both languages will show a small CN-EN gap, even when its responses are extreme. This study fixes that by placing all (model, language) responses on a single Bradley-Terry scale per focal country, then reading off both the cross-model ranking *and* the within-model language gap from the same chart.
 
-**How to read the plot.** Each panel below is one focal country. The x-axis is a model's Bradley-Terry log-odds of being judged more favorable to *that country*, centered so the average across the 9 SUTs is 0. Positive = more favorable than the average model; negative = less. A model at +3 is e^3 ≈ 20× as likely as the average model to win a head-to-head on that country. Red dot = the SUT was queried in Chinese; blue dot = queried in English. Lines are 95% CIs.
+**How to read the plot.** Each panel is one focal country. The x-axis is a (model, language)'s Bradley-Terry log-odds of being judged more favorable to *that country*, centered so the average across all 18 (model × language) entries is 0. Higher = more favorable. A point at +3 is e^3 ≈ 20× as likely as the average to win a head-to-head. **Red dot** = the SUT was queried in Chinese; **blue dot** = queried in English. Lines are 95% CIs. Differences between the two dots for the same model are the within-model CN-vs-EN bias — the same construct measured in the main audit, here on a unified BT scale.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
-**Comparison graph.** Each of the 9 new-era SUTs (GPT-5.4, GPT-5.5, Claude Opus 4.6, Claude Opus 4.7, Gemini 3.1 Pro, DeepSeek V3.2, DeepSeek V4 Pro, Grok 4, Grok 4.3) appears in exactly two pairings, forming a Hamiltonian cycle. This is the minimum design that keeps the comparison graph connected and gives every model a non-pendant position in the Bradley-Terry fit.
+**Players.** For each focal country we treat each (SUT, language) pair as a Bradley-Terry "player" — 9 SUTs × 2 languages = 18 players per focal country.
 
-**Prompts.** The same 828 politically sensitive Study 4 prompts (234 leader, 90 country, 504 institution) spanning six focal countries.
+**Edges.** Two kinds of pairwise comparisons:
 
-**Languages.** Each pair is judged separately in Chinese and English, using the SUT's original response in that language (no translation in the judging step).
+1. *Cross-model, same-language.* Each of the 9 SUTs appears in exactly two pairings, forming a Hamiltonian cycle. Each pair is judged separately in Chinese and English on all 828 prompts.
+2. *Within-model, cross-language.* From the main Study 4 audit: for each model and prompt, the judge picks between the model's Chinese-prompt response and English-prompt response (this is the same data behind the main audit chart).
 
-**Judges.** Two judges — GPT-OSS-120B and DeepSeek V3.2. BT is fit per (focal country, language, judge) stratum.
+Together these edges form a connected graph over all 18 (model, language) players per focal country, so a single BT fit yields scores that are directly comparable across both models and languages.
 
-**Bradley-Terry.** Fit with the `BradleyTerry2` R package. GPT-5.5 is the reference, so its BT log-odds is anchored at 0. Other SUTs' log-odds are interpretable as: positive = more favorable than GPT-5.5 to the focal country; negative = less favorable. Error bars are 95% Wald CIs.
+**Prompts.** The 828 politically sensitive Study 4 prompts (234 leader, 90 country, 504 institution) spanning six focal countries.
 
-**Departure from the main audit.** The main audit compares within-model CN vs. EN. This study compares between-model within-language. The two designs are complementary; they answer different questions.
+**Judges.** Two judges — GPT-OSS-120B and DeepSeek V3.2. BT is fit per (focal country, judge) stratum, plus a pooled-judges fit. Default view pools both judges.
+
+**Refusal exclusion.** Consistent with the rest of the site, prompts where the SUT refused in either Chinese or English are dropped before fitting.
+
+**Bradley-Terry.** Fit with the `BradleyTerry2` R package. Sum-to-zero recentering across the 18 players per focal country (no single model or language is pinned as a reference); SEs propagated through the linear shift via the full coefficient covariance.
+
+**Why a single combined BT?** Fitting language separately would make CN scores and EN scores incomparable (each is identified up to its own additive constant). Combining them on one scale recovers the within-model language effect that's visible in the main audit, while preserving the cross-model rankings.
 :::
 
 ```{ojs}
 //| echo: false
 
-btScores = FileAttachment("data/cross_model_audit/bt_scores.json").json()
+btScores = FileAttachment("data/cross_model_audit/bt_scores_with_language.json").json()
 ```
 
 ```{ojs}
