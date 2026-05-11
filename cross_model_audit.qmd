@@ -5,7 +5,7 @@ subtitle: "Which model gives the more favorable response, holding language const
 
 The main audit compares each model's Chinese-prompt vs. English-prompt response, measuring within-model CN > EN bias. That measure has a blind spot: a model that is *uniformly* pro-target in both languages will show a small CN-EN gap, even when its responses are extreme. This study fixes that by placing all (model, language) responses on a single Bradley-Terry scale per focal country, then reading off both the cross-model ranking *and* the within-model language gap from the same chart.
 
-**How to read the plot.** Each panel is one focal country. The x-axis is a (model, language)'s Bradley-Terry log-odds of being judged more favorable to *that country*, centered so the average across all 18 (model × language) entries is 0. Higher = more favorable. A point at +3 is e^3 ≈ 20× as likely as the average to win a head-to-head. **Red dot** = the SUT was queried in Chinese; **blue dot** = queried in English. Lines are 95% CIs. Differences between the two dots for the same model are the within-model CN-vs-EN bias — the same construct measured in the main audit, here on a unified BT scale.
+**How to read the plot.** Each panel is one focal country. The x-axis (log scale) is the Bradley-Terry odds that a (model, language) is judged more favorable to *that country* than the average (model, language) entry on that country. Odds of 1 = same as average; 10 = 10× as likely; 0.1 = 1/10. **Red dot** = SUT queried in Chinese; **blue dot** = English. Lines are 95% CIs. The gap between the two dots for the same model is the within-model CN-vs-EN bias measured in the main audit, here on the same unified scale.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 **Players.** For each focal country we treat each (SUT, language) pair as a Bradley-Terry "player" — 9 SUTs × 2 languages = 18 players per focal country.
@@ -72,6 +72,14 @@ function btFacetPlot(country) {
   const facetData = filtered.filter(d => d.focal_country_display === country);
   if (facetData.length === 0) return html``;
 
+  // Convert log-odds → odds for display
+  const expData = facetData.map(d => ({
+    ...d,
+    odds: Math.exp(d.bt_logit),
+    odds_lo: Math.exp(d.ci_lo),
+    odds_hi: Math.exp(d.ci_hi)
+  }));
+
   return Plot.plot({
     width: 720,
     height: 70 + modelOrder.length * 22,
@@ -80,9 +88,11 @@ function btFacetPlot(country) {
     marginTop: 35,
     marginBottom: 50,
     x: {
-      label: `← less favorable to ${country}    Bradley-Terry log-odds    more favorable to ${country} →`,
+      label: `← less favorable to ${country}    odds vs. average    more favorable to ${country} →`,
+      type: "log",
       grid: true,
-      zero: true
+      ticks: [0.05, 0.1, 0.3, 1, 3, 10, 30, 100],
+      tickFormat: d => d >= 1 ? `${d}\u00d7` : `1/${Math.round(1/d)}`
     },
     y: {
       domain: modelOrder,
@@ -95,27 +105,27 @@ function btFacetPlot(country) {
       tickFormat: x => x === "cn" ? "Chinese prompt" : "English prompt"
     },
     marks: [
-      Plot.ruleX([0], {stroke: "#999", strokeWidth: 1}),
+      Plot.ruleX([1], {stroke: "#999", strokeWidth: 1}),
       Plot.text([country], {x: null, y: null, frameAnchor: "top", dy: -20, fontSize: 13, fontWeight: 600}),
       Plot.ruleY(modelOrder, {stroke: "#eee"}),
-      Plot.ruleY(facetData, {
-        x1: "ci_lo",
-        x2: "ci_hi",
+      Plot.ruleY(expData, {
+        x1: "odds_lo",
+        x2: "odds_hi",
         y: "model",
         stroke: "language",
         strokeWidth: 1.5,
         strokeOpacity: 0.7,
         dy: d => d.language === "cn" ? -5 : 5
       }),
-      Plot.dot(facetData, {
-        x: "bt_logit",
+      Plot.dot(expData, {
+        x: "odds",
         y: "model",
         fill: "language",
         stroke: "language",
         r: 5,
         dy: d => d.language === "cn" ? -5 : 5,
         tip: true,
-        title: d => `${d.model} — ${d.focal_country_display}\n${d.language === "cn" ? "Chinese" : "English"} prompt\nBT log-odds: ${d.bt_logit.toFixed(2)} [${d.ci_lo.toFixed(2)}, ${d.ci_hi.toFixed(2)}]\nn pairs: ${d.n_pairs}`
+        title: d => `${d.model} — ${d.focal_country_display}\n${d.language === "cn" ? "Chinese" : "English"} prompt\nOdds vs. average: ${d.odds < 1 ? "1/" + (1/d.odds).toFixed(1) : d.odds.toFixed(1) + "×"} [${d.odds_lo < 1 ? "1/" + (1/d.odds_lo).toFixed(1) : d.odds_lo.toFixed(1)}, ${d.odds_hi < 1 ? "1/" + (1/d.odds_hi).toFixed(1) : d.odds_hi.toFixed(1) + "×"}]\nlog-odds: ${d.bt_logit.toFixed(2)}`
       })
     ]
   });
