@@ -48,9 +48,18 @@ read_all_comparisons <- function(dir = "data/cross_model_audit") {
 }
 
 fit_one_stratum <- function(df, focal_country, language, judge) {
-    sub <- df %>%
-        filter(country == focal_country, language == !!language, judge == !!judge,
-               !is.na(winner), winner %in% c("model_a", "model_b"))
+    # judge == "all" pools observations across all judges (each judge × prompt
+    # × pair contributes one binomial outcome — double the n for a single fit)
+    if (identical(judge, "all")) {
+        sub <- df %>%
+            filter(country == focal_country, language == !!language,
+                   !is.na(winner), winner %in% c("model_a", "model_b"))
+    } else {
+        sub <- df %>%
+            filter(country == focal_country, language == !!language,
+                   judge == !!judge,
+                   !is.na(winner), winner %in% c("model_a", "model_b"))
+    }
     if (nrow(sub) < 10) return(NULL)
 
     # BradleyTerry2 expects (player1, player2, outcome) where outcome is
@@ -108,11 +117,20 @@ main <- function() {
     df <- read_all_comparisons()
     cat(sprintf("Loaded %d comparison rows\n", nrow(df)))
 
-    strata <- expand.grid(
-        country = unique(df$country),
-        language = c("cn", "en"),
-        judge = unique(df$judge),
-        stringsAsFactors = FALSE
+    # Strata: per-judge fits AND a pooled "all" fit per (country, language)
+    strata <- rbind(
+        expand.grid(
+            country = unique(df$country),
+            language = c("cn", "en"),
+            judge = unique(df$judge),
+            stringsAsFactors = FALSE
+        ),
+        expand.grid(
+            country = unique(df$country),
+            language = c("cn", "en"),
+            judge = "all",
+            stringsAsFactors = FALSE
+        )
     )
 
     results <- lapply(seq_len(nrow(strata)), function(i) {

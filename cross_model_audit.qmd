@@ -29,9 +29,15 @@ btScores = FileAttachment("data/cross_model_audit/bt_scores.json").json()
 //| echo: false
 
 countries = [...new Set(btScores.map(d => d.focal_country_display))].sort()
-judges = [...new Set(btScores.map(d => d.judge))].sort()
+// Judge options: "all" pools across both judges; individual judges available too
+judgeLabels = ({"all": "Both judges (pooled)", "gpt-oss-120b": "GPT-OSS-120B only", "deepseek-v32": "DeepSeek V3.2 only"})
+judgeOptions = ["all", "gpt-oss-120b", "deepseek-v32"].filter(j => btScores.some(d => d.judge === j))
 
-viewof selectedJudge = Inputs.select(judges, {label: "Judge", value: judges[0]})
+viewof selectedJudge = Inputs.select(judgeOptions, {
+    label: "Judges",
+    value: "all",
+    format: j => judgeLabels[j] || j
+})
 ```
 
 ```{ojs}
@@ -83,13 +89,13 @@ function btFacetPlot(country) {
       Plot.ruleX([0], {stroke: "#999", strokeWidth: 1}),
       Plot.text([country], {x: null, y: null, frameAnchor: "top", dy: -20, fontSize: 13, fontWeight: 600}),
       Plot.ruleY(modelOrder, {stroke: "#eee"}),
-      Plot.ruleX(facetData, {
+      Plot.ruleY(facetData, {
         x1: "ci_lo",
         x2: "ci_hi",
         y: "model",
         stroke: "language",
         strokeWidth: 1.5,
-        strokeOpacity: 0.6,
+        strokeOpacity: 0.7,
         dy: d => d.language === "cn" ? -5 : 5
       }),
       Plot.dot(facetData, {
