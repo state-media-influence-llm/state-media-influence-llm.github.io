@@ -98,13 +98,35 @@ fit_one_stratum <- function(df, focal_country, language, judge) {
     if (is.null(fit)) return(NULL)
 
     ab <- BTabilities(fit)  # matrix: ability and s.e.
+    n <- nrow(ab)
+    models <- rownames(ab)
+    raw <- ab[, "ability"]
+
+    # Re-center on the mean (sum-to-zero). Need to propagate covariance:
+    # if a is the raw ability vector with covariance Σ, then c = a - mean(a)
+    # = (I - 11'/n) a has covariance (I - 11'/n) Σ (I - 11'/n)'.
+    # Σ has rank n-1: the reference (GPT-5.5) is pinned at 0 with var 0,
+    # but the other entries have variances from vcov(fit). Build Σ explicitly.
+    sigma <- matrix(0, n, n, dimnames = list(models, models))
+    vc <- vcov(fit)  # covariance over non-reference abilities
+    # vcov rownames look like "..claude-opus-4.6"; strip the prefix
+    vc_names <- gsub("^\\.\\.", "", rownames(vc))
+    rownames(vc) <- vc_names; colnames(vc) <- vc_names
+    common <- intersect(models, vc_names)
+    sigma[common, common] <- vc[common, common]
+
+    M <- diag(n) - matrix(1 / n, n, n)
+    cov_c <- M %*% sigma %*% t(M)
+    se_centered <- sqrt(pmax(diag(cov_c), 0))
+    centered <- raw - mean(raw)
+
     out <- data.frame(
-        model = rownames(ab),
+        model = models,
         focal_country = focal_country,
         language = language,
         judge = judge,
-        bt_logit = ab[, "ability"],
-        se = ab[, "s.e."],
+        bt_logit = centered,
+        se = se_centered,
         stringsAsFactors = FALSE
     )
     out$ci_lo <- out$bt_logit - 1.96 * out$se
