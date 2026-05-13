@@ -3,7 +3,7 @@ title: "Memorization Evidence"
 subtitle: "Can commercial LLMs complete state coordinated media phrases from memory?"
 ---
 
-Commercial LLMs have memorized Chinese state coordinated media. Given the first half of a distinctive phrase, models can complete the second half from memory — and they do so more often for state coordinated media phrases than for general web text. Consistent with [prior work showing that memorization scales with model size](https://arxiv.org/abs/2202.07646), newer and larger models show higher memorization rates.
+Commercial LLMs have memorized Chinese state coordinated media. Given the first half of a distinctive phrase, models complete the second half from memory more often for state coordinated media phrases than for general web text. Newer and larger models show higher memorization rates, [consistent with prior scaling work](https://arxiv.org/abs/2202.07646).
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 Each model receives the first half of 2,000 LASSO-selected 20-gram
@@ -18,14 +18,13 @@ reasoning before emitting any final content) are re-queried with
 max\_tokens=2048; any that remain empty after re-query are also excluded
 from the denominator.
 
-**Differences from the paper.** Two methodological updates improve
-measurement of memorization in current-generation models:
+**Differences from the paper.**
 
 1. **Sliding-window matching.** The original paper uses
 prefix-truncation: only the first *n* characters of the completion
 (where *n* = length of expected ending) are compared. This works when
-models immediately continue the text, but current models — especially
-reasoning models — often prepend meta-commentary, prompt echoes, or
+models immediately continue the text, but current models, especially
+reasoning models, often prepend meta-commentary, prompt echoes, or
 formatting before producing the actual memorized content. A
 sliding-window variant finds the best-matching *n*-character window
 anywhere in the completion. This change only increases match counts
@@ -44,9 +43,9 @@ user-message prefix or the completions API).
 
 In the original paper, the five models audited (GPT-3.5 Instruct, GPT-4,
 GPT-4o, Claude Opus 3, Claude Sonnet 3) were queried with max\_tokens=64.
-The new models — Claude Opus 4.6, Claude Opus 4.7, GPT-5.4, GPT-5.5,
+The new models (Claude Opus 4.6, Claude Opus 4.7, GPT-5.4, GPT-5.5,
 Gemini 3.1 Pro, DeepSeek V3.2, DeepSeek V4 Pro, Grok 4, Grok 4.3, and
-Qwen3-Max — are queried post-acceptance with max\_tokens=256 via
+Qwen3-Max) are queried post-acceptance with max\_tokens=256 via
 OpenRouter.
 :::
 

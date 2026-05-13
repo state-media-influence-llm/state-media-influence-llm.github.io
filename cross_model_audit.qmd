@@ -3,9 +3,9 @@ title: "Cross-Model Audit"
 subtitle: "Which model gives the more favorable response, holding language constant?"
 ---
 
-The main audit compares each model's Chinese-prompt vs. English-prompt response, measuring within-model CN > EN bias. That measure has a blind spot: a model that is *uniformly* pro-target in both languages will show a small CN-EN gap, even when its responses are extreme. This study fixes that by placing all (model, language) responses on a single Bradley-Terry scale per focal country, then reading off both the cross-model ranking *and* the within-model language gap from the same chart.
+The main audit compares each model's Chinese-prompt vs. English-prompt response. But a model that is uniformly pro-target in both languages (i.e., DeepSeek v4 Pro) will show a small Chinese-English difference. This page aggregates (model, language) responses on a single Bradley-Terry scale per focal country, then compares between *models* rather than between languages.
 
-**How to read the plot.** Each panel is one focal country. The x-axis (log scale) is the Bradley-Terry odds that a (model, language) is judged more favorable to *that country* than the average (model, language) entry on that country. Odds of 1 = same as average; 10 = 10× as likely; 0.1 = 1/10. **Red dot** = SUT queried in Chinese; **blue dot** = English. Lines are 95% CIs. The gap between the two dots for the same model is the within-model CN-vs-EN bias measured in the main audit, here on the same unified scale.
+**How to read the plot.** Each panel summarizes the odds a model gives a more favorable response to a prompt about that country than other models. More technically, the x-axis is the Bradley-Terry odds that a (model, language) is judged more favorable to that country than the average (model, language) entry on that country. Lines are 95% CIs.
 
 ::: {.callout-note collapse="true" title="Click for methodological details"}
 **Players.** For each focal country we treat each (SUT, language) pair as a Bradley-Terry "player" — 9 SUTs × 2 languages = 18 players per focal country.
