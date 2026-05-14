@@ -19,3 +19,6 @@ data/global/gpt5_opus4_prel.csv
 .claude/
 scripts/archive/
 plots/*.pdf
+Rplots.pdf
+logs/
+data/global/archive/
