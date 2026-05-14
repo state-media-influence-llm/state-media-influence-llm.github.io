@@ -8,6 +8,7 @@ project:
 
 website:
   title: "State Media & LLMs"
+  google-analytics: "G-9XTZZP2CJ8"
   navbar:
     background: light
     left:
