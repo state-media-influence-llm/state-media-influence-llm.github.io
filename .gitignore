@@ -22,3 +22,5 @@ plots/*.pdf
 Rplots.pdf
 logs/
 data/global/archive/
+figures/
+*.pdf
