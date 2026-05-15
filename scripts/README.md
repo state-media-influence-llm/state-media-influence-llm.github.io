@@ -6,10 +6,13 @@ companion paper with current-generation models.
 
 ## Prerequisites
 
-- Python 3.10+
-- R 4.x with `tidyverse` and `jsonlite` (only for `process_study1_contamination.R`)
-- An OpenRouter API key (set in `.env`; see `.env.example`)
+- Python 3.10+ (only required for steps that hit OpenRouter)
+- R 4.x with `tidyverse`, `jsonlite`, `readr`, `stringi`, `stringdist`, `BradleyTerry2`, `ggplot2`, `scales`
+- An OpenRouter API key (set in `.env`; see `.env.example`) — only for query / judge steps
 - For data processing scripts: the paper's public code repository (set `PAPER_DATA_DIR`)
+
+Most post-processing and analysis is available in both Python and R; R-only users
+can run the full website pipeline once the raw CSVs (gen + judge) are on disk.
 
 ```bash
 pip install -r requirements.txt
@@ -69,12 +72,24 @@ These seed the website with data from the original paper. Run once; outputs are 
 
 ### Post-Processing (produces website JSON)
 
+Every script in this section is available in both Python (`.py`) and R (`.R`).
+The two implementations produce byte-identical JSON output and are interchangeable.
+
 | Script | Input | Output |
 |--------|-------|--------|
-| `rescore_memorization.py` | `completions.json` | Recalculates matched/edit_distance/refused in place (no API calls). Default uses sliding-window matching; `--prefix` reproduces the paper's original method. |
-| `process_study4_audit.py` | Paper CSVs + `data/study4/` | `data/audit/audit_summary.json` |
-| `process_study4_responses.py` | Paper CSVs + `data/study4/` | `data/audit/prompts.json`, `responses.json` |
-| `process_global.py` | Paper CSV + `data/global/judges/` | `data/global/country_scores.json`, `responses.json` |
+| `rescore_memorization.{py,R}` | `completions.json` | Recalculates matched/edit_distance/refused in place (no API calls). Default uses sliding-window matching; `--prefix` reproduces the paper's original method. |
+| `process_study4_audit.{py,R}` | Paper CSVs + `data/study4/` | `data/audit/audit_summary.json` |
+| `process_study4_responses.{py,R}` | Paper CSVs + `data/study4/` | `data/audit/prompts.json`, `responses.json` |
+| `process_global.{py,R}` | Paper CSV + `data/global/judges/` | `data/global/country_scores.json`, `responses.json` |
+| `refusal_utils.{py,R}` | (utility) | Shared CN + EN refusal regex patterns used by audit / global processors when `--exclude-refusals` is set. |
+
+### Bradley-Terry Analysis (Cross-Model Audit)
+
+| Script | Input | Output |
+|--------|-------|--------|
+| `fit_bt_cross_model.R` | `data/cross_model_audit/*.csv` | `bt_scores.json` (per (model, country, language, judge) stratum) |
+| `fit_bt_cross_model_language.R` | `data/cross_model_audit/*.csv` + `data/study4/*_res_*.csv` | `bt_scores_with_language.json` (unified BT over (model, language) players, with within-model cross-language edges) |
+| `plot_cross_model_audit.R` | `bt_scores_with_language.json` | `plots/cross_model_audit.pdf` (static reproduction of the OJS chart) |
 
 ## Execution Order
 
@@ -93,10 +108,15 @@ python scripts/run_judge_panel.py
 python scripts/run_global_judges.py
 
 # Phase 4: Process into website JSON
-python scripts/rescore_memorization.py
-python scripts/process_study4_audit.py
-python scripts/process_study4_responses.py
-python scripts/process_global.py
+#   Python or R — either works (outputs are byte-identical):
+python scripts/rescore_memorization.py        # or: Rscript scripts/rescore_memorization.R
+python scripts/process_study4_audit.py        # or: Rscript scripts/process_study4_audit.R
+python scripts/process_study4_responses.py    # or: Rscript scripts/process_study4_responses.R
+python scripts/process_global.py              # or: Rscript scripts/process_global.R
+
+# Cross-model audit (Bradley-Terry, R only):
+Rscript scripts/fit_bt_cross_model.R
+Rscript scripts/fit_bt_cross_model_language.R
 
 # Phase 5: Build website
 quarto render
